@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>scm-plugins</artifactId>
+    <groupId>sonia.scm.plugins</groupId>
+    <version>1.7-SNAPSHOT</version>
+  </parent>
+
+  <groupId>sonia.scm.plugins</groupId>
+  <artifactId>scm-jira-plugin</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>scm-jira-plugin</name>
+  <url>https://bitbucket.org/sdorra/scm-manager</url>
+  <description>scm-jira-plugin</description>
+  
+  <scm>
+    <connection>scm:hg:https://bitbucket.org/sdorra/scm-jira-plugin</connection>
+    <developerConnection>scm:hg:https://bitbucket.org/sdorra/scm-jira-plugin</developerConnection>
+    <url>https://bitbucket.org/sdorra/scm-jira-plugin</url>
+  </scm>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>${servlet.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+  </dependencies>
+  
+  <repositories>
+    
+    <repository>
+      <id>maven.scm-manager.org</id>
+      <name>scm-manager release repository</name>
+      <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
+    </repository>
+  
+  </repositories>
+
+</project>
