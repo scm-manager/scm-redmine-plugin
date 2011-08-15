@@ -29,7 +29,85 @@
  * 
  */
 
+Ext.ns('Sonia.jira');
 
-function sayJira(){
-  alert('JIRA');
-}
+Sonia.jira.ConfigPanel = Ext.extend(Sonia.repository.FormPanel, {
+  
+  formTitleText: 'Jira Configuration',
+  urlText: 'Jira Url',
+  projectKeysText: 'Jira Project Keys',
+  
+  initComponent: function(){
+    var url = "";
+    var keys = "";
+    
+    var properties = this.item.properties;
+    if ( properties ){
+      for (var i=0; i<properties.length; i++){
+        var property = properties[i];
+        if ( property.key == 'jira.url' ){
+          url = property.value;
+        } else if (property.key == 'jira.project-keys'){
+          keys = property.value;
+        }
+      }
+    }
+    
+    var config = {
+      title: this.formTitleText,
+      items: [{
+        id: 'jiraUrl',
+        fieldLabel: this.urlText,
+        submitValue: false,
+        value: url
+      },{
+        id: 'jiraProjectKeys',
+        fieldLabel: this.projectKeysText,
+        submitValue: false,
+        value: keys
+      }],
+      listeners: {
+        preUpdate: {
+          fn: this.updateJiraProperties,
+          scope: this
+        }
+      }
+    };
+    
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.jira.ConfigPanel.superclass.initComponent.apply(this, arguments);
+  }, 
+  
+  updateJiraProperties: function(item){
+    if (!item.properties){
+      item.properties = [];
+    }
+    
+    if ( debug ){
+      console.debug( item );
+    }
+    
+    item.properties.push({
+      key: 'jira.url',
+      value: item.jiraUrl
+    },{
+      key: 'jira.project-keys',
+      value: item.jiraProjectKeys
+    });
+    delete item.jiraUrl;
+    delete item.jiraProjectKeys;
+  }
+  
+});
+
+// register xtype
+Ext.reg("jiraConfigPanel", Sonia.jira.ConfigPanel);
+
+// register panel
+Sonia.repository.openListeners.push(function(repository, panels){
+  panels.push({
+    xtype: 'jiraConfigPanel',
+    item: repository
+  });
+});
+
