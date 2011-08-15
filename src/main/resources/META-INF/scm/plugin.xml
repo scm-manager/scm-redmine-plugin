@@ -47,6 +47,10 @@
   <conditions>
     <min-version>1.7</min-version>
   </conditions>
+  
+  <packages>
+    <package>sonia.scm.jira</package>
+  </packages>
 
   <resources>
     <script>/sonia/scm/jira/sonia.jira.js</script>
