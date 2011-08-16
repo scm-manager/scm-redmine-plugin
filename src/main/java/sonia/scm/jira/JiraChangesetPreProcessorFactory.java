@@ -69,7 +69,7 @@ public class JiraChangesetPreProcessorFactory
 
   /** Field description */
   public static final String REPLACEMENT_LINK =
-    "<a target=\"_blank\" href=\"{0}/browse/$1-\">$1</a>";
+    "<a target=\"_blank\" href=\"{0}/browse/$0\">$0</a>";
 
   //~--- methods --------------------------------------------------------------
 
@@ -107,7 +107,7 @@ public class JiraChangesetPreProcessorFactory
         {
           String p = MessageFormat.format(KEY_PATTERN, key);
 
-          patternList.add(Pattern.compile(key));
+          patternList.add(Pattern.compile(p));
         }
       }
 
