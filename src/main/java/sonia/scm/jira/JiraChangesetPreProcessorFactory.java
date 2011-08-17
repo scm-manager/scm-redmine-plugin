@@ -39,6 +39,7 @@ import sonia.scm.plugin.ext.Extension;
 import sonia.scm.repository.ChangesetPreProcessor;
 import sonia.scm.repository.ChangesetPreProcessorFactory;
 import sonia.scm.repository.Repository;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -90,10 +91,7 @@ public class JiraChangesetPreProcessorFactory
 
     if (Util.isNotEmpty(jiraUrl) && Util.isNotEmpty(projectKeys))
     {
-      if (jiraUrl.endsWith("/"))
-      {
-        jiraUrl = jiraUrl.substring(0, jiraUrl.length());
-      }
+      jiraUrl = HttpUtil.getUriWithoutEndSeperator(jiraUrl);
 
       String replacementPattern = MessageFormat.format(REPLACEMENT_LINK,
                                     jiraUrl);
