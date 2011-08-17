@@ -41,6 +41,7 @@ Sonia.jira.ConfigPanel = Ext.extend(Sonia.repository.FormPanel, {
     var url = "";
     var keys = "";
     
+    // read fields from properties
     var properties = this.item.properties;
     if ( properties ){
       for (var i=0; i<properties.length; i++){
@@ -79,14 +80,12 @@ Sonia.jira.ConfigPanel = Ext.extend(Sonia.repository.FormPanel, {
   }, 
   
   updateJiraProperties: function(item){
+    // create properties if they are empty
     if (!item.properties){
       item.properties = [];
     }
     
-    if ( debug ){
-      console.debug( item );
-    }
-    
+    // copy fields to properties
     item.properties.push({
       key: 'jira.url',
       value: item.jiraUrl
@@ -94,6 +93,8 @@ Sonia.jira.ConfigPanel = Ext.extend(Sonia.repository.FormPanel, {
       key: 'jira.project-keys',
       value: item.jiraProjectKeys
     });
+    
+    // remove properties from object
     delete item.jiraUrl;
     delete item.jiraProjectKeys;
   }
