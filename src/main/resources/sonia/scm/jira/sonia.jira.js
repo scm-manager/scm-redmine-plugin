@@ -31,72 +31,30 @@
 
 Ext.ns('Sonia.jira');
 
-Sonia.jira.ConfigPanel = Ext.extend(Sonia.repository.FormPanel, {
+Sonia.jira.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
   
-  formTitleText: 'Jira Configuration',
-  urlText: 'Jira Url',
-  projectKeysText: 'Jira Project Keys',
+  formTitleText: 'Jira',
+  urlText: 'Url',
+  projectKeysText: 'Project Keys',
   
   initComponent: function(){
-    var url = "";
-    var keys = "";
-    
-    // read fields from properties
-    var properties = this.item.properties;
-    if ( properties ){
-      for (var i=0; i<properties.length; i++){
-        var property = properties[i];
-        if ( property.key == 'jira.url' ){
-          url = property.value;
-        } else if (property.key == 'jira.project-keys'){
-          keys = property.value;
-        }
-      }
-    }
     
     var config = {
       title: this.formTitleText,
       items: [{
-        id: 'jiraUrl',
+        name: 'jiraUrl',
         fieldLabel: this.urlText,
-        submitValue: false,
-        value: url
+        property: 'jira.url',
+        vtype: 'url'
       },{
-        id: 'jiraProjectKeys',
+        name: 'jiraProjectKeys',
         fieldLabel: this.projectKeysText,
-        submitValue: false,
-        value: keys
-      }],
-      listeners: {
-        preUpdate: {
-          fn: this.updateJiraProperties,
-          scope: this
-        }
-      }
+        property: 'jira.project-keys'
+      }]
     };
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.jira.ConfigPanel.superclass.initComponent.apply(this, arguments);
-  }, 
-  
-  updateJiraProperties: function(item){
-    // create properties if they are empty
-    if (!item.properties){
-      item.properties = [];
-    }
-    
-    // copy fields to properties
-    item.properties.push({
-      key: 'jira.url',
-      value: item.jiraUrl
-    },{
-      key: 'jira.project-keys',
-      value: item.jiraProjectKeys
-    });
-    
-    // remove properties from object
-    delete item.jiraUrl;
-    delete item.jiraProjectKeys;
   }
   
 });
