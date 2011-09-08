@@ -37,6 +37,9 @@ Sonia.jira.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
   urlText: 'Url',
   projectKeysText: 'Project Keys',
   
+  urlHelpText: 'Url of Jira installation (with contextpath).',
+  projectKeysHelpText: 'Comma separated project keys e.g.: SCM, JENKINS.',
+  
   initComponent: function(){
     
     var config = {
@@ -45,11 +48,13 @@ Sonia.jira.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
         name: 'jiraUrl',
         fieldLabel: this.urlText,
         property: 'jira.url',
-        vtype: 'url'
+        vtype: 'url',
+        helpText: this.urlHelpText
       },{
         name: 'jiraProjectKeys',
         fieldLabel: this.projectKeysText,
-        property: 'jira.project-keys'
+        property: 'jira.project-keys',
+        helpText: this.projectKeysHelpText
       }]
     };
     
