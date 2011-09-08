@@ -14,8 +14,8 @@
   <artifactId>scm-jira-plugin</artifactId>
   <version>1.0-SNAPSHOT</version>
   <name>scm-jira-plugin</name>
-  <url>https://bitbucket.org/sdorra/scm-manager</url>
-  <description>scm-jira-plugin</description>
+  <url>https://bitbucket.org/sdorra/scm-jira-plugin</url>
+  <description>This plugin integrates Atlassian JIRA to SCM-Manager.</description>
   
   <scm>
     <connection>scm:hg:https://bitbucket.org/sdorra/scm-jira-plugin</connection>
