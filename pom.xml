@@ -22,17 +22,6 @@
     <developerConnection>scm:hg:https://bitbucket.org/sdorra/scm-jira-plugin</developerConnection>
     <url>https://bitbucket.org/sdorra/scm-jira-plugin</url>
   </scm>
-
-  <dependencies>
-
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>${servlet.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
-  </dependencies>
   
   <repositories>
     
