@@ -49,7 +49,7 @@ public interface JiraHandler
    *
    * @throws JiraException
    */
-  public void addComment(String issueId, String commend) throws JiraException;
+  public void addComment(String issueId, String comment) throws JiraException;
 
   /**
    * Method description
