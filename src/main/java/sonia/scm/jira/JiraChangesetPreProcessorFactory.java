@@ -36,7 +36,6 @@ package sonia.scm.jira;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.plugin.ext.Extension;
-import sonia.scm.repository.ChangesetPreProcessor;
 import sonia.scm.repository.ChangesetPreProcessorFactory;
 import sonia.scm.repository.Repository;
 import sonia.scm.util.HttpUtil;
@@ -83,9 +82,9 @@ public class JiraChangesetPreProcessorFactory
    * @return
    */
   @Override
-  public ChangesetPreProcessor createPreProcessor(Repository repository)
+  public JiraChangesetPreProcessor createPreProcessor(Repository repository)
   {
-    ChangesetPreProcessor cpp = null;
+    JiraChangesetPreProcessor cpp = null;
     String jiraUrl = repository.getProperty(PROPERTY_JIRA_URL);
     String projectKeys = repository.getProperty(PROPERTY_JIRA_PROJECTKEYS);
 

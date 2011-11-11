@@ -35,37 +35,26 @@ package sonia.scm.jira;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.repository.Changeset;
-import sonia.scm.repository.ChangesetPreProcessor;
-import sonia.scm.util.Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.jira.soap.JiraSoapService;
+import sonia.scm.jira.soap.JiraSoapServiceServiceLocator;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collection;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.net.URL;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class JiraChangesetPreProcessor implements ChangesetPreProcessor
+public class SoapJiraHandlerFactory implements JiraHandlerFactory
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param keyReplacementPattern
-   * @param projectKeys
-   */
-  public JiraChangesetPreProcessor(String keyReplacementPattern,
-                                   Collection<Pattern> projectKeys)
-  {
-    this.keyReplacementPattern = keyReplacementPattern;
-    this.projectKeys = projectKeys;
-  }
+  /** the logger for SoapJiraHandlerFactory */
+  private static final Logger logger =
+    LoggerFactory.getLogger(SoapJiraHandlerFactory.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -73,59 +62,55 @@ public class JiraChangesetPreProcessor implements ChangesetPreProcessor
    * Method description
    *
    *
-   * @param changeset
+   * @param urlString
+   * @param username
+   * @param password
+   *
+   * @return
+   *
+   * @throws JiraConnectException
    */
   @Override
-  public void process(Changeset changeset)
+  public JiraHandler createJiraHandler(String urlString, String username,
+          String password)
+          throws JiraConnectException
   {
-    String description = changeset.getDescription();
+    JiraHandler handler = null;
 
-    if (Util.isNotEmpty(description))
+    try
     {
-      for (Pattern p : projectKeys)
+      URL url = createSoapUrl(urlString);
+
+      if (logger.isDebugEnabled())
       {
-        StringBuffer sb = new StringBuffer();
-        Matcher m = p.matcher(description);
-
-        if (m.find())
-        {
-          m.appendReplacement(sb, keyReplacementPattern);
-
-          if (autoCloseHandler != null)
-          {
-            autoCloseHandler.handleAutoClose(m.group(), changeset);
-          }
-        }
-
-        m.appendTail(sb);
-        description = sb.toString();
+        logger.debug("connect to jira {} as user {}", url, username);
       }
+
+      JiraSoapService service =
+        new JiraSoapServiceServiceLocator().getJirasoapserviceV2(url);
+      String token = service.login(username, password);
+
+      handler = new SoapJiraHandler(service, token);
+    }
+    catch (Exception ex)
+    {
+      throw new JiraConnectException(
+          "could not connect to jira instance at ".concat(urlString), ex);
     }
 
-    changeset.setDescription(description);
+    return handler;
   }
-
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param autoCloseHandler
+   * @param url
+   *
+   * @return
    */
-  public void setAutoCloseHandler(JiraAutoCloseHandler autoCloseHandler)
+  private URL createSoapUrl(String url)
   {
-    this.autoCloseHandler = autoCloseHandler;
+    throw new UnsupportedOperationException("Not yet implemented");
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private JiraAutoCloseHandler autoCloseHandler;
-
-  /** Field description */
-  private String keyReplacementPattern;
-
-  /** Field description */
-  private Collection<Pattern> projectKeys;
 }

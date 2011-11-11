@@ -40,6 +40,14 @@ Sonia.jira.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
   urlHelpText: 'Url of Jira installation (with contextpath).',
   projectKeysHelpText: 'Comma separated project keys e.g.: SCM, JENKINS.',
   
+  autoCloseText: 'Enable Auto-Close',
+  autoCloseHelpText: '',
+  autoCloseWordsText: 'Auto-Close Words',
+  autoCloseWordsHelpText: '',
+  
+  usernameTransformerText: 'Transform Username',
+  usernameTransformerHelpText: '',
+  
   initComponent: function(){
     
     var config = {
@@ -55,6 +63,22 @@ Sonia.jira.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
         fieldLabel: this.projectKeysText,
         property: 'jira.project-keys',
         helpText: this.projectKeysHelpText
+      },{
+        name: 'jiraAutoClose',
+        fieldLabel: this.autoCloseText,
+        property: 'jira.auto-close',
+        helpText: this.autoCloseHelpText
+      },{
+        name: 'jiraAutoCloseWords',
+        fieldLabel: this.autoCloseWordsText,
+        property: 'jira.auto-close-words',
+        helpText: this.autoCloseWordsHelpText,
+        value: 'fixed, fix, closed, close, resolved, resolve'
+      },{
+        name: 'usernameTransformerText',
+        fieldLabel: this.usernameTransformerText,
+        property: 'jira.auto-close-username-transformer',
+        helpText: this.usernameTransformerHelpText
       }]
     };
     

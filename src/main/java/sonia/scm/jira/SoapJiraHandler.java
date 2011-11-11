@@ -35,36 +35,35 @@ package sonia.scm.jira;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.repository.Changeset;
-import sonia.scm.repository.ChangesetPreProcessor;
-import sonia.scm.util.Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import sonia.scm.jira.soap.JiraSoapService;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class JiraChangesetPreProcessor implements ChangesetPreProcessor
+public class SoapJiraHandler implements JiraHandler
 {
+
+  /** the logger for SoapJiraHandler */
+  private static final Logger logger =
+    LoggerFactory.getLogger(SoapJiraHandler.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    *
-   *
-   * @param keyReplacementPattern
-   * @param projectKeys
+   * @param service
+   * @param token
    */
-  public JiraChangesetPreProcessor(String keyReplacementPattern,
-                                   Collection<Pattern> projectKeys)
+  public SoapJiraHandler(JiraSoapService service, String token)
   {
-    this.keyReplacementPattern = keyReplacementPattern;
-    this.projectKeys = projectKeys;
+    this.service = service;
+    this.token = token;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -73,59 +72,51 @@ public class JiraChangesetPreProcessor implements ChangesetPreProcessor
    * Method description
    *
    *
-   * @param changeset
+   * @param issueId
+   * @param commend
+   *
+   * @throws JiraException
    */
   @Override
-  public void process(Changeset changeset)
+  public void addComment(String issueId, String commend) throws JiraException
   {
-    String description = changeset.getDescription();
-
-    if (Util.isNotEmpty(description))
-    {
-      for (Pattern p : projectKeys)
-      {
-        StringBuffer sb = new StringBuffer();
-        Matcher m = p.matcher(description);
-
-        if (m.find())
-        {
-          m.appendReplacement(sb, keyReplacementPattern);
-
-          if (autoCloseHandler != null)
-          {
-            autoCloseHandler.handleAutoClose(m.group(), changeset);
-          }
-        }
-
-        m.appendTail(sb);
-        description = sb.toString();
-      }
-    }
-
-    changeset.setDescription(description);
+    throw new UnsupportedOperationException("Not supported yet.");
   }
-
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param autoCloseHandler
+   * @param issueId
+   *
+   * @throws JiraException
    */
-  public void setAutoCloseHandler(JiraAutoCloseHandler autoCloseHandler)
+  @Override
+  public void close(String issueId) throws JiraException
   {
-    this.autoCloseHandler = autoCloseHandler;
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param issueId
+   * @param comment
+   *
+   * @throws JiraException
+   */
+  @Override
+  public void closeIssue(String issueId, String comment) throws JiraException
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private JiraAutoCloseHandler autoCloseHandler;
+  private JiraSoapService service;
 
   /** Field description */
-  private String keyReplacementPattern;
-
-  /** Field description */
-  private Collection<Pattern> projectKeys;
+  private String token;
 }

@@ -35,36 +35,46 @@ package sonia.scm.jira;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import java.net.URL;
+import java.rmi.RemoteException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.jira.soap.JiraSoapService;
+import sonia.scm.jira.soap.JiraSoapServiceServiceLocator;
 import sonia.scm.repository.Changeset;
-import sonia.scm.repository.ChangesetPreProcessor;
-import sonia.scm.util.Util;
+import sonia.scm.repository.Repository;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collection;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import javax.xml.rpc.ServiceException;
+import sonia.scm.jira.soap.RemoteFieldValue;
+import sonia.scm.jira.soap.RemoteNamedObject;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class JiraChangesetPreProcessor implements ChangesetPreProcessor
+public class JiraAutoCloseHandler
 {
+
+  /** the logger for JiraAutoCloseHandler */
+  private static final Logger logger =
+    LoggerFactory.getLogger(JiraAutoCloseHandler.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    *
-   *
-   * @param keyReplacementPattern
-   * @param projectKeys
+   * @param repository
+   * @param autoCloseWords
    */
-  public JiraChangesetPreProcessor(String keyReplacementPattern,
-                                   Collection<Pattern> projectKeys)
+  public JiraAutoCloseHandler(Repository repository, String[] autoCloseWords)
   {
-    this.keyReplacementPattern = keyReplacementPattern;
-    this.projectKeys = projectKeys;
+    this.repository = repository;
+    this.autoCloseWords = autoCloseWords;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -73,59 +83,82 @@ public class JiraChangesetPreProcessor implements ChangesetPreProcessor
    * Method description
    *
    *
+   * @param issueId
    * @param changeset
    */
-  @Override
-  public void process(Changeset changeset)
+  public void handleAutoClose(String issueId, Changeset changeset)
   {
-    String description = changeset.getDescription();
-
-    if (Util.isNotEmpty(description))
+    if (logger.isTraceEnabled())
     {
-      for (Pattern p : projectKeys)
-      {
-        StringBuffer sb = new StringBuffer();
-        Matcher m = p.matcher(description);
-
-        if (m.find())
-        {
-          m.appendReplacement(sb, keyReplacementPattern);
-
-          if (autoCloseHandler != null)
-          {
-            autoCloseHandler.handleAutoClose(m.group(), changeset);
-          }
-        }
-
-        m.appendTail(sb);
-        description = sb.toString();
-      }
+      logger.trace("check changeset {} for auto-close of issue",
+                   changeset.getId(), issueId);
     }
 
-    changeset.setDescription(description);
-  }
+    String autoCloseWord = searchAutoCloseWord(changeset);
 
-  //~--- set methods ----------------------------------------------------------
+    if (autoCloseWord != null)
+    {
+      closeIssue(repository, changeset, issueId, autoCloseWord);
+    }
+
+    throw new UnsupportedOperationException("Not yet implemented");
+  }
 
   /**
    * Method description
    *
    *
-   * @param autoCloseHandler
+   * @param repository
+   * @param changeset
+   * @param issueId
+   * @param autoCloseWord
    */
-  public void setAutoCloseHandler(JiraAutoCloseHandler autoCloseHandler)
+  private void closeIssue(Repository repository, Changeset changeset,
+                          String issueId, String autoCloseWord)
   {
-    this.autoCloseHandler = autoCloseHandler;
+    
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param changeset
+   *
+   * @return
+   */
+  private String searchAutoCloseWord(Changeset changeset)
+  {
+    String description = changeset.getDescription();
+    String autoCloseWord = null;
+    String[] words = description.split("\\s");
+
+    for (String w : words)
+    {
+      for (String acw : autoCloseWords)
+      {
+        if (w.equalsIgnoreCase(acw))
+        {
+          autoCloseWord = w;
+
+          break;
+        }
+      }
+
+      if (autoCloseWord != null)
+      {
+        break;
+      }
+    }
+
+    return autoCloseWord;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private JiraAutoCloseHandler autoCloseHandler;
+  private String[] autoCloseWords;
 
   /** Field description */
-  private String keyReplacementPattern;
-
-  /** Field description */
-  private Collection<Pattern> projectKeys;
+  private Repository repository;
 }
