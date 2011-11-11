@@ -22,6 +22,59 @@
     <url>https://bitbucket.org/sdorra/scm-jira-plugin</url>
   </scm>
   
+  <dependencies>
+    
+    <dependency>
+      <groupId>axis</groupId>
+      <artifactId>axis</artifactId>
+      <version>1.4</version>
+    </dependency>
+    
+  </dependencies>
+  
+  <build>
+    <plugins>
+    
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>axistools-maven-plugin</artifactId>
+        <version>1.4</version>
+        <configuration>
+          <sourceDirectory>src/main/wsdl</sourceDirectory>
+          <packageSpace>sonia.scm.jira.soap</packageSpace>
+          <testCases>false</testCases>
+          <serverSide>false</serverSide>
+          <subPackageByFileName>false</subPackageByFileName>
+          <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>wsdl2java</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    
+    </plugins>
+  </build>
+  
+  <pluginRepositories>
+    
+    <pluginRepository>
+      <id>codehaus.org</id>
+      <name>CodeHaus Plugin Snapshots</name>
+      <url>http://repository.codehaus.org</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+ 
+  </pluginRepositories>
+  
   <repositories>
     
     <repository>
@@ -29,6 +82,7 @@
       <name>scm-manager release repository</name>
       <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
     </repository>
+
   
   </repositories>
 
