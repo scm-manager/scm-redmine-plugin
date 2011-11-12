@@ -59,11 +59,14 @@ public class JiraAutoCloseHandler
    *
    *
    * @param repository
+   * @param url
    * @param autoCloseWords
    */
-  public JiraAutoCloseHandler(Repository repository, String[] autoCloseWords)
+  public JiraAutoCloseHandler(Repository repository, String url,
+                              String[] autoCloseWords)
   {
     this.repository = repository;
+    this.url = url;
     this.autoCloseWords = autoCloseWords;
   }
 
@@ -104,7 +107,10 @@ public class JiraAutoCloseHandler
    * @param autoCloseWord
    */
   private void closeIssue(Repository repository, Changeset changeset,
-                          String issueId, String autoCloseWord) {}
+                          String issueId, String autoCloseWord) 
+  {
+    // JiraUtil.createJiraHandler(url, url, issueId);
+  }
 
   /**
    * Method description
@@ -148,4 +154,7 @@ public class JiraAutoCloseHandler
 
   /** Field description */
   private Repository repository;
+
+  /** Field description */
+  private String url;
 }

@@ -102,12 +102,13 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
 
     if (repository != null)
     {
+      String url = repository.getProperty(JiraChangesetPreProcessorFactory.PROPERTY_JIRA_URL);
+      
       String autoCloseString = repository.getProperty(PROPERTY_AUTOCLOSE);
 
-      if (Util.isNotEmpty(autoCloseString)
-          && Boolean.parseBoolean(autoCloseString))
+      if (Util.isNotEmpty(url) && Util.isNotEmpty(autoCloseString) && Boolean.parseBoolean(autoCloseString))
       {
-        handleAutoCloseEvent(event, repository);
+        handleAutoCloseEvent(event, repository, url);
       }
       else if (logger.isTraceEnabled())
       {
@@ -156,7 +157,7 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
    * @param repository
    */
   private void handleAutoCloseEvent(RepositoryHookEvent event,
-                                    Repository repository)
+                                    Repository repository, String url)
   {
     if (logger.isDebugEnabled())
     {
@@ -168,7 +169,7 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
 
     if (Util.isNotEmpty(autoCloseWords))
     {
-      handleAutoCloseEvent(event, repository, autoCloseWords);
+      handleAutoCloseEvent(event, repository, url, autoCloseWords);
     }
     else if (logger.isWarnEnabled())
     {
@@ -186,7 +187,7 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
    * @param autoCloseWords
    */
   private void handleAutoCloseEvent(RepositoryHookEvent event,
-                                    Repository repository,
+                                    Repository repository, String url,
                                     String[] autoCloseWords)
   {
     Collection<Changeset> changesets = event.getChangesets();
@@ -196,7 +197,7 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
       JiraChangesetPreProcessor jcpp =
         changesetPreProcessorFactory.createPreProcessor(repository);
 
-      jcpp.setAutoCloseHandler(new JiraAutoCloseHandler(repository,
+      jcpp.setAutoCloseHandler(new JiraAutoCloseHandler(repository, url,
               autoCloseWords));
 
       for (Changeset c : changesets)
