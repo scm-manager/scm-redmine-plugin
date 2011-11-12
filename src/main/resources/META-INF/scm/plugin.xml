@@ -45,7 +45,7 @@
   </information>
 
   <conditions>
-    <min-version>1.7</min-version>
+    <min-version>1.8</min-version>
   </conditions>
   
   <packages>
