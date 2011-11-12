@@ -63,6 +63,12 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
   public static final String PROPERTY_AUTOCLOSE = "jira.auto-close";
 
   /** Field description */
+  public static final String PROPERTY_AUTOCLOSEWORDS = "";
+
+  /** Field description */
+  public static final String SEPARATOR = ",";
+
+  /** Field description */
   public static final Collection<RepositoryHookType> TYPES =
     Arrays.asList(RepositoryHookType.POST_RECEIVE);
 
@@ -216,7 +222,14 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
    */
   private String[] getAutoCloseWords(Repository repository)
   {
-    throw new UnsupportedOperationException("Not yet implemented");
+    String autoCloseWords = repository.getProperty(PROPERTY_AUTOCLOSEWORDS);
+
+    if (autoCloseWords == null)
+    {
+      autoCloseWords = Util.EMPTY_STRING;
+    }
+
+    return autoCloseWords.split(SEPARATOR);
   }
 
   //~--- fields ---------------------------------------------------------------
