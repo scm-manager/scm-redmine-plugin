@@ -40,6 +40,13 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
+import sonia.scm.security.CipherUtil;
+import sonia.scm.util.AssertUtil;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -47,6 +54,9 @@ import sonia.scm.repository.Repository;
  */
 public class JiraAutoCloseHandler
 {
+
+  /** Field description */
+  public static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
 
   /** the logger for JiraAutoCloseHandler */
   private static final Logger logger =
@@ -58,13 +68,16 @@ public class JiraAutoCloseHandler
    * Constructs ...
    *
    *
+   * @param request
    * @param repository
    * @param url
    * @param autoCloseWords
    */
-  public JiraAutoCloseHandler(Repository repository, String url,
+  public JiraAutoCloseHandler(HttpServletRequest request,
+                              Repository repository, String url,
                               String[] autoCloseWords)
   {
+    this.request = request;
     this.repository = repository;
     this.url = url;
     this.autoCloseWords = autoCloseWords;
@@ -107,9 +120,36 @@ public class JiraAutoCloseHandler
    * @param autoCloseWord
    */
   private void closeIssue(Repository repository, Changeset changeset,
-                          String issueId, String autoCloseWord) 
+                          String issueId, String autoCloseWord)
   {
-    // JiraUtil.createJiraHandler(url, url, issueId);
+    HttpSession session = request.getSession();
+
+    AssertUtil.assertIsNotNull(session);
+
+    String credentialsString = (String) session.getAttribute(SCM_CREDENTIALS);
+
+    AssertUtil.assertIsNotEmpty(credentialsString);
+    credentialsString = CipherUtil.getInstance().decode(credentialsString);
+
+    String[] credentialsArray = credentialsString.split(":");
+
+    if (credentialsArray.length < 2)
+    {
+      throw new RuntimeException("credentials empty");
+    }
+
+    try
+    {
+      JiraHandler handler = JiraUtil.createJiraHandler(url,
+                              credentialsArray[0], credentialsArray[1]);
+
+      // TODO add comment
+      handler.close(issueId);
+    }
+    catch (JiraException ex)
+    {
+      logger.error("could not close jira issue", ex);
+    }
   }
 
   /**
@@ -154,6 +194,9 @@ public class JiraAutoCloseHandler
 
   /** Field description */
   private Repository repository;
+
+  /** Field description */
+  private HttpServletRequest request;
 
   /** Field description */
   private String url;

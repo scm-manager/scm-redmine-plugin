@@ -35,6 +35,8 @@ package sonia.scm.jira;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Provider;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +52,8 @@ import sonia.scm.util.Util;
 
 import java.util.Arrays;
 import java.util.Collection;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -81,9 +85,13 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
   /**
    * Constructs ...
    *
+   *
+   * @param requestProvider
    */
-  public JiraAutoClosePostReceiveHook()
+  public JiraAutoClosePostReceiveHook(
+          Provider<HttpServletRequest> requestProvider)
   {
+    this.requestProvider = requestProvider;
     this.changesetPreProcessorFactory = new JiraChangesetPreProcessorFactory();
   }
 
@@ -102,11 +110,12 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
 
     if (repository != null)
     {
-      String url = repository.getProperty(JiraChangesetPreProcessorFactory.PROPERTY_JIRA_URL);
-      
+      String url = repository.getProperty(
+                       JiraChangesetPreProcessorFactory.PROPERTY_JIRA_URL);
       String autoCloseString = repository.getProperty(PROPERTY_AUTOCLOSE);
 
-      if (Util.isNotEmpty(url) && Util.isNotEmpty(autoCloseString) && Boolean.parseBoolean(autoCloseString))
+      if (Util.isNotEmpty(url) && Util.isNotEmpty(autoCloseString)
+          && Boolean.parseBoolean(autoCloseString))
       {
         handleAutoCloseEvent(event, repository, url);
       }
@@ -155,6 +164,7 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
    *
    * @param event
    * @param repository
+   * @param url
    */
   private void handleAutoCloseEvent(RepositoryHookEvent event,
                                     Repository repository, String url)
@@ -184,6 +194,7 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
    *
    * @param event
    * @param repository
+   * @param url
    * @param autoCloseWords
    */
   private void handleAutoCloseEvent(RepositoryHookEvent event,
@@ -197,8 +208,8 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
       JiraChangesetPreProcessor jcpp =
         changesetPreProcessorFactory.createPreProcessor(repository);
 
-      jcpp.setAutoCloseHandler(new JiraAutoCloseHandler(repository, url,
-              autoCloseWords));
+      jcpp.setAutoCloseHandler(new JiraAutoCloseHandler(requestProvider.get(),
+              repository, url, autoCloseWords));
 
       for (Changeset c : changesets)
       {
@@ -237,4 +248,7 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
 
   /** Field description */
   private JiraChangesetPreProcessorFactory changesetPreProcessorFactory;
+
+  /** Field description */
+  private Provider<HttpServletRequest> requestProvider;
 }
