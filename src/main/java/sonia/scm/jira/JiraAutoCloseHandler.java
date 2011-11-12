@@ -35,21 +35,11 @@ package sonia.scm.jira;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import java.net.URL;
-import java.rmi.RemoteException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.jira.soap.JiraSoapService;
-import sonia.scm.jira.soap.JiraSoapServiceServiceLocator;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.xml.rpc.ServiceException;
-import sonia.scm.jira.soap.RemoteFieldValue;
-import sonia.scm.jira.soap.RemoteNamedObject;
 
 /**
  *
@@ -114,10 +104,7 @@ public class JiraAutoCloseHandler
    * @param autoCloseWord
    */
   private void closeIssue(Repository repository, Changeset changeset,
-                          String issueId, String autoCloseWord)
-  {
-    
-  }
+                          String issueId, String autoCloseWord) {}
 
   /**
    * Method description
