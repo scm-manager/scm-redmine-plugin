@@ -39,6 +39,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.jira.soap.JiraSoapService;
+import sonia.scm.jira.soap.RemoteAuthenticationException;
+import sonia.scm.jira.soap.RemoteComment;
+import sonia.scm.jira.soap.RemotePermissionException;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.rmi.RemoteException;
+
+import java.util.GregorianCalendar;
+import java.util.logging.Level;
 
 /**
  *
@@ -59,11 +69,13 @@ public class SoapJiraHandler implements JiraHandler
    *
    * @param service
    * @param token
+   * @param username
    */
-  public SoapJiraHandler(JiraSoapService service, String token)
+  public SoapJiraHandler(JiraSoapService service, String token, String username)
   {
     this.service = service;
     this.token = token;
+    this.username = username;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -73,14 +85,27 @@ public class SoapJiraHandler implements JiraHandler
    *
    *
    * @param issueId
-   * @param commend
+   * @param comment
    *
    * @throws JiraException
    */
   @Override
-  public void addComment(String issueId, String commend) throws JiraException
+  public void addComment(String issueId, String comment) throws JiraException
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    RemoteComment remoteComment = new RemoteComment();
+
+    remoteComment.setAuthor(username);
+    remoteComment.setCreated(new GregorianCalendar());
+    remoteComment.setBody(comment);
+
+    try
+    {
+      service.addComment(token, issueId, remoteComment);
+    }
+    catch (Exception ex)
+    {
+      throw new JiraException("add comment failed", ex);
+    }
   }
 
   /**
@@ -119,4 +144,7 @@ public class SoapJiraHandler implements JiraHandler
 
   /** Field description */
   private String token;
+
+  /** Field description */
+  private String username;
 }

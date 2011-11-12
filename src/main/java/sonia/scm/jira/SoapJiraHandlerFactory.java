@@ -40,9 +40,11 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.jira.soap.JiraSoapService;
 import sonia.scm.jira.soap.JiraSoapServiceServiceLocator;
+import sonia.scm.util.HttpUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -51,6 +53,9 @@ import java.net.URL;
  */
 public class SoapJiraHandlerFactory implements JiraHandlerFactory
 {
+
+  /** Field description */
+  public static final String PATH_SOAPSERVICE = "/rpc/soap/jirasoapservice-v2";
 
   /** the logger for SoapJiraHandlerFactory */
   private static final Logger logger =
@@ -90,7 +95,7 @@ public class SoapJiraHandlerFactory implements JiraHandlerFactory
         new JiraSoapServiceServiceLocator().getJirasoapserviceV2(url);
       String token = service.login(username, password);
 
-      handler = new SoapJiraHandler(service, token);
+      handler = new SoapJiraHandler(service, token, username);
     }
     catch (Exception ex)
     {
@@ -108,9 +113,14 @@ public class SoapJiraHandlerFactory implements JiraHandlerFactory
    * @param url
    *
    * @return
+   *
+   * @throws MalformedURLException
    */
-  private URL createSoapUrl(String url)
+  private URL createSoapUrl(String url) throws MalformedURLException
   {
-    throw new UnsupportedOperationException("Not yet implemented");
+    url = HttpUtil.getUriWithoutEndSeperator(url);
+    url = url.concat(PATH_SOAPSERVICE);
+
+    return new URL(url);
   }
 }
