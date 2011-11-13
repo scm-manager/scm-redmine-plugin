@@ -65,6 +65,7 @@ Sonia.jira.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
         helpText: this.projectKeysHelpText
       },{
         name: 'jiraAutoClose',
+        xtype: 'checkbox',
         fieldLabel: this.autoCloseText,
         property: 'jira.auto-close',
         helpText: this.autoCloseHelpText
