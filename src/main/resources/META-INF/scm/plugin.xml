@@ -42,6 +42,7 @@
     <description>${project.description}</description>
     <author>Sebastian Sdorra</author>
     <url>${project.url}</url>
+    <category>Issue-Tracking</category>
     <wiki>https://bitbucket.org/sdorra/scm-manager/wiki/jira-plugin</wiki>
   </information>
 
