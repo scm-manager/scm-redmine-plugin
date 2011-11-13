@@ -79,7 +79,8 @@ Sonia.jira.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
         name: 'usernameTransformerText',
         fieldLabel: this.usernameTransformerText,
         property: 'jira.auto-close-username-transformer',
-        helpText: this.usernameTransformerHelpText
+        helpText: this.usernameTransformerHelpText,
+        value: '{0}'
       }]
     }
     

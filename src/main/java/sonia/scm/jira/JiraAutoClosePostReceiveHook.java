@@ -47,9 +47,14 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHook;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookType;
+import sonia.scm.user.User;
+import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.Util;
+import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.text.MessageFormat;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -71,6 +76,10 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
   public static final String PROPERTY_AUTOCLOSEWORDS = "jira.auto-close-words";
 
   /** Field description */
+  public static final String PROPERTY_USERNAMETRANSFORMER =
+    "jira.auto-close-username-transformer";
+
+  /** Field description */
   public static final String SEPARATOR = ",";
 
   /** Field description */
@@ -88,12 +97,15 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
    *
    *
    * @param requestProvider
+   * @param securityContextProvider
    */
   @Inject
   public JiraAutoClosePostReceiveHook(
-          Provider<HttpServletRequest> requestProvider)
+          Provider<HttpServletRequest> requestProvider,
+          Provider<WebSecurityContext> securityContextProvider)
   {
     this.requestProvider = requestProvider;
+    this.securityContextProvider = securityContextProvider;
     this.changesetPreProcessorFactory = new JiraChangesetPreProcessorFactory();
   }
 
@@ -215,9 +227,19 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
     {
       JiraChangesetPreProcessor jcpp =
         changesetPreProcessorFactory.createPreProcessor(repository);
+      String username = getUsername(repository);
 
-      jcpp.setAutoCloseHandler(new JiraAutoCloseHandler(requestProvider.get(),
-              repository, url, autoCloseWords));
+      if (Util.isNotEmpty(username))
+      {
+        jcpp.setAutoCloseHandler(
+            new JiraAutoCloseHandler(
+                requestProvider.get(), username, repository, url,
+                autoCloseWords));
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("current username is empty");
+      }
 
       for (Changeset c : changesets)
       {
@@ -252,6 +274,42 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
     return autoCloseWords.split(SEPARATOR);
   }
 
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param repository
+   * @return
+   */
+  private String getUsername(Repository repository)
+  {
+    String username = null;
+    User user = SecurityUtil.getCurrentUser(securityContextProvider);
+
+    if (user != null)
+    {
+      String transformPattern =
+        repository.getProperty(PROPERTY_USERNAMETRANSFORMER);
+
+      if (Util.isEmpty(transformPattern))
+      {
+        username = user.getName();
+      }
+      else
+      {
+        username = MessageFormat.format(transformPattern, user.getName(),
+                                        user.getMail(), user.getDisplayName());
+      }
+    }
+    else if (logger.isErrorEnabled())
+    {
+      logger.error("could not find current user");
+    }
+
+    return username;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -259,4 +317,7 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
 
   /** Field description */
   private Provider<HttpServletRequest> requestProvider;
+
+  /** Field description */
+  private Provider<WebSecurityContext> securityContextProvider;
 }
