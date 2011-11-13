@@ -113,10 +113,18 @@ public class JiraAutoCloseHandler
 
     if (autoCloseWord != null)
     {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("found auto close word {} for issue {}", autoCloseWord,
+                     issueId);
+      }
+
       closeIssue(repository, changeset, issueId, autoCloseWord);
     }
-
-    throw new UnsupportedOperationException("Not yet implemented");
+    else if (logger.isWarnEnabled())
+    {
+      logger.warn("found no auto close word");
+    }
   }
 
   /**
@@ -131,6 +139,12 @@ public class JiraAutoCloseHandler
   private void closeIssue(Repository repository, Changeset changeset,
                           String issueId, String autoCloseWord)
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("try to close issue {} because of changeset {}", issueId,
+                   changeset.getId());
+    }
+
     HttpSession session = request.getSession();
 
     AssertUtil.assertIsNotNull(session);

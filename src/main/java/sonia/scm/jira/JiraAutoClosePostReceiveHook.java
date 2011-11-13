@@ -155,7 +155,7 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
   @Override
   public boolean isAsync()
   {
-    return true;
+    return false;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -173,7 +173,7 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
   {
     if (logger.isDebugEnabled())
     {
-      logger.debug("chech repository {} commits for jira auto-close messages",
+      logger.debug("check repository {} commits for jira auto-close messages",
                    repository.getName());
     }
 
