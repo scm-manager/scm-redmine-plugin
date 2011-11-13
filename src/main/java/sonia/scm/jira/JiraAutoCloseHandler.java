@@ -52,7 +52,6 @@ import java.io.Reader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import sonia.scm.user.User;
 
 /**
  *
@@ -79,6 +78,7 @@ public class JiraAutoCloseHandler
    *
    *
    * @param request
+   * @param username
    * @param repository
    * @param url
    * @param autoCloseWords
@@ -88,13 +88,12 @@ public class JiraAutoCloseHandler
                               String[] autoCloseWords)
   {
     this.request = request;
+    this.username = username;
     this.repository = repository;
     this.url = url;
     this.autoCloseWords = autoCloseWords;
   }
-  
-  private String username;
-  
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -168,8 +167,8 @@ public class JiraAutoCloseHandler
 
     try
     {
-      JiraHandler handler = JiraUtil.createJiraHandler(url,
-                              username, credentialsArray[1]);
+      JiraHandler handler = JiraUtil.createJiraHandler(url, username,
+                              credentialsArray[1]);
 
       reader = createReader(TEMPLATE_EXTENDED);
 
@@ -260,4 +259,7 @@ public class JiraAutoCloseHandler
 
   /** Field description */
   private String url;
+
+  /** Field description */
+  private String username;
 }
