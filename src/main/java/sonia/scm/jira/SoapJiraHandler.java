@@ -40,8 +40,12 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.jira.soap.JiraSoapService;
 import sonia.scm.jira.soap.RemoteComment;
+import sonia.scm.jira.soap.RemoteFieldValue;
+import sonia.scm.jira.soap.RemoteNamedObject;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.rmi.RemoteException;
 
 import java.util.GregorianCalendar;
 
@@ -51,6 +55,9 @@ import java.util.GregorianCalendar;
  */
 public class SoapJiraHandler implements JiraHandler
 {
+
+  /** Field description */
+  public static final String ACTION_DEFAULT_CLOSE = "2";
 
   /** the logger for SoapJiraHandler */
   private static final Logger logger =
@@ -87,6 +94,11 @@ public class SoapJiraHandler implements JiraHandler
   @Override
   public void addComment(String issueId, String comment) throws JiraException
   {
+    if (logger.isInfoEnabled())
+    {
+      logger.info("add comment to issue {}", issueId);
+    }
+
     RemoteComment remoteComment = new RemoteComment();
 
     remoteComment.setAuthor(username);
@@ -108,28 +120,64 @@ public class SoapJiraHandler implements JiraHandler
    *
    *
    * @param issueId
+   * @param autoCloseWords
    *
    * @throws JiraException
    */
   @Override
-  public void closeIssue(String issueId) throws JiraException
+  public void close(String issueId, String autoCloseWords) throws JiraException
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    if (logger.isInfoEnabled())
+    {
+      logger.info("close issue {}", issueId);
+    }
+
+    try
+    {
+      RemoteNamedObject[] rnms = service.getAvailableActions(token, issueId);
+      String id = ACTION_DEFAULT_CLOSE;
+
+      for (RemoteNamedObject rnm : rnms)
+      {
+        if (rnm.getName().toLowerCase().contains(autoCloseWords.toLowerCase()))
+        {
+          id = rnm.getId();
+
+          break;
+        }
+      }
+
+      service.progressWorkflowAction(token, issueId, id,
+                                     new RemoteFieldValue[] {});
+    }
+    catch (Exception ex)
+    {
+      throw new JiraException("close issue failed", ex);
+    }
   }
 
   /**
    * Method description
    *
    *
-   * @param issueId
-   * @param comment
-   *
    * @throws JiraException
    */
   @Override
-  public void closeIssue(String issueId, String comment) throws JiraException
+  public void logout() throws JiraException
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    if (logger.isInfoEnabled())
+    {
+      logger.info("logout from jira");
+    }
+
+    try
+    {
+      service.logout(token);
+    }
+    catch (RemoteException ex)
+    {
+      throw new JiraException("logout failed", ex);
+    }
   }
 
   //~--- fields ---------------------------------------------------------------

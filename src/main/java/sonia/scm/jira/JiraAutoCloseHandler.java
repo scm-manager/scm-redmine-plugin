@@ -160,8 +160,9 @@ public class JiraAutoCloseHandler
       String comment = acth.render("extended", reader, repository, changeset,
                                    autoCloseWord);
 
-      // TODO add comment
-      handler.closeIssue(issueId, comment);
+      handler.close(issueId, autoCloseWord);
+      handler.addComment(issueId, comment);
+      handler.logout();
     }
     catch (AutoCloseTemplateException ex)
     {

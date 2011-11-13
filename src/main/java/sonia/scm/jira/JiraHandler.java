@@ -45,7 +45,7 @@ public interface JiraHandler
    *
    *
    * @param issueId
-   * @param commend
+   * @param comment
    *
    * @throws JiraException
    */
@@ -56,19 +56,17 @@ public interface JiraHandler
    *
    *
    * @param issueId
+   * @param autoCloseWord
    *
    * @throws JiraException
    */
-  public void closeIssue(String issueId) throws JiraException;
+  public void close(String issueId, String autoCloseWord) throws JiraException;
 
   /**
    * Method description
    *
    *
-   * @param issueId
-   * @param comment
-   *
    * @throws JiraException
    */
-  public void closeIssue(String issueId, String comment) throws JiraException;
+  public void logout() throws JiraException;
 }
