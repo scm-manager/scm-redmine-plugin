@@ -225,6 +225,8 @@ public class JiraAutoCloseHandler
     {
       for (String acw : autoCloseWords)
       {
+        acw = acw.trim();
+
         if (w.equalsIgnoreCase(acw))
         {
           autoCloseWord = w;
