@@ -68,7 +68,7 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
   public static final String PROPERTY_AUTOCLOSE = "jira.auto-close";
 
   /** Field description */
-  public static final String PROPERTY_AUTOCLOSEWORDS = "";
+  public static final String PROPERTY_AUTOCLOSEWORDS = "jira.auto-close-words";
 
   /** Field description */
   public static final String SEPARATOR = ",";
