@@ -181,6 +181,12 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
 
     if (Util.isNotEmpty(autoCloseWords))
     {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("found auto close words for repository {}: {}",
+                     repository.getName(), Arrays.toString(autoCloseWords));
+      }
+
       handleAutoCloseEvent(event, repository, url, autoCloseWords);
     }
     else if (logger.isWarnEnabled())
