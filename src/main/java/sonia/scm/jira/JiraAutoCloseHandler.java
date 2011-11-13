@@ -67,6 +67,16 @@ public class JiraAutoCloseHandler
   public static final String TEMPLATE_EXTENDED =
     "/sonia/scm/jira/autoclose/extended.ftl";
 
+  /** Field description */
+  public static final String TEMPLATE_EXTENDED_NAME = "extended";
+
+  /** Field description */
+  public static final String TEMPLATE_SIMPLE =
+    "/sonia/scm/jira/autoclose/simple.ftl";
+
+  /** Field description */
+  public static final String TEMPLATE_SIMPLE_NAME = "simple";
+
   /** the logger for JiraAutoCloseHandler */
   private static final Logger logger =
     LoggerFactory.getLogger(JiraAutoCloseHandler.class);
@@ -170,11 +180,11 @@ public class JiraAutoCloseHandler
       JiraHandler handler = JiraUtil.createJiraHandler(url, username,
                               credentialsArray[1]);
 
-      reader = createReader(TEMPLATE_EXTENDED);
+      reader = createReader(TEMPLATE_SIMPLE);
 
       AutoCloseTemplateHandler acth = JiraUtil.createAutoCloseTemplateHandler();
-      String comment = acth.render("extended", reader, repository, changeset,
-                                   autoCloseWord);
+      String comment = acth.render(TEMPLATE_SIMPLE_NAME, reader, repository,
+                                   changeset, autoCloseWord);
 
       handler.close(issueId, autoCloseWord);
       handler.addComment(issueId, comment);
