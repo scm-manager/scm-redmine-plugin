@@ -35,6 +35,7 @@ package sonia.scm.jira;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import org.slf4j.Logger;
@@ -88,6 +89,7 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
    *
    * @param requestProvider
    */
+  @Inject
   public JiraAutoClosePostReceiveHook(
           Provider<HttpServletRequest> requestProvider)
   {
