@@ -80,7 +80,7 @@ Sonia.jira.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
         property: 'jira.auto-close-username-transformer',
         helpText: this.usernameTransformerHelpText
       }]
-    };
+    }
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.jira.ConfigPanel.superclass.initComponent.apply(this, arguments);

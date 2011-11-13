@@ -35,42 +35,52 @@ package sonia.scm.jira;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
-import sonia.scm.jira.soap.JiraSoapService;
-import sonia.scm.jira.soap.RemoteComment;
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.Repository;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.GregorianCalendar;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringWriter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class SoapJiraHandler implements JiraHandler
+public class FreemarkerAutoCloseTemplateHandler
+        implements AutoCloseTemplateHandler
 {
 
-  /** the logger for SoapJiraHandler */
-  private static final Logger logger =
-    LoggerFactory.getLogger(SoapJiraHandler.class);
+  /** Field description */
+  public static final String ENV_AUTOCLOSEWORD = "autoCloseWord";
+
+  /** Field description */
+  public static final String ENV_CHANGESET = "changeset";
+
+  /** Field description */
+  public static final String ENV_DIFFURL = "diffUrl";
+
+  /** Field description */
+  public static final String ENV_REPOSITORY = "repository";
 
   //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
-   *
-   * @param service
-   * @param token
-   * @param username
    */
-  public SoapJiraHandler(JiraSoapService service, String token, String username)
+  public FreemarkerAutoCloseTemplateHandler()
   {
-    this.service = service;
-    this.token = token;
-    this.username = username;
+    configuration = new Configuration();
   }
 
   //~--- methods --------------------------------------------------------------
@@ -79,67 +89,50 @@ public class SoapJiraHandler implements JiraHandler
    * Method description
    *
    *
-   * @param issueId
-   * @param comment
+   * @param name
+   * @param reader
+   * @param repository
+   * @param changeset
+   * @param autoCloseWord
    *
-   * @throws JiraException
+   * @return
+   *
+   *
+   * @throws AutoCloseTemplateException
    */
   @Override
-  public void addComment(String issueId, String comment) throws JiraException
+  public String render(String name, Reader reader, Repository repository,
+                       Changeset changeset, String autoCloseWord)
+          throws AutoCloseTemplateException
   {
-    RemoteComment remoteComment = new RemoteComment();
-
-    remoteComment.setAuthor(username);
-    remoteComment.setCreated(new GregorianCalendar());
-    remoteComment.setBody(comment);
+    StringWriter writer = null;
 
     try
     {
-      service.addComment(token, issueId, remoteComment);
+      Template template = new Template(name, reader, configuration);
+
+      writer = new StringWriter();
+
+      Map<String, Object> env = new HashMap<String, Object>();
+
+      env.put(ENV_REPOSITORY, repository);
+      env.put(ENV_CHANGESET, changeset);
+      env.put(ENV_AUTOCLOSEWORD, autoCloseWord);
+
+      // todo create diff url
+      env.put(ENV_DIFFURL, Util.EMPTY_STRING);
+      template.process(env, writer);
     }
     catch (Exception ex)
     {
-      throw new JiraException("add comment failed", ex);
+      throw new AutoCloseTemplateException("could not render template", ex);
     }
-  }
 
-  /**
-   * Method description
-   *
-   *
-   * @param issueId
-   *
-   * @throws JiraException
-   */
-  @Override
-  public void closeIssue(String issueId) throws JiraException
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param issueId
-   * @param comment
-   *
-   * @throws JiraException
-   */
-  @Override
-  public void closeIssue(String issueId, String comment) throws JiraException
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
+    return writer.toString();
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private JiraSoapService service;
-
-  /** Field description */
-  private String token;
-
-  /** Field description */
-  private String username;
+  private Configuration configuration;
 }

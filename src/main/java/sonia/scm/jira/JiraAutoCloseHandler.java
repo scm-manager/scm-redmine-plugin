@@ -42,8 +42,13 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -57,6 +62,10 @@ public class JiraAutoCloseHandler
 
   /** Field description */
   public static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
+
+  /** Field description */
+  public static final String TEMPLATE_EXTENDED =
+    "/sonia/scm/jira/autoclose/extended.ftl";
 
   /** the logger for JiraAutoCloseHandler */
   private static final Logger logger =
@@ -138,18 +147,49 @@ public class JiraAutoCloseHandler
       throw new RuntimeException("credentials empty");
     }
 
+    Reader reader = null;
+
     try
     {
       JiraHandler handler = JiraUtil.createJiraHandler(url,
                               credentialsArray[0], credentialsArray[1]);
 
+      reader = createReader(TEMPLATE_EXTENDED);
+
+      AutoCloseTemplateHandler acth = JiraUtil.createAutoCloseTemplateHandler();
+      String comment = acth.render("extended", reader, repository, changeset,
+                                   autoCloseWord);
+
       // TODO add comment
-      handler.close(issueId);
+      handler.closeIssue(issueId, comment);
+    }
+    catch (AutoCloseTemplateException ex)
+    {
+      logger.error("could render template", ex);
     }
     catch (JiraException ex)
     {
       logger.error("could not close jira issue", ex);
     }
+    finally
+    {
+      IOUtil.close(reader);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param path
+   *
+   * @return
+   */
+  private Reader createReader(String path)
+  {
+    InputStream input = JiraAutoCloseHandler.class.getResourceAsStream(path);
+
+    return new InputStreamReader(input);
   }
 
   /**

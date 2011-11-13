@@ -35,56 +35,34 @@ package sonia.scm.jira;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.util.ServiceUtil;
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.Repository;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+import java.io.Reader;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class JiraUtil
+public interface AutoCloseTemplateHandler
 {
 
   /**
    * Method description
    *
    *
-   * @return
-   */
-  public static AutoCloseTemplateHandler createAutoCloseTemplateHandler()
-  {
-    return ServiceUtil.getService(AutoCloseTemplateHandler.class,
-                                  new FreemarkerAutoCloseTemplateHandler());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param url
-   * @param username
-   * @param password
+   * @param reader
+   * @param repository
+   * @param changeset
    *
    * @return
    *
-   * @throws JiraConnectException
+   * @throws IOException
    */
-  public static JiraHandler createJiraHandler(String url, String username,
-          String password)
-          throws JiraConnectException
-  {
-    return createJiraHandlerFactory().createJiraHandler(url, username,
-            password);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public static JiraHandlerFactory createJiraHandlerFactory()
-  {
-    return ServiceUtil.getService(JiraHandlerFactory.class,
-                                  new SoapJiraHandlerFactory());
-  }
+  public String render(String name, Reader reader, Repository repository,
+                       Changeset changeset, String autoCloseWord)
+          throws AutoCloseTemplateException;
 }

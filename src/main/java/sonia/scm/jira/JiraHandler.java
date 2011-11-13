@@ -59,7 +59,7 @@ public interface JiraHandler
    *
    * @throws JiraException
    */
-  public void close(String issueId) throws JiraException;
+  public void closeIssue(String issueId) throws JiraException;
 
   /**
    * Method description

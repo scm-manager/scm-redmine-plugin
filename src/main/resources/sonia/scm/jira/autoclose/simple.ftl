@@ -1,0 +1,1 @@
+Issue closed by ${changeset.id} of repository ${repository.name}.
