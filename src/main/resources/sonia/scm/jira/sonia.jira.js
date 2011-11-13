@@ -41,12 +41,21 @@ Sonia.jira.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
   projectKeysHelpText: 'Comma separated project keys e.g.: SCM, JENKINS.',
   
   autoCloseText: 'Enable Auto-Close',
-  autoCloseHelpText: '',
+  autoCloseHelpText: 'Enables the auto close function. SCM-Manager searches for \n\
+                      issue keys and auto close words in commit messages. If \n\
+                      both found in a message SCM-Manager closes the issue in \n\
+                      the jira server. It is necessary that users have the same \n\
+                      password in SCM-Manager and Jira.',
+  
   autoCloseWordsText: 'Auto-Close Words',
-  autoCloseWordsHelpText: '',
+  autoCloseWordsHelpText: 'Comma separated list of words to enable the auto close function. \n\
+                           Each commit message of a changeset is being searched for these words.',
   
   usernameTransformerText: 'Transform Username',
-  usernameTransformerHelpText: '',
+  usernameTransformerHelpText: 'Pattern to create a username for the jira server.</br>\n\
+                                {0} - name of the current user</br>\n\
+                                {1} - mail address of the current user</br>\n\
+                                {2} - display name of the current user',
   
   initComponent: function(){
     
