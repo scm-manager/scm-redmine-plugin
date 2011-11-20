@@ -35,17 +35,20 @@ package sonia.scm.jira;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.name.Named;
+
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
 
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
-import sonia.scm.util.Util;
+import sonia.scm.url.UrlProvider;
+import sonia.scm.url.UrlProviderFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
 
@@ -67,19 +70,36 @@ public class FreemarkerAutoCloseTemplateHandler
   public static final String ENV_CHANGESET = "changeset";
 
   /** Field description */
+  public static final String ENV_DIFFRESTURL = "diffRestUrl";
+
+  /** Field description */
   public static final String ENV_DIFFURL = "diffUrl";
 
   /** Field description */
   public static final String ENV_REPOSITORY = "repository";
+
+  /** Field description */
+  public static final String ENV_REPOSITORYURL = "repositoryUrl";
 
   //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
+   *
+   * @param wuiUrlProvider
+   * @param restUrlProvider
    */
-  public FreemarkerAutoCloseTemplateHandler()
+  @Inject
+  public FreemarkerAutoCloseTemplateHandler(
+          @Named(
+            UrlProviderFactory
+              .TYPE_WUI) Provider<UrlProvider> wuiUrlProvider, @Named(
+                UrlProviderFactory
+                  .TYPE_RESTAPI_XML) Provider<UrlProvider> restUrlProvider)
   {
+    this.wuiUrlProvider = wuiUrlProvider;
+    this.restUrlProvider = restUrlProvider;
     configuration = new Configuration();
   }
 
@@ -91,7 +111,7 @@ public class FreemarkerAutoCloseTemplateHandler
    *
    * @param name
    * @param reader
-   * @param repository
+   * @param request
    * @param changeset
    * @param autoCloseWord
    *
@@ -101,8 +121,9 @@ public class FreemarkerAutoCloseTemplateHandler
    * @throws AutoCloseTemplateException
    */
   @Override
-  public String render(String name, Reader reader, Repository repository,
-                       Changeset changeset, String autoCloseWord)
+  public String render(String name, Reader reader,
+                       JiraAutoCloseRequest request, Changeset changeset,
+                       String autoCloseWord)
           throws AutoCloseTemplateException
   {
     StringWriter writer = null;
@@ -113,14 +134,23 @@ public class FreemarkerAutoCloseTemplateHandler
 
       writer = new StringWriter();
 
+      Repository repository = request.getRepository();
       Map<String, Object> env = new HashMap<String, Object>();
+      UrlProvider wuiUrl = wuiUrlProvider.get();
+      UrlProvider restUrl = restUrlProvider.get();
 
       env.put(ENV_REPOSITORY, repository);
       env.put(ENV_CHANGESET, changeset);
       env.put(ENV_AUTOCLOSEWORD, autoCloseWord);
-
-      // todo create diff url
-      env.put(ENV_DIFFURL, Util.EMPTY_STRING);
+      env.put(ENV_DIFFURL,
+              wuiUrl.getRepositoryUrlProvider().getDiffUrl(repository.getId(),
+                changeset.getId()));
+      env.put(ENV_DIFFRESTURL,
+              restUrl.getRepositoryUrlProvider().getDiffUrl(repository.getId(),
+                changeset.getId()));
+      env.put(
+          ENV_REPOSITORYURL,
+          wuiUrl.getRepositoryUrlProvider().getDetailUrl(repository.getId()));
       template.process(env, writer);
     }
     catch (Exception ex)
@@ -135,4 +165,10 @@ public class FreemarkerAutoCloseTemplateHandler
 
   /** Field description */
   private Configuration configuration;
+
+  /** Field description */
+  private Provider<UrlProvider> restUrlProvider;
+
+  /** Field description */
+  private Provider<UrlProvider> wuiUrlProvider;
 }

@@ -39,9 +39,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.Changeset;
-import sonia.scm.repository.Repository;
-import sonia.scm.security.CipherUtil;
-import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -50,18 +47,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 /**
  *
  * @author Sebastian Sdorra
  */
 public class JiraAutoCloseHandler
 {
-
-  /** Field description */
-  public static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
 
   /** Field description */
   public static final String TEMPLATE_EXTENDED =
@@ -87,21 +78,14 @@ public class JiraAutoCloseHandler
    * Constructs ...
    *
    *
+   * @param templateHandler
    * @param request
-   * @param username
-   * @param repository
-   * @param url
-   * @param autoCloseWords
    */
-  public JiraAutoCloseHandler(HttpServletRequest request, String username,
-                              Repository repository, String url,
-                              String[] autoCloseWords)
+  public JiraAutoCloseHandler(AutoCloseTemplateHandler templateHandler,
+                              JiraAutoCloseRequest request)
   {
+    this.templateHandler = templateHandler;
     this.request = request;
-    this.username = username;
-    this.repository = repository;
-    this.url = url;
-    this.autoCloseWords = autoCloseWords;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -131,11 +115,11 @@ public class JiraAutoCloseHandler
                      issueId);
       }
 
-      closeIssue(repository, changeset, issueId, autoCloseWord);
+      closeIssue(changeset, issueId, autoCloseWord);
     }
-    else if (logger.isWarnEnabled())
+    else if (logger.isDebugEnabled())
     {
-      logger.warn("found no auto close word");
+      logger.debug("found no auto close word");
     }
   }
 
@@ -143,13 +127,12 @@ public class JiraAutoCloseHandler
    * Method description
    *
    *
-   * @param repository
    * @param changeset
    * @param issueId
    * @param autoCloseWord
    */
-  private void closeIssue(Repository repository, Changeset changeset,
-                          String issueId, String autoCloseWord)
+  private void closeIssue(Changeset changeset, String issueId,
+                          String autoCloseWord)
   {
     if (logger.isDebugEnabled())
     {
@@ -157,38 +140,19 @@ public class JiraAutoCloseHandler
                    changeset.getId());
     }
 
-    HttpSession session = request.getSession();
-
-    AssertUtil.assertIsNotNull(session);
-
-    String credentialsString = (String) session.getAttribute(SCM_CREDENTIALS);
-
-    AssertUtil.assertIsNotEmpty(credentialsString);
-    credentialsString = CipherUtil.getInstance().decode(credentialsString);
-
-    String[] credentialsArray = credentialsString.split(":");
-
-    if (credentialsArray.length < 2)
-    {
-      throw new RuntimeException("credentials empty");
-    }
-
     Reader reader = null;
 
     try
     {
-      JiraHandler handler = JiraUtil.createJiraHandler(url, username,
-                              credentialsArray[1]);
+      JiraHandler handler = request.createJiraHandler();
 
       reader = createReader(TEMPLATE_SIMPLE);
 
-      AutoCloseTemplateHandler acth = JiraUtil.createAutoCloseTemplateHandler();
-      String comment = acth.render(TEMPLATE_SIMPLE_NAME, reader, repository,
-                                   changeset, autoCloseWord);
+      String comment = templateHandler.render(TEMPLATE_SIMPLE_NAME, reader,
+                         request, changeset, autoCloseWord);
 
       handler.close(issueId, autoCloseWord);
       handler.addComment(issueId, comment);
-      handler.logout();
     }
     catch (AutoCloseTemplateException ex)
     {
@@ -235,7 +199,7 @@ public class JiraAutoCloseHandler
 
     for (String w : words)
     {
-      for (String acw : autoCloseWords)
+      for (String acw : request.getConfiguration().getAutoCloseWords())
       {
         acw = acw.trim();
 
@@ -259,17 +223,8 @@ public class JiraAutoCloseHandler
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String[] autoCloseWords;
+  private JiraAutoCloseRequest request;
 
   /** Field description */
-  private Repository repository;
-
-  /** Field description */
-  private HttpServletRequest request;
-
-  /** Field description */
-  private String url;
-
-  /** Field description */
-  private String username;
+  private AutoCloseTemplateHandler templateHandler;
 }

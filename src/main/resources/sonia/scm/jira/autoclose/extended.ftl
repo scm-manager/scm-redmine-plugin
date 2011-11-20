@@ -1,7 +1,10 @@
 Issue closed by ${changeset.id} of repository ${repository.name}.
 
 <#if diffUrl??>
-Patch: ${diffUrl}
+Changes: ${diffUrl}
+</#if>
+<#if diffRestUrl??>
+Patch: ${diffRestUrl}
 </#if>
 Changeset:
 <#if changeset.description??>

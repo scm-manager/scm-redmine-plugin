@@ -36,7 +36,6 @@ package sonia.scm.jira;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,19 +46,13 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHook;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookType;
-import sonia.scm.user.User;
-import sonia.scm.util.SecurityUtil;
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.text.MessageFormat;
-
 import java.util.Arrays;
 import java.util.Collection;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -68,19 +61,6 @@ import javax.servlet.http.HttpServletRequest;
 @Extension
 public class JiraAutoClosePostReceiveHook implements RepositoryHook
 {
-
-  /** Field description */
-  public static final String PROPERTY_AUTOCLOSE = "jira.auto-close";
-
-  /** Field description */
-  public static final String PROPERTY_AUTOCLOSEWORDS = "jira.auto-close-words";
-
-  /** Field description */
-  public static final String PROPERTY_USERNAMETRANSFORMER =
-    "jira.auto-close-username-transformer";
-
-  /** Field description */
-  public static final String SEPARATOR = ",";
 
   /** Field description */
   public static final Collection<RepositoryHookType> TYPES =
@@ -96,16 +76,17 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
    * Constructs ...
    *
    *
-   * @param requestProvider
-   * @param securityContextProvider
+   *
+   * @param requestFactory
+   * @param templateHandler
    */
   @Inject
   public JiraAutoClosePostReceiveHook(
-          Provider<HttpServletRequest> requestProvider,
-          Provider<WebSecurityContext> securityContextProvider)
+          JiraAutoCloseRequestFactory requestFactory,
+          AutoCloseTemplateHandler templateHandler)
   {
-    this.requestProvider = requestProvider;
-    this.securityContextProvider = securityContextProvider;
+    this.requestFactory = requestFactory;
+    this.templateHandler = templateHandler;
     this.changesetPreProcessorFactory = new JiraChangesetPreProcessorFactory();
   }
 
@@ -124,14 +105,11 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
 
     if (repository != null)
     {
-      String url = repository.getProperty(
-                       JiraChangesetPreProcessorFactory.PROPERTY_JIRA_URL);
-      String autoCloseString = repository.getProperty(PROPERTY_AUTOCLOSE);
+      JiraConfiguration configuraiton = new JiraConfiguration(repository);
 
-      if (Util.isNotEmpty(url) && Util.isNotEmpty(autoCloseString)
-          && Boolean.parseBoolean(autoCloseString))
+      if (configuraiton.isAutoCloseEnabled())
       {
-        handleAutoCloseEvent(event, repository, url);
+        handleAutoCloseEvent(event, repository, configuraiton);
       }
       else if (logger.isTraceEnabled())
       {
@@ -178,48 +156,11 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
    *
    * @param event
    * @param repository
-   * @param url
+   * @param configuration
    */
   private void handleAutoCloseEvent(RepositoryHookEvent event,
-                                    Repository repository, String url)
-  {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("check repository {} commits for jira auto-close messages",
-                   repository.getName());
-    }
-
-    String[] autoCloseWords = getAutoCloseWords(repository);
-
-    if (Util.isNotEmpty(autoCloseWords))
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("found auto close words for repository {}: {}",
-                     repository.getName(), Arrays.toString(autoCloseWords));
-      }
-
-      handleAutoCloseEvent(event, repository, url, autoCloseWords);
-    }
-    else if (logger.isWarnEnabled())
-    {
-      logger.warn("no auto-close words defined for repository {}",
-                  repository.getName());
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param event
-   * @param repository
-   * @param url
-   * @param autoCloseWords
-   */
-  private void handleAutoCloseEvent(RepositoryHookEvent event,
-                                    Repository repository, String url,
-                                    String[] autoCloseWords)
+                                    Repository repository,
+                                    JiraConfiguration configuration)
   {
     Collection<Changeset> changesets = event.getChangesets();
 
@@ -227,23 +168,22 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
     {
       JiraChangesetPreProcessor jcpp =
         changesetPreProcessorFactory.createPreProcessor(repository);
-      String username = getUsername(repository);
+      JiraAutoCloseRequest request = null;
 
-      if (Util.isNotEmpty(username))
+      try
       {
-        jcpp.setAutoCloseHandler(
-            new JiraAutoCloseHandler(
-                requestProvider.get(), username, repository, url,
-                autoCloseWords));
-      }
-      else if (logger.isWarnEnabled())
-      {
-        logger.warn("current username is empty");
-      }
+        request = requestFactory.createRequest(configuration, repository);
+        jcpp.setAutoCloseHandler(new JiraAutoCloseHandler(templateHandler,
+                request));
 
-      for (Changeset c : changesets)
+        for (Changeset c : changesets)
+        {
+          jcpp.process(c);
+        }
+      }
+      finally
       {
-        jcpp.process(c);
+        IOUtil.close(request);
       }
     }
     else if (logger.isWarnEnabled())
@@ -252,72 +192,14 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  private String[] getAutoCloseWords(Repository repository)
-  {
-    String autoCloseWords = repository.getProperty(PROPERTY_AUTOCLOSEWORDS);
-
-    if (autoCloseWords == null)
-    {
-      autoCloseWords = Util.EMPTY_STRING;
-    }
-
-    return autoCloseWords.split(SEPARATOR);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param repository
-   * @return
-   */
-  private String getUsername(Repository repository)
-  {
-    String username = null;
-    User user = SecurityUtil.getCurrentUser(securityContextProvider);
-
-    if (user != null)
-    {
-      String transformPattern =
-        repository.getProperty(PROPERTY_USERNAMETRANSFORMER);
-
-      if (Util.isEmpty(transformPattern))
-      {
-        username = user.getName();
-      }
-      else
-      {
-        username = MessageFormat.format(transformPattern, user.getName(),
-                                        user.getMail(), user.getDisplayName());
-      }
-    }
-    else if (logger.isErrorEnabled())
-    {
-      logger.error("could not find current user");
-    }
-
-    return username;
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private JiraChangesetPreProcessorFactory changesetPreProcessorFactory;
 
   /** Field description */
-  private Provider<HttpServletRequest> requestProvider;
+  private JiraAutoCloseRequestFactory requestFactory;
 
   /** Field description */
-  private Provider<WebSecurityContext> securityContextProvider;
+  private AutoCloseTemplateHandler templateHandler;
 }
