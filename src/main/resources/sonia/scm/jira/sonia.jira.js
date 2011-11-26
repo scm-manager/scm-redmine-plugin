@@ -130,7 +130,7 @@ Sonia.jira.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
     ];
     
     Ext.each(cmps, function(cmp){
-      cmp.setEditable(!this.checked);
+      cmp.setReadOnly(!this.checked);
       if ( ! this.checked ){
         cmp.addClass('x-item-disabled');
       } else {
