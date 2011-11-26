@@ -93,7 +93,7 @@ public class JiraChangesetPreProcessor implements ChangesetPreProcessor
 
           if (autoCloseHandler != null)
           {
-            autoCloseHandler.handleAutoClose(m.group(), changeset);
+            autoCloseHandler.handleIssue(m.group(), changeset);
           }
         }
 
@@ -113,7 +113,7 @@ public class JiraChangesetPreProcessor implements ChangesetPreProcessor
    *
    * @param autoCloseHandler
    */
-  public void setAutoCloseHandler(JiraAutoCloseHandler autoCloseHandler)
+  public void setJiraIssueHandler(JiraIssueHandler autoCloseHandler)
   {
     this.autoCloseHandler = autoCloseHandler;
   }
@@ -121,7 +121,7 @@ public class JiraChangesetPreProcessor implements ChangesetPreProcessor
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private JiraAutoCloseHandler autoCloseHandler;
+  private JiraIssueHandler autoCloseHandler;
 
   /** Field description */
   private String keyReplacementPattern;

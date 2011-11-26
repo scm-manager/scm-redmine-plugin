@@ -62,15 +62,15 @@ import javax.servlet.http.HttpSession;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class JiraAutoCloseRequestFactory
+public class JiraIssueRequestFactory
 {
 
   /** Field description */
   public static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
 
-  /** the logger for JiraAutoCloseRequestFactory */
+  /** the logger for JiraIssueRequestFactory */
   private static final Logger logger =
-    LoggerFactory.getLogger(JiraAutoCloseRequestFactory.class);
+    LoggerFactory.getLogger(JiraIssueRequestFactory.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -84,7 +84,7 @@ public class JiraAutoCloseRequestFactory
    * @param securityContextProvider
    */
   @Inject
-  public JiraAutoCloseRequestFactory(
+  public JiraIssueRequestFactory(
           JiraHandlerFactory handlerFactory,
           Provider<HttpServletRequest> requestProvider,
           Provider<WebSecurityContext> securityContextProvider)
@@ -106,13 +106,13 @@ public class JiraAutoCloseRequestFactory
    *
    * @return
    */
-  public JiraAutoCloseRequest createRequest(JiraConfiguration configuration,
+  public JiraIssueRequest createRequest(JiraConfiguration configuration,
           Repository repository)
   {
     String username = getUsername(configuration);
     String password = getPassword();
 
-    return new JiraAutoCloseRequest(handlerFactory, username, password,
+    return new JiraIssueRequest(handlerFactory, username, password,
                                     configuration, repository);
   }
 

@@ -46,7 +46,7 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  */
-public class JiraAutoCloseRequest implements Closeable
+public class JiraIssueRequest implements Closeable
 {
 
   /**
@@ -60,7 +60,7 @@ public class JiraAutoCloseRequest implements Closeable
    * @param configuration
    * @param repository
    */
-  public JiraAutoCloseRequest(JiraHandlerFactory handlerFactory,
+  public JiraIssueRequest(JiraHandlerFactory handlerFactory,
                               String username, String password,
                               JiraConfiguration configuration,
                               Repository repository)

@@ -33,39 +33,50 @@
 
 package sonia.scm.jira;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.repository.Changeset;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Reader;
-
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface AutoCloseTemplateHandler
+public class TemplateException extends Exception
 {
 
   /**
-   * Method description
+   * Constructs ...
    *
-   *
-   *
-   * @param name
-   * @param reader
-   * @param request
-   * @param changeset
-   * @param autoCloseWord
-   *
-   * @return
-   *
-   *
-   * @throws AutoCloseTemplateException
    */
-  public String render(String name, Reader reader,
-                       JiraAutoCloseRequest request, Changeset changeset,
-                       String autoCloseWord)
-          throws AutoCloseTemplateException;
+  public TemplateException() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param message
+   */
+  public TemplateException(String message)
+  {
+    super(message);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param cause
+   */
+  public TemplateException(Throwable cause)
+  {
+    super(cause);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param message
+   * @param cause
+   */
+  public TemplateException(String message, Throwable cause)
+  {
+    super(message, cause);
+  }
 }

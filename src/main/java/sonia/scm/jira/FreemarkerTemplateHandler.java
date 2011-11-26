@@ -59,8 +59,8 @@ import java.util.Map;
  *
  * @author Sebastian Sdorra
  */
-public class FreemarkerAutoCloseTemplateHandler
-        implements AutoCloseTemplateHandler
+public class FreemarkerTemplateHandler
+        implements TemplateHandler
 {
 
   /** Field description */
@@ -91,7 +91,7 @@ public class FreemarkerAutoCloseTemplateHandler
    * @param restUrlProvider
    */
   @Inject
-  public FreemarkerAutoCloseTemplateHandler(
+  public FreemarkerTemplateHandler(
           @Named(
             UrlProviderFactory
               .TYPE_WUI) Provider<UrlProvider> wuiUrlProvider, @Named(
@@ -118,13 +118,13 @@ public class FreemarkerAutoCloseTemplateHandler
    * @return
    *
    *
-   * @throws AutoCloseTemplateException
+   * @throws TemplateException
    */
   @Override
   public String render(String name, Reader reader,
-                       JiraAutoCloseRequest request, Changeset changeset,
+                       JiraIssueRequest request, Changeset changeset,
                        String autoCloseWord)
-          throws AutoCloseTemplateException
+          throws TemplateException
   {
     StringWriter writer = null;
 
@@ -155,7 +155,7 @@ public class FreemarkerAutoCloseTemplateHandler
     }
     catch (Exception ex)
     {
-      throw new AutoCloseTemplateException("could not render template", ex);
+      throw new TemplateException("could not render template", ex);
     }
 
     return writer.toString();

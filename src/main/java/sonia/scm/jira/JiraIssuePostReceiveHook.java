@@ -59,16 +59,16 @@ import java.util.Collection;
  * @author Sebastian Sdorra
  */
 @Extension
-public class JiraAutoClosePostReceiveHook implements RepositoryHook
+public class JiraIssuePostReceiveHook implements RepositoryHook
 {
 
   /** Field description */
   public static final Collection<RepositoryHookType> TYPES =
     Arrays.asList(RepositoryHookType.POST_RECEIVE);
 
-  /** the logger for JiraAutoClosePostReceiveHook */
+  /** the logger for JiraIssuePostReceiveHook */
   private static final Logger logger =
-    LoggerFactory.getLogger(JiraAutoClosePostReceiveHook.class);
+    LoggerFactory.getLogger(JiraIssuePostReceiveHook.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -81,9 +81,8 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
    * @param templateHandler
    */
   @Inject
-  public JiraAutoClosePostReceiveHook(
-          JiraAutoCloseRequestFactory requestFactory,
-          AutoCloseTemplateHandler templateHandler)
+  public JiraIssuePostReceiveHook(JiraIssueRequestFactory requestFactory,
+                                  TemplateHandler templateHandler)
   {
     this.requestFactory = requestFactory;
     this.templateHandler = templateHandler;
@@ -168,12 +167,12 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
     {
       JiraChangesetPreProcessor jcpp =
         changesetPreProcessorFactory.createPreProcessor(repository);
-      JiraAutoCloseRequest request = null;
+      JiraIssueRequest request = null;
 
       try
       {
         request = requestFactory.createRequest(configuration, repository);
-        jcpp.setAutoCloseHandler(new JiraAutoCloseHandler(templateHandler,
+        jcpp.setJiraIssueHandler(new JiraIssueHandler(templateHandler,
                 request));
 
         for (Changeset c : changesets)
@@ -198,8 +197,8 @@ public class JiraAutoClosePostReceiveHook implements RepositoryHook
   private JiraChangesetPreProcessorFactory changesetPreProcessorFactory;
 
   /** Field description */
-  private JiraAutoCloseRequestFactory requestFactory;
+  private JiraIssueRequestFactory requestFactory;
 
   /** Field description */
-  private AutoCloseTemplateHandler templateHandler;
+  private TemplateHandler templateHandler;
 }

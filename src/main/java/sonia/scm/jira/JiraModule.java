@@ -54,9 +54,9 @@ public class JiraModule extends AbstractModule
   @Override
   protected void configure()
   {
-    bind(JiraAutoCloseRequestFactory.class);
+    bind(JiraIssueRequestFactory.class);
     bind(JiraHandlerFactory.class).to(SoapJiraHandlerFactory.class);
-    bind(AutoCloseTemplateHandler.class).to(
-        FreemarkerAutoCloseTemplateHandler.class);
+    bind(TemplateHandler.class).to(
+        FreemarkerTemplateHandler.class);
   }
 }

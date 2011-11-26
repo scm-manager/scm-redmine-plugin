@@ -51,7 +51,7 @@ import java.io.Reader;
  *
  * @author Sebastian Sdorra
  */
-public class JiraAutoCloseHandler
+public class JiraIssueHandler
 {
 
   /** Field description */
@@ -68,9 +68,9 @@ public class JiraAutoCloseHandler
   /** Field description */
   public static final String TEMPLATE_SIMPLE_NAME = "simple";
 
-  /** the logger for JiraAutoCloseHandler */
+  /** the logger for JiraIssueHandler */
   private static final Logger logger =
-    LoggerFactory.getLogger(JiraAutoCloseHandler.class);
+    LoggerFactory.getLogger(JiraIssueHandler.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -81,8 +81,8 @@ public class JiraAutoCloseHandler
    * @param templateHandler
    * @param request
    */
-  public JiraAutoCloseHandler(AutoCloseTemplateHandler templateHandler,
-                              JiraAutoCloseRequest request)
+  public JiraIssueHandler(TemplateHandler templateHandler,
+                              JiraIssueRequest request)
   {
     this.templateHandler = templateHandler;
     this.request = request;
@@ -97,7 +97,7 @@ public class JiraAutoCloseHandler
    * @param issueId
    * @param changeset
    */
-  public void handleAutoClose(String issueId, Changeset changeset)
+  public void handleIssue(String issueId, Changeset changeset)
   {
     if (logger.isTraceEnabled())
     {
@@ -154,7 +154,7 @@ public class JiraAutoCloseHandler
       handler.close(issueId, autoCloseWord);
       handler.addComment(issueId, comment);
     }
-    catch (AutoCloseTemplateException ex)
+    catch (TemplateException ex)
     {
       logger.error("could render template", ex);
     }
@@ -178,7 +178,7 @@ public class JiraAutoCloseHandler
    */
   private Reader createReader(String path)
   {
-    InputStream input = JiraAutoCloseHandler.class.getResourceAsStream(path);
+    InputStream input = JiraIssueHandler.class.getResourceAsStream(path);
 
     return new InputStreamReader(input);
   }
@@ -223,8 +223,8 @@ public class JiraAutoCloseHandler
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private JiraAutoCloseRequest request;
+  private JiraIssueRequest request;
 
   /** Field description */
-  private AutoCloseTemplateHandler templateHandler;
+  private TemplateHandler templateHandler;
 }

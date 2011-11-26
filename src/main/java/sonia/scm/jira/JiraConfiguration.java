@@ -68,6 +68,9 @@ public class JiraConfiguration implements Validateable
   public static final String PROPERTY_JIRA_URL = "jira.url";
 
   /** Field description */
+  public static final String PROPERTY_UPDATEISSUES = "jira.update-issues";
+
+  /** Field description */
   public static final String PROPERTY_USERNAMETRANSFORMER =
     "jira.auto-close-username-transformer";
 
@@ -90,8 +93,8 @@ public class JiraConfiguration implements Validateable
   {
     url = repository.getProperty(PROPERTY_JIRA_URL);
     projectsKeys = getListProperty(repository, PROPERTY_JIRA_PROJECTKEYS);
-    autoClose =
-      Boolean.parseBoolean(repository.getProperty(PROPERTY_AUTOCLOSE));
+    updateIssues = getBooleanProperty(repository, PROPERTY_UPDATEISSUES);
+    autoClose = getBooleanProperty(repository, PROPERTY_AUTOCLOSE);
     autoCloseWords = getListProperty(repository, PROPERTY_AUTOCLOSEWORDS);
     usernameTransformPattern =
       repository.getProperty(PROPERTY_USERNAMETRANSFORMER);
@@ -151,7 +154,19 @@ public class JiraConfiguration implements Validateable
    */
   public boolean isAutoCloseEnabled()
   {
-    return isValid() && autoClose && Util.isNotEmpty(autoCloseWords);
+    return isUpdateIssuesEnabled() && autoClose
+           && Util.isNotEmpty(autoCloseWords);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isUpdateIssuesEnabled()
+  {
+    return isValid() && updateIssues;
   }
 
   /**
@@ -164,6 +179,28 @@ public class JiraConfiguration implements Validateable
   public boolean isValid()
   {
     return Util.isNotEmpty(url) && Util.isNotEmpty(projectsKeys);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param key
+   *
+   * @return
+   */
+  private boolean getBooleanProperty(Repository repository, String key)
+  {
+    boolean result = false;
+    String value = repository.getProperty(key);
+
+    if (Util.isNotEmpty(value))
+    {
+      result = Boolean.parseBoolean(value);
+    }
+
+    return result;
   }
 
   /**
@@ -202,6 +239,9 @@ public class JiraConfiguration implements Validateable
 
   /** Field description */
   private List<String> projectsKeys;
+
+  /** Field description */
+  private boolean updateIssues;
 
   /** Field description */
   private String url;
