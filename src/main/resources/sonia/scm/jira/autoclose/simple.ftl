@@ -1,4 +1,4 @@
-Issue closed by ${changeset.id} of repository ${repository.name}.
+Issue closed by changeset ${changeset.id} of repository ${repository.name}.
 
 <#if diffUrl??>
 Changes: ${diffUrl}
