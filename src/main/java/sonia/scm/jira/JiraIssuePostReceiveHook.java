@@ -106,9 +106,9 @@ public class JiraIssuePostReceiveHook implements RepositoryHook
     {
       JiraConfiguration configuraiton = new JiraConfiguration(repository);
 
-      if (configuraiton.isAutoCloseEnabled())
+      if (configuraiton.isUpdateIssuesEnabled())
       {
-        handleAutoCloseEvent(event, repository, configuraiton);
+        handleIssueEvent(event, repository, configuraiton);
       }
       else if (logger.isTraceEnabled())
       {
@@ -157,7 +157,7 @@ public class JiraIssuePostReceiveHook implements RepositoryHook
    * @param repository
    * @param configuration
    */
-  private void handleAutoCloseEvent(RepositoryHookEvent event,
+  private void handleIssueEvent(RepositoryHookEvent event,
                                     Repository repository,
                                     JiraConfiguration configuration)
   {

@@ -39,13 +39,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.Changeset;
-import sonia.scm.util.IOUtil;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 
 /**
  *
@@ -53,20 +46,6 @@ import java.io.Reader;
  */
 public class JiraIssueHandler
 {
-
-  /** Field description */
-  public static final String TEMPLATE_EXTENDED =
-    "/sonia/scm/jira/autoclose/extended.ftl";
-
-  /** Field description */
-  public static final String TEMPLATE_EXTENDED_NAME = "extended";
-
-  /** Field description */
-  public static final String TEMPLATE_SIMPLE =
-    "/sonia/scm/jira/autoclose/simple.ftl";
-
-  /** Field description */
-  public static final String TEMPLATE_SIMPLE_NAME = "simple";
 
   /** the logger for JiraIssueHandler */
   private static final Logger logger =
@@ -82,7 +61,7 @@ public class JiraIssueHandler
    * @param request
    */
   public JiraIssueHandler(TemplateHandler templateHandler,
-                              JiraIssueRequest request)
+                          JiraIssueRequest request)
   {
     this.templateHandler = templateHandler;
     this.request = request;
@@ -99,27 +78,39 @@ public class JiraIssueHandler
    */
   public void handleIssue(String issueId, Changeset changeset)
   {
-    if (logger.isTraceEnabled())
+    if (request.getConfiguration().isAutoCloseEnabled())
     {
-      logger.trace("check changeset {} for auto-close of issue",
-                   changeset.getId(), issueId);
-    }
-
-    String autoCloseWord = searchAutoCloseWord(changeset);
-
-    if (autoCloseWord != null)
-    {
-      if (logger.isDebugEnabled())
+      if (logger.isTraceEnabled())
       {
-        logger.debug("found auto close word {} for issue {}", autoCloseWord,
-                     issueId);
+        logger.trace("check changeset {} for auto-close of issue",
+                     changeset.getId(), issueId);
       }
 
-      closeIssue(changeset, issueId, autoCloseWord);
+      String autoCloseWord = searchAutoCloseWord(changeset);
+
+      if (autoCloseWord != null)
+      {
+        if (logger.isDebugEnabled())
+        {
+          logger.debug("found auto close word {} for issue {}", autoCloseWord,
+                       issueId);
+        }
+
+        closeIssue(changeset, issueId, autoCloseWord);
+      }
+      else
+      {
+        if (logger.isDebugEnabled())
+        {
+          logger.debug("found no auto close word");
+        }
+
+        updateIssue(changeset, issueId);
+      }
     }
-    else if (logger.isDebugEnabled())
+    else
     {
-      logger.debug("found no auto close word");
+      updateIssue(changeset, issueId);
     }
   }
 
@@ -140,16 +131,11 @@ public class JiraIssueHandler
                    changeset.getId());
     }
 
-    Reader reader = null;
-
     try
     {
       JiraHandler handler = request.createJiraHandler();
-
-      reader = createReader(TEMPLATE_SIMPLE);
-
-      String comment = templateHandler.render(TEMPLATE_SIMPLE_NAME, reader,
-                         request, changeset, autoCloseWord);
+      String comment = templateHandler.render(Template.CLOSE_SIMPLE, request,
+                         changeset, autoCloseWord);
 
       handler.close(issueId, autoCloseWord);
       handler.addComment(issueId, comment);
@@ -162,25 +148,6 @@ public class JiraIssueHandler
     {
       logger.error("could not close jira issue", ex);
     }
-    finally
-    {
-      IOUtil.close(reader);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @return
-   */
-  private Reader createReader(String path)
-  {
-    InputStream input = JiraIssueHandler.class.getResourceAsStream(path);
-
-    return new InputStreamReader(input);
   }
 
   /**
@@ -218,6 +185,39 @@ public class JiraIssueHandler
     }
 
     return autoCloseWord;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param changeset
+   * @param issueId
+   */
+  private void updateIssue(Changeset changeset, String issueId)
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("try to update issue {} because of changeset {}", issueId,
+                   changeset.getId());
+    }
+
+    try
+    {
+      JiraHandler handler = request.createJiraHandler();
+      String comment = templateHandler.render(Template.UPDATE_SIMPLE, request,
+                         changeset);
+
+      handler.addComment(issueId, comment);
+    }
+    catch (TemplateException ex)
+    {
+      logger.error("could render template", ex);
+    }
+    catch (JiraException ex)
+    {
+      logger.error("could not close jira issue", ex);
+    }
   }
 
   //~--- fields ---------------------------------------------------------------

@@ -46,9 +46,13 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 import sonia.scm.url.UrlProvider;
 import sonia.scm.url.UrlProviderFactory;
+import sonia.scm.util.IOUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 
@@ -59,8 +63,7 @@ import java.util.Map;
  *
  * @author Sebastian Sdorra
  */
-public class FreemarkerTemplateHandler
-        implements TemplateHandler
+public class FreemarkerTemplateHandler implements TemplateHandler
 {
 
   /** Field description */
@@ -90,18 +93,19 @@ public class FreemarkerTemplateHandler
    * @param wuiUrlProvider
    * @param restUrlProvider
    */
+  //J-
   @Inject
   public FreemarkerTemplateHandler(
-          @Named(
-            UrlProviderFactory
-              .TYPE_WUI) Provider<UrlProvider> wuiUrlProvider, @Named(
-                UrlProviderFactory
-                  .TYPE_RESTAPI_XML) Provider<UrlProvider> restUrlProvider)
+          @Named(UrlProviderFactory.TYPE_WUI) 
+            Provider<UrlProvider> wuiUrlProvider, 
+          @Named(UrlProviderFactory.TYPE_RESTAPI_XML) 
+            Provider<UrlProvider> restUrlProvider)
   {
     this.wuiUrlProvider = wuiUrlProvider;
     this.restUrlProvider = restUrlProvider;
-    configuration = new Configuration();
+    this.configuration = new Configuration();
   }
+  //J+
 
   //~--- methods --------------------------------------------------------------
 
@@ -109,8 +113,8 @@ public class FreemarkerTemplateHandler
    * Method description
    *
    *
-   * @param name
-   * @param reader
+   *
+   * @param template
    * @param request
    * @param changeset
    * @param autoCloseWord
@@ -121,16 +125,19 @@ public class FreemarkerTemplateHandler
    * @throws TemplateException
    */
   @Override
-  public String render(String name, Reader reader,
+  public String render(sonia.scm.jira.Template template,
                        JiraIssueRequest request, Changeset changeset,
                        String autoCloseWord)
           throws TemplateException
   {
+    Reader reader = null;
     StringWriter writer = null;
 
     try
     {
-      Template template = new Template(name, reader, configuration);
+      reader = createReader(template);
+
+      Template tpl = new Template(template.getName(), reader, configuration);
 
       writer = new StringWriter();
 
@@ -141,7 +148,7 @@ public class FreemarkerTemplateHandler
 
       env.put(ENV_REPOSITORY, repository);
       env.put(ENV_CHANGESET, changeset);
-      env.put(ENV_AUTOCLOSEWORD, autoCloseWord);
+      env.put(ENV_AUTOCLOSEWORD, Util.nonNull(autoCloseWord));
       env.put(ENV_DIFFURL,
               wuiUrl.getRepositoryUrlProvider().getDiffUrl(repository.getId(),
                 changeset.getId()));
@@ -151,14 +158,56 @@ public class FreemarkerTemplateHandler
       env.put(
           ENV_REPOSITORYURL,
           wuiUrl.getRepositoryUrlProvider().getDetailUrl(repository.getId()));
-      template.process(env, writer);
+      tpl.process(env, writer);
     }
     catch (Exception ex)
     {
       throw new TemplateException("could not render template", ex);
     }
+    finally
+    {
+      IOUtil.close(reader);
+    }
 
     return writer.toString();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param template
+   * @param request
+   * @param changeset
+   *
+   * @return
+   *
+   * @throws TemplateException
+   */
+  @Override
+  public String render(sonia.scm.jira.Template template,
+                       JiraIssueRequest request, Changeset changeset)
+          throws TemplateException
+  {
+    return render(template, request, changeset, null);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param template
+   *
+   * @return
+   */
+  private Reader createReader(sonia.scm.jira.Template template)
+  {
+    InputStream input = FreemarkerTemplateHandler.class.getResourceAsStream(
+                            template.getResource());
+
+    return new InputStreamReader(input);
   }
 
   //~--- fields ---------------------------------------------------------------

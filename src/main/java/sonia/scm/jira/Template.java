@@ -33,50 +33,73 @@
 
 package sonia.scm.jira;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.repository.Changeset;
-
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface TemplateHandler
+public class Template
 {
-  
-  
+
+  /** Field description */
+  public static final Template UPDATE_SIMPLE =
+    new Template("update-simple", "/sonia/scm/jira/update/simple.ftl");
+
+  /** Field description */
+  public static final Template UPDATE_EXTENDED =
+    new Template("update-extended", "/sonia/scm/jira/update/extended.ftl");
+
+  /** Field description */
+  public static final Template CLOSE_SIMPLE =
+    new Template("close-simple", "/sonia/scm/jira/autoclose/simple.ftl");
+
+  /** Field description */
+  public static final Template CLOSE_EXTENDED =
+    new Template("close-extended", "/sonia/scm/jira/autoclose/extended.ftl");
+
+  //~--- constructors ---------------------------------------------------------
+
   /**
-   * Method description
+   * Constructs ...
    *
    *
    * @param name
-   * @param request
-   * @param changeset
-   *
-   * @return
-   *
-   * @throws TemplateException
+   * @param resource
    */
-  public String render(Template template, JiraIssueRequest request,
-                       Changeset changeset)
-          throws TemplateException;
+  public Template(String name, String resource)
+  {
+    this.name = name;
+    this.resource = resource;
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
+   * @return
+   */
+  public String getName()
+  {
+    return name;
+  }
+
+  /**
+   * Method description
    *
-   * @param name
-   * @param request
-   * @param changeset
-   * @param autoCloseWord
    *
    * @return
-   *
-   *
-   * @throws TemplateException
    */
-  public String render(Template template, JiraIssueRequest request,
-                       Changeset changeset, String autoCloseWord)
-          throws TemplateException;
+  public String getResource()
+  {
+    return resource;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String name;
+
+  /** Field description */
+  private String resource;
 }
