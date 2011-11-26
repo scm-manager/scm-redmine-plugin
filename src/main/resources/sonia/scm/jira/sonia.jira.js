@@ -80,25 +80,32 @@ Sonia.jira.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
         property: 'jira.project-keys',
         helpText: this.projectKeysHelpText
       },{
+        id: 'jiraUpdateIssues',
         name: 'jiraUpdateIssues',
         xtype: 'checkbox',
         fieldLabel: this.updateIssuesText,
         property: 'jira.update-issues',
-        helpText: this.updateIssuesHelpText
+        helpText: this.updateIssuesHelpText,
+        listeners: {
+          check: this.toggleUpdateIssues
+        }
       },{
+        id: 'jiraAutoClose',
         name: 'jiraAutoClose',
         xtype: 'checkbox',
         fieldLabel: this.autoCloseText,
         property: 'jira.auto-close',
         helpText: this.autoCloseHelpText
       },{
+        id: 'jiraAutoCloseWords',
         name: 'jiraAutoCloseWords',
         fieldLabel: this.autoCloseWordsText,
         property: 'jira.auto-close-words',
         helpText: this.autoCloseWordsHelpText,
         value: 'fixed, fix, closed, close, resolved, resolve'
       },{
-        name: 'usernameTransformerText',
+        id: 'jiraUsernameTransformer',
+        name: 'jiraUsernameTransformer',
         fieldLabel: this.usernameTransformerText,
         property: 'jira.auto-close-username-transformer',
         helpText: this.usernameTransformerHelpText,
@@ -108,7 +115,30 @@ Sonia.jira.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.jira.ConfigPanel.superclass.initComponent.apply(this, arguments);
+  },
+  
+  loadExtraProperties: function(item){
+    var cmp = Ext.getCmp('jiraUpdateIssues');
+    this.toggleUpdateIssues.call(cmp);
+  },
+  
+  toggleUpdateIssues: function(){
+    var cmps = [
+      Ext.getCmp( 'jiraAutoClose' ),
+      Ext.getCmp( 'jiraAutoCloseWords' ),
+      Ext.getCmp( 'jiraUsernameTransformer' )
+    ];
+    
+    Ext.each(cmps, function(cmp){
+      cmp.setEditable(!this.checked);
+      if ( ! this.checked ){
+        cmp.addClass('x-item-disabled');
+      } else {
+        cmp.removeClass('x-item-disabled');
+      }
+    }, this);
   }
+  
   
 });
 
