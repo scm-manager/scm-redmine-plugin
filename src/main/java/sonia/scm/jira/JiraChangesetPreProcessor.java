@@ -87,7 +87,7 @@ public class JiraChangesetPreProcessor implements ChangesetPreProcessor
         StringBuffer sb = new StringBuffer();
         Matcher m = p.matcher(description);
 
-        if (m.find())
+        while (m.find())
         {
           m.appendReplacement(sb, keyReplacementPattern);
 
