@@ -113,7 +113,7 @@ public class RedmineChangesetPreProcessor implements ChangesetPreProcessor
    *
    * @param issueHandler
    */
-  public void setJiraIssueHandler(RemineIssueHandler issueHandler)
+  public void setJiraIssueHandler(RedmineIssueHandler issueHandler)
   {
     this.issueHandler = issueHandler;
   }
@@ -121,7 +121,7 @@ public class RedmineChangesetPreProcessor implements ChangesetPreProcessor
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private RemineIssueHandler issueHandler;
+  private RedmineIssueHandler issueHandler;
 
   /** Field description */
   private String keyReplacementPattern;

@@ -62,7 +62,7 @@ import javax.servlet.http.HttpSession;
  * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
 @Singleton
-public class RemineIssueRequestFactory
+public class RedmineIssueRequestFactory
 {
 
   /** Field description */
@@ -70,7 +70,7 @@ public class RemineIssueRequestFactory
 
   /** the logger for JiraIssueRequestFactory */
   private static final Logger logger =
-    LoggerFactory.getLogger(RemineIssueRequestFactory.class);
+    LoggerFactory.getLogger(RedmineIssueRequestFactory.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -84,8 +84,8 @@ public class RemineIssueRequestFactory
    * @param securityContextProvider
    */
   @Inject
-  public RemineIssueRequestFactory(
-          RemineHandlerFactory handlerFactory,
+  public RedmineIssueRequestFactory(
+          RedmineHandlerFactory handlerFactory,
           Provider<HttpServletRequest> requestProvider,
           Provider<WebSecurityContext> securityContextProvider)
   {
@@ -106,13 +106,13 @@ public class RemineIssueRequestFactory
    *
    * @return
    */
-  public RemineIssueRequest createRequest(RemineConfiguration configuration,
+  public RedmineIssueRequest createRequest(RedmineConfiguration configuration,
           Repository repository)
   {
     String username = getUsername(configuration);
     String password = getPassword();
 
-    return new RemineIssueRequest(handlerFactory, username, password,
+    return new RedmineIssueRequest(handlerFactory, username, password,
                                     configuration, repository);
   }
 
@@ -154,7 +154,7 @@ public class RemineIssueRequestFactory
    * @param configuration
    * @return
    */
-  private String getUsername(RemineConfiguration configuration)
+  private String getUsername(RedmineConfiguration configuration)
   {
     String username = null;
     User user = SecurityUtil.getCurrentUser(securityContextProvider);
@@ -184,7 +184,7 @@ public class RemineIssueRequestFactory
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private RemineHandlerFactory handlerFactory;
+  private RedmineHandlerFactory handlerFactory;
 
   /** Field description */
   private Provider<HttpServletRequest> requestProvider;

@@ -59,7 +59,7 @@ import java.util.Collection;
  * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
 @Extension
-public class RemineIssuePostReceiveHook implements RepositoryHook
+public class RedmineIssuePostReceiveHook implements RepositoryHook
 {
 
   /** Field description */
@@ -68,7 +68,7 @@ public class RemineIssuePostReceiveHook implements RepositoryHook
 
   /** the logger for JiraIssuePostReceiveHook */
   private static final Logger logger =
-    LoggerFactory.getLogger(RemineIssuePostReceiveHook.class);
+    LoggerFactory.getLogger(RedmineIssuePostReceiveHook.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -81,7 +81,7 @@ public class RemineIssuePostReceiveHook implements RepositoryHook
    * @param templateHandler
    */
   @Inject
-  public RemineIssuePostReceiveHook(RemineIssueRequestFactory requestFactory,
+  public RedmineIssuePostReceiveHook(RedmineIssueRequestFactory requestFactory,
                                   TemplateHandler templateHandler)
   {
     this.requestFactory = requestFactory;
@@ -104,7 +104,7 @@ public class RemineIssuePostReceiveHook implements RepositoryHook
 
     if (repository != null)
     {
-      RemineConfiguration configuraiton = new RemineConfiguration(repository);
+      RedmineConfiguration configuraiton = new RedmineConfiguration(repository);
 
       if (configuraiton.isUpdateIssuesEnabled())
       {
@@ -159,7 +159,7 @@ public class RemineIssuePostReceiveHook implements RepositoryHook
    */
   private void handleIssueEvent(RepositoryHookEvent event,
                                     Repository repository,
-                                    RemineConfiguration configuration)
+                                    RedmineConfiguration configuration)
   {
     Collection<Changeset> changesets = event.getChangesets();
 
@@ -167,12 +167,12 @@ public class RemineIssuePostReceiveHook implements RepositoryHook
     {
       RedmineChangesetPreProcessor jcpp =
         changesetPreProcessorFactory.createPreProcessor(repository);
-      RemineIssueRequest request = null;
+      RedmineIssueRequest request = null;
 
       try
       {
         request = requestFactory.createRequest(configuration, repository);
-        jcpp.setJiraIssueHandler(new RemineIssueHandler(templateHandler,
+        jcpp.setJiraIssueHandler(new RedmineIssueHandler(templateHandler,
                 request));
 
         for (Changeset c : changesets)
@@ -197,7 +197,7 @@ public class RemineIssuePostReceiveHook implements RepositoryHook
   private RedmineChangesetPreProcessorFactory changesetPreProcessorFactory;
 
   /** Field description */
-  private RemineIssueRequestFactory requestFactory;
+  private RedmineIssueRequestFactory requestFactory;
 
   /** Field description */
   private TemplateHandler templateHandler;

@@ -52,7 +52,7 @@ import java.util.List;
  *
  * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
-public class RemineConfiguration implements Validateable
+public class RedmineConfiguration implements Validateable
 {
 
   /** Field description */
@@ -79,7 +79,7 @@ public class RemineConfiguration implements Validateable
 
   /** the logger for JiraConfiguration */
   private static final Logger logger =
-    LoggerFactory.getLogger(RemineConfiguration.class);
+    LoggerFactory.getLogger(RedmineConfiguration.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -89,7 +89,7 @@ public class RemineConfiguration implements Validateable
    *
    * @param repository
    */
-  public RemineConfiguration(Repository repository)
+  public RedmineConfiguration(Repository repository)
   {
     url = repository.getProperty(PROPERTY_JIRA_URL);
     projectsKeys = getListProperty(repository, PROPERTY_JIRA_PROJECTKEYS);

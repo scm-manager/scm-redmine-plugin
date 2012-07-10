@@ -33,30 +33,29 @@
 
 package sonia.scm.redmine;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.AbstractModule;
-
-import sonia.scm.plugin.ext.Extension;
+import com.taskadapter.redmineapi.RedmineException;
 
 /**
  *
  * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
-@Extension
-public class RemineModule extends AbstractModule
+public interface RedmineHandlerFactory
 {
 
   /**
    * Method description
    *
+   *
+   * @param url
+   * @param username
+   * @param password
+   *
+   * @return
+   *
+   * @throws RemineConnectException
+ * @throws RemineException 
    */
-  @Override
-  protected void configure()
-  {
-    bind(RemineIssueRequestFactory.class);
-    bind(RemineHandlerFactory.class).to(SoapJiraHandlerFactory.class);
-    bind(TemplateHandler.class).to(
-        FreemarkerTemplateHandler.class);
-  }
+  public RedmineHandler createJiraHandler(String url, String username,
+          String password)
+          throws RedmineException;
 }

@@ -33,50 +33,30 @@
 
 package sonia.scm.redmine;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.inject.AbstractModule;
+
+import sonia.scm.plugin.ext.Extension;
+
 /**
  *
  * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
-public class RemineException extends Exception
+@Extension
+public class RedmineModule extends AbstractModule
 {
 
   /**
-   * Constructs ...
+   * Method description
    *
    */
-  public RemineException() {}
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   */
-  public RemineException(String message)
+  @Override
+  protected void configure()
   {
-    super(message);
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param cause
-   */
-  public RemineException(Throwable cause)
-  {
-    super(cause);
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   * @param cause
-   */
-  public RemineException(String message, Throwable cause)
-  {
-    super(message, cause);
+    bind(RedmineIssueRequestFactory.class);
+    bind(RedmineHandlerFactory.class).to(RestRedmineHandlerFactory.class);
+    bind(TemplateHandler.class).to(
+        FreemarkerTemplateHandler.class);
   }
 }

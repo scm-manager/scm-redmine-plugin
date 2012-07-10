@@ -37,7 +37,7 @@ package sonia.scm.redmine;
  *
  * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
-public interface RemineHandler
+public interface RedmineHandler
 {
 
   /**

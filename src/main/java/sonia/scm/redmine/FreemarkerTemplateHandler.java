@@ -126,7 +126,7 @@ public class FreemarkerTemplateHandler implements TemplateHandler
    */
   @Override
   public String render(sonia.scm.redmine.Template template,
-                       RemineIssueRequest request, Changeset changeset,
+                       RedmineIssueRequest request, Changeset changeset,
                        String autoCloseWord)
           throws TemplateException
   {
@@ -187,7 +187,7 @@ public class FreemarkerTemplateHandler implements TemplateHandler
    */
   @Override
   public String render(sonia.scm.redmine.Template template,
-                       RemineIssueRequest request, Changeset changeset)
+                       RedmineIssueRequest request, Changeset changeset)
           throws TemplateException
   {
     return render(template, request, changeset, null);

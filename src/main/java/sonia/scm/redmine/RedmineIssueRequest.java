@@ -46,7 +46,7 @@ import java.io.IOException;
  *
  * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
-public class RemineIssueRequest implements Closeable
+public class RedmineIssueRequest implements Closeable
 {
 
   /**
@@ -60,9 +60,9 @@ public class RemineIssueRequest implements Closeable
    * @param configuration
    * @param repository
    */
-  public RemineIssueRequest(RemineHandlerFactory handlerFactory,
+  public RedmineIssueRequest(RedmineHandlerFactory handlerFactory,
                               String username, String password,
-                              RemineConfiguration configuration,
+                              RedmineConfiguration configuration,
                               Repository repository)
   {
     this.handlerFactory = handlerFactory;
@@ -104,7 +104,7 @@ public class RemineIssueRequest implements Closeable
    *
    * @throws RemineConnectException
    */
-  public RemineHandler createJiraHandler() throws RemineConnectException
+  public RedmineHandler createJiraHandler() throws RemineConnectException
   {
     if (handler == null)
     {
@@ -123,7 +123,7 @@ public class RemineIssueRequest implements Closeable
    *
    * @return
    */
-  public RemineConfiguration getConfiguration()
+  public RedmineConfiguration getConfiguration()
   {
     return configuration;
   }
@@ -164,13 +164,13 @@ public class RemineIssueRequest implements Closeable
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private RemineConfiguration configuration;
+  private RedmineConfiguration configuration;
 
   /** Field description */
-  private RemineHandler handler;
+  private RedmineHandler handler;
 
   /** Field description */
-  private RemineHandlerFactory handlerFactory;
+  private RedmineHandlerFactory handlerFactory;
 
   /** Field description */
   private String password;

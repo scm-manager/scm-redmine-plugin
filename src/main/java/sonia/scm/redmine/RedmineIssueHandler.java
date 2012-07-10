@@ -44,12 +44,12 @@ import sonia.scm.repository.Changeset;
  *
  * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
-public class RemineIssueHandler
+public class RedmineIssueHandler
 {
 
   /** the logger for JiraIssueHandler */
   private static final Logger logger =
-    LoggerFactory.getLogger(RemineIssueHandler.class);
+    LoggerFactory.getLogger(RedmineIssueHandler.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -60,8 +60,8 @@ public class RemineIssueHandler
    * @param templateHandler
    * @param request
    */
-  public RemineIssueHandler(TemplateHandler templateHandler,
-                          RemineIssueRequest request)
+  public RedmineIssueHandler(TemplateHandler templateHandler,
+                          RedmineIssueRequest request)
   {
     this.templateHandler = templateHandler;
     this.request = request;
@@ -133,7 +133,7 @@ public class RemineIssueHandler
 
     try
     {
-      RemineHandler handler = request.createJiraHandler();
+      RedmineHandler handler = request.createJiraHandler();
       String comment = templateHandler.render(Template.CLOSE_SIMPLE, request,
                          changeset, autoCloseWord);
 
@@ -204,7 +204,7 @@ public class RemineIssueHandler
 
     try
     {
-      RemineHandler handler = request.createJiraHandler();
+      RedmineHandler handler = request.createJiraHandler();
       String comment = templateHandler.render(Template.UPDATE_SIMPLE, request,
                          changeset);
 
@@ -223,7 +223,7 @@ public class RemineIssueHandler
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private RemineIssueRequest request;
+  private RedmineIssueRequest request;
 
   /** Field description */
   private TemplateHandler templateHandler;

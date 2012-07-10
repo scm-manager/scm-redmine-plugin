@@ -57,7 +57,7 @@ public interface TemplateHandler
    *
    * @throws TemplateException
    */
-  public String render(Template template, RemineIssueRequest request,
+  public String render(Template template, RedmineIssueRequest request,
                        Changeset changeset)
           throws TemplateException;
 
@@ -76,7 +76,7 @@ public interface TemplateHandler
    *
    * @throws TemplateException
    */
-  public String render(Template template, RemineIssueRequest request,
+  public String render(Template template, RedmineIssueRequest request,
                        Changeset changeset, String autoCloseWord)
           throws TemplateException;
 }
