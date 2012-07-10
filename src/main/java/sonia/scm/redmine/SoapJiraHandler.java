@@ -31,17 +31,17 @@
 
 
 
-package sonia.scm.jira;
+package sonia.scm.redmine;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.jira.soap.JiraSoapService;
-import sonia.scm.jira.soap.RemoteComment;
-import sonia.scm.jira.soap.RemoteFieldValue;
-import sonia.scm.jira.soap.RemoteNamedObject;
+import sonia.scm.redmine.soap.JiraSoapService;
+import sonia.scm.redmine.soap.RemoteComment;
+import sonia.scm.redmine.soap.RemoteFieldValue;
+import sonia.scm.redmine.soap.RemoteNamedObject;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -53,7 +53,7 @@ import java.util.GregorianCalendar;
  *
  * @author Sebastian Sdorra
  */
-public class SoapJiraHandler implements JiraHandler
+public class SoapJiraHandler implements RemineHandler
 {
 
   /** Field description */
@@ -89,10 +89,10 @@ public class SoapJiraHandler implements JiraHandler
    * @param issueId
    * @param comment
    *
-   * @throws JiraException
+   * @throws RemineException
    */
   @Override
-  public void addComment(String issueId, String comment) throws JiraException
+  public void addComment(String issueId, String comment) throws RemineException
   {
     if (logger.isInfoEnabled())
     {
@@ -111,7 +111,7 @@ public class SoapJiraHandler implements JiraHandler
     }
     catch (Exception ex)
     {
-      throw new JiraException("add comment failed", ex);
+      throw new RemineException("add comment failed", ex);
     }
   }
 
@@ -122,10 +122,10 @@ public class SoapJiraHandler implements JiraHandler
    * @param issueId
    * @param autoCloseWords
    *
-   * @throws JiraException
+   * @throws RemineException
    */
   @Override
-  public void close(String issueId, String autoCloseWords) throws JiraException
+  public void close(String issueId, String autoCloseWords) throws RemineException
   {
     if (logger.isInfoEnabled())
     {
@@ -152,7 +152,7 @@ public class SoapJiraHandler implements JiraHandler
     }
     catch (Exception ex)
     {
-      throw new JiraException("close issue failed", ex);
+      throw new RemineException("close issue failed", ex);
     }
   }
 
@@ -160,10 +160,10 @@ public class SoapJiraHandler implements JiraHandler
    * Method description
    *
    *
-   * @throws JiraException
+   * @throws RemineException
    */
   @Override
-  public void logout() throws JiraException
+  public void logout() throws RemineException
   {
     if (logger.isInfoEnabled())
     {
@@ -176,7 +176,7 @@ public class SoapJiraHandler implements JiraHandler
     }
     catch (RemoteException ex)
     {
-      throw new JiraException("logout failed", ex);
+      throw new RemineException("logout failed", ex);
     }
   }
 

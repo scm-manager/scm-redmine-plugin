@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.jira;
+package sonia.scm.redmine;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
  *
  * @author Sebastian Sdorra
  */
-public class JiraChangesetPreProcessor implements ChangesetPreProcessor
+public class RedmineChangesetPreProcessor implements ChangesetPreProcessor
 {
 
   /**
@@ -60,7 +60,7 @@ public class JiraChangesetPreProcessor implements ChangesetPreProcessor
    * @param keyReplacementPattern
    * @param projectKeys
    */
-  public JiraChangesetPreProcessor(String keyReplacementPattern,
+  public RedmineChangesetPreProcessor(String keyReplacementPattern,
                                    Collection<Pattern> projectKeys)
   {
     this.keyReplacementPattern = keyReplacementPattern;
@@ -113,7 +113,7 @@ public class JiraChangesetPreProcessor implements ChangesetPreProcessor
    *
    * @param issueHandler
    */
-  public void setJiraIssueHandler(JiraIssueHandler issueHandler)
+  public void setJiraIssueHandler(RemineIssueHandler issueHandler)
   {
     this.issueHandler = issueHandler;
   }
@@ -121,7 +121,7 @@ public class JiraChangesetPreProcessor implements ChangesetPreProcessor
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private JiraIssueHandler issueHandler;
+  private RemineIssueHandler issueHandler;
 
   /** Field description */
   private String keyReplacementPattern;

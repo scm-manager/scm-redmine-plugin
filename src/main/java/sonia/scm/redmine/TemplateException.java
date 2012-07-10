@@ -31,20 +31,20 @@
 
 
 
-package sonia.scm.jira;
+package sonia.scm.redmine;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class JiraConnectException extends JiraException
+public class TemplateException extends Exception
 {
 
   /**
    * Constructs ...
    *
    */
-  public JiraConnectException() {}
+  public TemplateException() {}
 
   /**
    * Constructs ...
@@ -52,7 +52,7 @@ public class JiraConnectException extends JiraException
    *
    * @param message
    */
-  public JiraConnectException(String message)
+  public TemplateException(String message)
   {
     super(message);
   }
@@ -63,7 +63,7 @@ public class JiraConnectException extends JiraException
    *
    * @param cause
    */
-  public JiraConnectException(Throwable cause)
+  public TemplateException(Throwable cause)
   {
     super(cause);
   }
@@ -75,7 +75,7 @@ public class JiraConnectException extends JiraException
    * @param message
    * @param cause
    */
-  public JiraConnectException(String message, Throwable cause)
+  public TemplateException(String message, Throwable cause)
   {
     super(message, cause);
   }

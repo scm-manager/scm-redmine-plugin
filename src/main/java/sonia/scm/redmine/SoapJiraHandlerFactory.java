@@ -31,45 +31,35 @@
 
 
 
-package sonia.scm.jira;
+package sonia.scm.redmine;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.plugin.ext.Extension;
-import sonia.scm.repository.ChangesetPreProcessorFactory;
-import sonia.scm.repository.Repository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.redmine.soap.JiraSoapService;
+import sonia.scm.redmine.soap.JiraSoapServiceServiceLocator;
 import sonia.scm.util.HttpUtil;
-import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.text.MessageFormat;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Extension
-public class JiraChangesetPreProcessorFactory
-        implements ChangesetPreProcessorFactory
+public class SoapJiraHandlerFactory implements RemineHandlerFactory
 {
 
   /** Field description */
-  public static final String KEY_PATTERN = "({0}-[0-9]+)";
+  public static final String PATH_SOAPSERVICE = "/rpc/soap/jirasoapservice-v2";
 
-  /** Field description */
-  public static final String PROPERTY_JIRA_PROJECTKEYS = "jira.project-keys";
-
-  /** Field description */
-  public static final String PROPERTY_JIRA_URL = "jira.url";
-
-  /** Field description */
-  public static final String REPLACEMENT_LINK =
-    "<a target=\"_blank\" href=\"{0}/browse/$0\">$0</a>";
+  /** the logger for SoapJiraHandlerFactory */
+  private static final Logger logger =
+    LoggerFactory.getLogger(SoapJiraHandlerFactory.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -77,40 +67,60 @@ public class JiraChangesetPreProcessorFactory
    * Method description
    *
    *
-   * @param repository
+   * @param urlString
+   * @param username
+   * @param password
    *
    * @return
+   *
+   * @throws RemineConnectException
    */
   @Override
-  public JiraChangesetPreProcessor createPreProcessor(Repository repository)
+  public RemineHandler createJiraHandler(String urlString, String username,
+          String password)
+          throws RemineConnectException
   {
-    JiraChangesetPreProcessor cpp = null;
-    String jiraUrl = repository.getProperty(PROPERTY_JIRA_URL);
-    String projectKeys = repository.getProperty(PROPERTY_JIRA_PROJECTKEYS);
+    RemineHandler handler = null;
 
-    if (Util.isNotEmpty(jiraUrl) && Util.isNotEmpty(projectKeys))
+    try
     {
-      jiraUrl = HttpUtil.getUriWithoutEndSeperator(jiraUrl);
+      URL url = createSoapUrl(urlString);
 
-      String replacementPattern = MessageFormat.format(REPLACEMENT_LINK,
-                                    jiraUrl);
-      List<Pattern> patternList = new ArrayList<Pattern>();
-
-      for (String key : projectKeys.split(","))
+      if (logger.isDebugEnabled())
       {
-        key = key.trim().toUpperCase();
-
-        if (Util.isNotEmpty(key))
-        {
-          String p = MessageFormat.format(KEY_PATTERN, key);
-
-          patternList.add(Pattern.compile(p));
-        }
+        logger.debug("connect to jira {} as user {}", url, username);
       }
 
-      cpp = new JiraChangesetPreProcessor(replacementPattern, patternList);
+      JiraSoapService service =
+        new JiraSoapServiceServiceLocator().getJirasoapserviceV2(url);
+      String token = service.login(username, password);
+
+      handler = new SoapJiraHandler(service, token, username);
+    }
+    catch (Exception ex)
+    {
+      throw new RemineConnectException(
+          "could not connect to jira instance at ".concat(urlString), ex);
     }
 
-    return cpp;
+    return handler;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param url
+   *
+   * @return
+   *
+   * @throws MalformedURLException
+   */
+  private URL createSoapUrl(String url) throws MalformedURLException
+  {
+    url = HttpUtil.getUriWithoutEndSeperator(url);
+    url = url.concat(PATH_SOAPSERVICE);
+
+    return new URL(url);
   }
 }

@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.jira;
+package sonia.scm.redmine;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -46,7 +46,7 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  */
-public class JiraIssueRequest implements Closeable
+public class RemineIssueRequest implements Closeable
 {
 
   /**
@@ -60,9 +60,9 @@ public class JiraIssueRequest implements Closeable
    * @param configuration
    * @param repository
    */
-  public JiraIssueRequest(JiraHandlerFactory handlerFactory,
+  public RemineIssueRequest(RemineHandlerFactory handlerFactory,
                               String username, String password,
-                              JiraConfiguration configuration,
+                              RemineConfiguration configuration,
                               Repository repository)
   {
     this.handlerFactory = handlerFactory;
@@ -89,7 +89,7 @@ public class JiraIssueRequest implements Closeable
       {
         handler.logout();
       }
-      catch (JiraException ex)
+      catch (RemineException ex)
       {
         throw new IOException("could not logout", ex);
       }
@@ -102,9 +102,9 @@ public class JiraIssueRequest implements Closeable
    *
    * @return
    *
-   * @throws JiraConnectException
+   * @throws RemineConnectException
    */
-  public JiraHandler createJiraHandler() throws JiraConnectException
+  public RemineHandler createJiraHandler() throws RemineConnectException
   {
     if (handler == null)
     {
@@ -123,7 +123,7 @@ public class JiraIssueRequest implements Closeable
    *
    * @return
    */
-  public JiraConfiguration getConfiguration()
+  public RemineConfiguration getConfiguration()
   {
     return configuration;
   }
@@ -164,13 +164,13 @@ public class JiraIssueRequest implements Closeable
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private JiraConfiguration configuration;
+  private RemineConfiguration configuration;
 
   /** Field description */
-  private JiraHandler handler;
+  private RemineHandler handler;
 
   /** Field description */
-  private JiraHandlerFactory handlerFactory;
+  private RemineHandlerFactory handlerFactory;
 
   /** Field description */
   private String password;

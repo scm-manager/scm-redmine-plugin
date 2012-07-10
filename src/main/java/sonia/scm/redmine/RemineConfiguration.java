@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.jira;
+package sonia.scm.redmine;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -52,7 +52,7 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-public class JiraConfiguration implements Validateable
+public class RemineConfiguration implements Validateable
 {
 
   /** Field description */
@@ -79,7 +79,7 @@ public class JiraConfiguration implements Validateable
 
   /** the logger for JiraConfiguration */
   private static final Logger logger =
-    LoggerFactory.getLogger(JiraConfiguration.class);
+    LoggerFactory.getLogger(RemineConfiguration.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -89,7 +89,7 @@ public class JiraConfiguration implements Validateable
    *
    * @param repository
    */
-  public JiraConfiguration(Repository repository)
+  public RemineConfiguration(Repository repository)
   {
     url = repository.getProperty(PROPERTY_JIRA_URL);
     projectsKeys = getListProperty(repository, PROPERTY_JIRA_PROJECTKEYS);

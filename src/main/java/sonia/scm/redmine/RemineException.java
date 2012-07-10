@@ -31,32 +31,52 @@
 
 
 
-package sonia.scm.jira;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.AbstractModule;
-
-import sonia.scm.plugin.ext.Extension;
+package sonia.scm.redmine;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Extension
-public class JiraModule extends AbstractModule
+public class RemineException extends Exception
 {
 
   /**
-   * Method description
+   * Constructs ...
    *
    */
-  @Override
-  protected void configure()
+  public RemineException() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param message
+   */
+  public RemineException(String message)
   {
-    bind(JiraIssueRequestFactory.class);
-    bind(JiraHandlerFactory.class).to(SoapJiraHandlerFactory.class);
-    bind(TemplateHandler.class).to(
-        FreemarkerTemplateHandler.class);
+    super(message);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param cause
+   */
+  public RemineException(Throwable cause)
+  {
+    super(cause);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param message
+   * @param cause
+   */
+  public RemineException(String message, Throwable cause)
+  {
+    super(message, cause);
   }
 }

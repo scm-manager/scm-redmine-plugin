@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.jira;
+package sonia.scm.redmine;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -62,7 +62,7 @@ import javax.servlet.http.HttpSession;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class JiraIssueRequestFactory
+public class RemineIssueRequestFactory
 {
 
   /** Field description */
@@ -70,7 +70,7 @@ public class JiraIssueRequestFactory
 
   /** the logger for JiraIssueRequestFactory */
   private static final Logger logger =
-    LoggerFactory.getLogger(JiraIssueRequestFactory.class);
+    LoggerFactory.getLogger(RemineIssueRequestFactory.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -84,8 +84,8 @@ public class JiraIssueRequestFactory
    * @param securityContextProvider
    */
   @Inject
-  public JiraIssueRequestFactory(
-          JiraHandlerFactory handlerFactory,
+  public RemineIssueRequestFactory(
+          RemineHandlerFactory handlerFactory,
           Provider<HttpServletRequest> requestProvider,
           Provider<WebSecurityContext> securityContextProvider)
   {
@@ -106,13 +106,13 @@ public class JiraIssueRequestFactory
    *
    * @return
    */
-  public JiraIssueRequest createRequest(JiraConfiguration configuration,
+  public RemineIssueRequest createRequest(RemineConfiguration configuration,
           Repository repository)
   {
     String username = getUsername(configuration);
     String password = getPassword();
 
-    return new JiraIssueRequest(handlerFactory, username, password,
+    return new RemineIssueRequest(handlerFactory, username, password,
                                     configuration, repository);
   }
 
@@ -154,7 +154,7 @@ public class JiraIssueRequestFactory
    * @param configuration
    * @return
    */
-  private String getUsername(JiraConfiguration configuration)
+  private String getUsername(RemineConfiguration configuration)
   {
     String username = null;
     User user = SecurityUtil.getCurrentUser(securityContextProvider);
@@ -184,7 +184,7 @@ public class JiraIssueRequestFactory
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private JiraHandlerFactory handlerFactory;
+  private RemineHandlerFactory handlerFactory;
 
   /** Field description */
   private Provider<HttpServletRequest> requestProvider;

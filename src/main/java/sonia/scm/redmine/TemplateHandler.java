@@ -31,28 +31,52 @@
 
 
 
-package sonia.scm.jira;
+package sonia.scm.redmine;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.repository.Changeset;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface JiraHandlerFactory
+public interface TemplateHandler
 {
+  
+  
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   * @param request
+   * @param changeset
+   *
+   * @return
+   *
+   * @throws TemplateException
+   */
+  public String render(Template template, RemineIssueRequest request,
+                       Changeset changeset)
+          throws TemplateException;
 
   /**
    * Method description
    *
    *
-   * @param url
-   * @param username
-   * @param password
+   *
+   * @param name
+   * @param request
+   * @param changeset
+   * @param autoCloseWord
    *
    * @return
    *
-   * @throws JiraConnectException
+   *
+   * @throws TemplateException
    */
-  public JiraHandler createJiraHandler(String url, String username,
-          String password)
-          throws JiraConnectException;
+  public String render(Template template, RemineIssueRequest request,
+                       Changeset changeset, String autoCloseWord)
+          throws TemplateException;
 }

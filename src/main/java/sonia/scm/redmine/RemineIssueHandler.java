@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.jira;
+package sonia.scm.redmine;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -44,12 +44,12 @@ import sonia.scm.repository.Changeset;
  *
  * @author Sebastian Sdorra
  */
-public class JiraIssueHandler
+public class RemineIssueHandler
 {
 
   /** the logger for JiraIssueHandler */
   private static final Logger logger =
-    LoggerFactory.getLogger(JiraIssueHandler.class);
+    LoggerFactory.getLogger(RemineIssueHandler.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -60,8 +60,8 @@ public class JiraIssueHandler
    * @param templateHandler
    * @param request
    */
-  public JiraIssueHandler(TemplateHandler templateHandler,
-                          JiraIssueRequest request)
+  public RemineIssueHandler(TemplateHandler templateHandler,
+                          RemineIssueRequest request)
   {
     this.templateHandler = templateHandler;
     this.request = request;
@@ -133,7 +133,7 @@ public class JiraIssueHandler
 
     try
     {
-      JiraHandler handler = request.createJiraHandler();
+      RemineHandler handler = request.createJiraHandler();
       String comment = templateHandler.render(Template.CLOSE_SIMPLE, request,
                          changeset, autoCloseWord);
 
@@ -144,7 +144,7 @@ public class JiraIssueHandler
     {
       logger.error("could render template", ex);
     }
-    catch (JiraException ex)
+    catch (RemineException ex)
     {
       logger.error("could not close jira issue", ex);
     }
@@ -204,7 +204,7 @@ public class JiraIssueHandler
 
     try
     {
-      JiraHandler handler = request.createJiraHandler();
+      RemineHandler handler = request.createJiraHandler();
       String comment = templateHandler.render(Template.UPDATE_SIMPLE, request,
                          changeset);
 
@@ -214,7 +214,7 @@ public class JiraIssueHandler
     {
       logger.error("could render template", ex);
     }
-    catch (JiraException ex)
+    catch (RemineException ex)
     {
       logger.error("could not close jira issue", ex);
     }
@@ -223,7 +223,7 @@ public class JiraIssueHandler
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private JiraIssueRequest request;
+  private RemineIssueRequest request;
 
   /** Field description */
   private TemplateHandler templateHandler;

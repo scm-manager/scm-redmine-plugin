@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.jira;
+package sonia.scm.redmine;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -125,8 +125,8 @@ public class FreemarkerTemplateHandler implements TemplateHandler
    * @throws TemplateException
    */
   @Override
-  public String render(sonia.scm.jira.Template template,
-                       JiraIssueRequest request, Changeset changeset,
+  public String render(sonia.scm.redmine.Template template,
+                       RemineIssueRequest request, Changeset changeset,
                        String autoCloseWord)
           throws TemplateException
   {
@@ -186,8 +186,8 @@ public class FreemarkerTemplateHandler implements TemplateHandler
    * @throws TemplateException
    */
   @Override
-  public String render(sonia.scm.jira.Template template,
-                       JiraIssueRequest request, Changeset changeset)
+  public String render(sonia.scm.redmine.Template template,
+                       RemineIssueRequest request, Changeset changeset)
           throws TemplateException
   {
     return render(template, request, changeset, null);
@@ -202,7 +202,7 @@ public class FreemarkerTemplateHandler implements TemplateHandler
    *
    * @return
    */
-  private Reader createReader(sonia.scm.jira.Template template)
+  private Reader createReader(sonia.scm.redmine.Template template)
   {
     InputStream input = FreemarkerTemplateHandler.class.getResourceAsStream(
                             template.getResource());

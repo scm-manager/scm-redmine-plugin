@@ -31,73 +31,28 @@
 
 
 
-package sonia.scm.jira;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.HandlerEvent;
-import sonia.scm.plugin.ext.Extension;
-import sonia.scm.repository.ChangesetViewerUtil;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryListener;
+package sonia.scm.redmine;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Extension
-public class ClearCacheRepositoryListener implements RepositoryListener
+public interface RemineHandlerFactory
 {
-
-  /** the logger for ClearCacheRepositoryListener */
-  private static final Logger logger =
-    LoggerFactory.getLogger(ClearCacheRepositoryListener.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param changesetViewerUtil
-   */
-  @Inject
-  public ClearCacheRepositoryListener(ChangesetViewerUtil changesetViewerUtil)
-  {
-    this.changesetViewerUtil = changesetViewerUtil;
-  }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param repository
-   * @param event
+   * @param url
+   * @param username
+   * @param password
+   *
+   * @return
+   *
+   * @throws RemineConnectException
    */
-  @Override
-  public void onEvent(Repository repository, HandlerEvent event)
-  {
-    if (event == HandlerEvent.MODIFY)
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("clear cache because repository stettings {} has changed",
-                     repository.getName());
-      }
-
-      changesetViewerUtil.clearCache();
-    }
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private ChangesetViewerUtil changesetViewerUtil;
+  public RemineHandler createJiraHandler(String url, String username,
+          String password)
+          throws RemineConnectException;
 }

@@ -31,75 +31,52 @@
 
 
 
-package sonia.scm.jira;
+package sonia.scm.redmine;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class Template
+public class RemineConnectException extends RemineException
 {
 
-  /** Field description */
-  public static final Template UPDATE_SIMPLE =
-    new Template("update-simple", "/sonia/scm/jira/update/simple.ftl");
-
-  /** Field description */
-  public static final Template UPDATE_EXTENDED =
-    new Template("update-extended", "/sonia/scm/jira/update/extended.ftl");
-
-  /** Field description */
-  public static final Template CLOSE_SIMPLE =
-    new Template("close-simple", "/sonia/scm/jira/autoclose/simple.ftl");
-
-  /** Field description */
-  public static final Template CLOSE_EXTENDED =
-    new Template("close-extended", "/sonia/scm/jira/autoclose/extended.ftl");
-
-  //~--- constructors ---------------------------------------------------------
+  /**
+   * Constructs ...
+   *
+   */
+  public RemineConnectException() {}
 
   /**
    * Constructs ...
    *
    *
-   * @param name
-   * @param resource
+   * @param message
    */
-  public Template(String name, String resource)
+  public RemineConnectException(String message)
   {
-    this.name = name;
-    this.resource = resource;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getName()
-  {
-    return name;
+    super(message);
   }
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @return
+   * @param cause
    */
-  public String getResource()
+  public RemineConnectException(Throwable cause)
   {
-    return resource;
+    super(cause);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String name;
-
-  /** Field description */
-  private String resource;
+  /**
+   * Constructs ...
+   *
+   *
+   * @param message
+   * @param cause
+   */
+  public RemineConnectException(String message, Throwable cause)
+  {
+    super(message, cause);
+  }
 }

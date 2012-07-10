@@ -31,52 +31,42 @@
 
 
 
-package sonia.scm.jira;
+package sonia.scm.redmine;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class TemplateException extends Exception
+public interface RemineHandler
 {
 
   /**
-   * Constructs ...
+   * Method description
    *
+   *
+   * @param issueId
+   * @param comment
+   *
+   * @throws RemineException
    */
-  public TemplateException() {}
+  public void addComment(String issueId, String comment) throws RemineException;
 
   /**
-   * Constructs ...
+   * Method description
    *
    *
-   * @param message
+   * @param issueId
+   * @param autoCloseWord
+   *
+   * @throws RemineException
    */
-  public TemplateException(String message)
-  {
-    super(message);
-  }
+  public void close(String issueId, String autoCloseWord) throws RemineException;
 
   /**
-   * Constructs ...
+   * Method description
    *
    *
-   * @param cause
+   * @throws RemineException
    */
-  public TemplateException(Throwable cause)
-  {
-    super(cause);
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   * @param cause
-   */
-  public TemplateException(String message, Throwable cause)
-  {
-    super(message, cause);
-  }
+  public void logout() throws RemineException;
 }
