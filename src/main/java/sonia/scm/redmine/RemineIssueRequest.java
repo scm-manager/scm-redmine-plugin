@@ -44,7 +44,7 @@ import java.io.IOException;
 
 /**
  *
- * @author Sebastian Sdorra
+ * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
 public class RemineIssueRequest implements Closeable
 {

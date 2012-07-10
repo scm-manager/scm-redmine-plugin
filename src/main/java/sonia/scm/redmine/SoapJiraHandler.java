@@ -51,7 +51,7 @@ import java.util.GregorianCalendar;
 
 /**
  *
- * @author Sebastian Sdorra
+ * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
 public class SoapJiraHandler implements RemineHandler
 {

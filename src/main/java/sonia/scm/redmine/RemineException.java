@@ -35,7 +35,7 @@ package sonia.scm.redmine;
 
 /**
  *
- * @author Sebastian Sdorra
+ * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
 public class RemineException extends Exception
 {

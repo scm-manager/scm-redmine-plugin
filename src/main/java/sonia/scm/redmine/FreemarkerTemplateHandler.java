@@ -61,7 +61,7 @@ import java.util.Map;
 
 /**
  *
- * @author Sebastian Sdorra
+ * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
 public class FreemarkerTemplateHandler implements TemplateHandler
 {

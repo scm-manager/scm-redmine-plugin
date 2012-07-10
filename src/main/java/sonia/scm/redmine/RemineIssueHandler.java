@@ -42,7 +42,7 @@ import sonia.scm.repository.Changeset;
 
 /**
  *
- * @author Sebastian Sdorra
+ * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
 public class RemineIssueHandler
 {

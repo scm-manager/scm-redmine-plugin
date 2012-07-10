@@ -48,7 +48,7 @@ import sonia.scm.repository.RepositoryListener;
 
 /**
  *
- * @author Sebastian Sdorra
+ * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
 @Extension
 public class ClearCacheRepositoryListener implements RepositoryListener

@@ -41,7 +41,7 @@ import sonia.scm.plugin.ext.Extension;
 
 /**
  *
- * @author Sebastian Sdorra
+ * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
 @Extension
 public class RemineModule extends AbstractModule

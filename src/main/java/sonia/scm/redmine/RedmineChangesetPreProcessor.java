@@ -47,7 +47,7 @@ import java.util.regex.Pattern;
 
 /**
  *
- * @author Sebastian Sdorra
+ * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
 public class RedmineChangesetPreProcessor implements ChangesetPreProcessor
 {

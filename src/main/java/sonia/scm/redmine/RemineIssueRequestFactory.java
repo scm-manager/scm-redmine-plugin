@@ -59,7 +59,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Sebastian Sdorra
+ * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
 @Singleton
 public class RemineIssueRequestFactory

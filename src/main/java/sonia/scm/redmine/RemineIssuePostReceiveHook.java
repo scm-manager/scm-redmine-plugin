@@ -56,7 +56,7 @@ import java.util.Collection;
 
 /**
  *
- * @author Sebastian Sdorra
+ * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
 @Extension
 public class RemineIssuePostReceiveHook implements RepositoryHook

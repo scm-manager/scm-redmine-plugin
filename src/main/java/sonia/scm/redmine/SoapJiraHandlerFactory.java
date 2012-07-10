@@ -49,7 +49,7 @@ import java.net.URL;
 
 /**
  *
- * @author Sebastian Sdorra
+ * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
 public class SoapJiraHandlerFactory implements RemineHandlerFactory
 {
