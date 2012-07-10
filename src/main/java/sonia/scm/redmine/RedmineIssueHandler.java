@@ -40,8 +40,6 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.Changeset;
 
-import com.taskadapter.redmineapi.RedmineException;
-
 /**
  *
  * @author Marvin Froeder marvin_at_marvinformatics_dot_com
@@ -146,7 +144,7 @@ public class RedmineIssueHandler
     {
       logger.error("could render template", ex);
     }
-    catch (RedmineException ex)
+    catch (Exception ex)
     {
       logger.error("could not close redmine issue", ex);
     }
@@ -216,7 +214,7 @@ public class RedmineIssueHandler
     {
       logger.error("could render template", ex);
     }
-    catch (RedmineException ex)
+    catch (Exception ex)
     {
       logger.error("could not close redmine issue", ex);
     }

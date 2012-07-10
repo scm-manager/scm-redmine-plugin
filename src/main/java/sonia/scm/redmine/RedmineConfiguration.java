@@ -57,9 +57,6 @@ public class RedmineConfiguration implements Validateable
   public static final String PROPERTY_AUTOCLOSEWORDS = "redmine.auto-close-words";
 
   /** Field description */
-  public static final String PROPERTY_REDMINE_PROJECTKEYS = "redmine.project-keys";
-
-  /** Field description */
   public static final String PROPERTY_REDMINE_URL = "redmine.url";
 
   /** Field description */
@@ -83,7 +80,6 @@ public class RedmineConfiguration implements Validateable
   public RedmineConfiguration(Repository repository)
   {
     url = repository.getProperty(PROPERTY_REDMINE_URL);
-    projectsKeys = getListProperty(repository, PROPERTY_REDMINE_PROJECTKEYS);
     updateIssues = getBooleanProperty(repository, PROPERTY_UPDATEISSUES);
     autoClose = getBooleanProperty(repository, PROPERTY_AUTOCLOSE);
     autoCloseWords = getListProperty(repository, PROPERTY_AUTOCLOSEWORDS);
@@ -102,17 +98,6 @@ public class RedmineConfiguration implements Validateable
   public List<String> getAutoCloseWords()
   {
     return autoCloseWords;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public List<String> getProjectsKeys()
-  {
-    return projectsKeys;
   }
 
   /**
@@ -169,7 +154,7 @@ public class RedmineConfiguration implements Validateable
   @Override
   public boolean isValid()
   {
-    return Util.isNotEmpty(url) && Util.isNotEmpty(projectsKeys);
+    return Util.isNotEmpty(url);
   }
 
   /**
@@ -227,9 +212,6 @@ public class RedmineConfiguration implements Validateable
 
   /** Field description */
   private List<String> autoCloseWords;
-
-  /** Field description */
-  private List<String> projectsKeys;
 
   /** Field description */
   private boolean updateIssues;

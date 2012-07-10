@@ -77,17 +77,17 @@ Sonia.redmine.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
         xtype: 'checkbox',
         fieldLabel: this.updateIssuesText,
         property: 'redmine.update-issues',
-        helpText: this.updateIssuesHelpText,
-        listeners: {
-          check: this.toggleUpdateIssues
-        }
+        helpText: this.updateIssuesHelpText
       },{
         id: 'redmineAutoClose',
         name: 'redmineAutoClose',
         xtype: 'checkbox',
         fieldLabel: this.autoCloseText,
         property: 'redmine.auto-close',
-        helpText: this.autoCloseHelpText
+        helpText: this.autoCloseHelpText,
+        listeners: {
+            check: this.toggleUpdateIssues
+          }
       },{
         id: 'redmineAutoCloseWords',
         name: 'redmineAutoCloseWords',
@@ -110,7 +110,7 @@ Sonia.redmine.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
   },
   
   loadExtraProperties: function(item){
-    var cmp = Ext.getCmp('redmineUpdateIssues');
+    var cmp = Ext.getCmp('redmineAutoClose');
     this.toggleUpdateIssues.call(cmp);
   },
   

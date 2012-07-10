@@ -7,6 +7,7 @@ import sonia.scm.util.HttpUtil;
 
 import com.taskadapter.redmineapi.RedmineException;
 import com.taskadapter.redmineapi.RedmineManager;
+import com.taskadapter.redmineapi.RedmineOptions;
 
 /**
 *
@@ -40,25 +41,17 @@ public class RestRedmineHandlerFactory implements RedmineHandlerFactory
     {
       RedmineHandler handler = null;
 
-      try
+      //just validate if is a valid url
+      HttpUtil.getUriWithoutEndSeperator(urlString);
+
+      if (logger.isDebugEnabled())
       {
-        //just validate if is a valid url
-        HttpUtil.getUriWithoutEndSeperator(urlString);
-
-        if (logger.isDebugEnabled())
-        {
-          logger.debug("connect to redmine {} as user {}", urlString, username);
-        }
-
-        RedmineManager mgr = new RedmineManager( urlString, username, password );
-
-        handler = new RestRedmineHandler(mgr);
+        logger.debug("connect to redmine {} as user {}", urlString, username);
       }
-      catch (NullPointerException ex)
-      {
-        throw new RedmineException(
-            "could not connect to redmine instance at ".concat(urlString), ex);
-      }
+
+    RedmineManager mgr = new RedmineManager( urlString, username, password );
+
+      handler = new RestRedmineHandler(mgr);
 
       return handler;
     }

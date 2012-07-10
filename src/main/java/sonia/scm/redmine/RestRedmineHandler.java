@@ -85,12 +85,12 @@ public class RestRedmineHandler implements RedmineHandler
    * @throws RedmineException
    */
   @Override
-  public void addComment(Integer issueId, String comment) throws RedmineException
+  public void addComment(Integer issueId, String comment) throws Exception
   {
     if (logger.isInfoEnabled())
     {
       logger.info("add comment to issue {}", issueId);
-    }
+    } 
 
     Issue issue = redmineManager.getIssueById( issueId );
     issue.setNotes( comment );
@@ -107,7 +107,7 @@ public class RestRedmineHandler implements RedmineHandler
    * @throws RedmineException
    */
   @Override
-  public void close(Integer issueId, String autoCloseWords) throws RedmineException
+  public void close(Integer issueId, String autoCloseWords) throws Exception
   {
     if (logger.isInfoEnabled())
     {

@@ -48,10 +48,11 @@ public interface RedmineHandler
    *
    * @param issueId
    * @param comment
+ * @throws Exception 
    *
    * @throws RemineException
    */
-  public void addComment(Integer issueId, String comment) throws RedmineException;
+  public void addComment(Integer issueId, String comment) throws RedmineException, Exception;
 
   /**
    * Method description
@@ -59,10 +60,11 @@ public interface RedmineHandler
    *
    * @param issueId
    * @param autoCloseWord
+ * @throws Exception 
    *
    * @throws RemineException
    */
-  public void close(Integer issueId, String autoCloseWord) throws RedmineException;
+  public void close(Integer issueId, String autoCloseWord) throws RedmineException, Exception;
 
   /**
    * Method description
