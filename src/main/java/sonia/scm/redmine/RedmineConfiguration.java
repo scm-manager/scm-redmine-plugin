@@ -35,18 +35,13 @@ package sonia.scm.redmine;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import sonia.scm.Validateable;
 import sonia.scm.repository.Repository;
 import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 /**
  *
@@ -76,10 +71,6 @@ public class RedmineConfiguration implements Validateable
 
   /** Field description */
   public static final String SEPARATOR = ",";
-
-  /** the logger for redmine Configuration */
-  private static final Logger logger =
-    LoggerFactory.getLogger(RedmineConfiguration.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -223,7 +214,7 @@ public class RedmineConfiguration implements Validateable
     }
     else
     {
-      values = Collections.EMPTY_LIST;
+      values = Collections.emptyList();
     }
 
     return values;

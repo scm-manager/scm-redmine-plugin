@@ -35,9 +35,6 @@ package sonia.scm.redmine;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import java.rmi.RemoteException;
-import java.util.GregorianCalendar;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,8 +58,6 @@ public class RestRedmineHandler implements RedmineHandler
 
   private final RedmineManager redmineManager;
 
-  private final String username;
-
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -72,10 +67,9 @@ public class RestRedmineHandler implements RedmineHandler
    * @param redmineManager
    * @param username
    */
-  public RestRedmineHandler( RedmineManager mgr, String username )
+  public RestRedmineHandler( RedmineManager mgr )
   {
       this.redmineManager = mgr;
-      this.username = username;
   }
 
   //~--- methods --------------------------------------------------------------

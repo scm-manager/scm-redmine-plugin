@@ -41,6 +41,11 @@ public class TemplateException extends Exception
 {
 
   /**
+     * 
+     */
+    private static final long serialVersionUID = 1938958295478829577L;
+
+/**
    * Constructs ...
    *
    */

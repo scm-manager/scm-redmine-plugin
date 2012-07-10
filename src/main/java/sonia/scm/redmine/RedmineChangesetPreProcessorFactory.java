@@ -35,19 +35,13 @@ package sonia.scm.redmine;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import java.text.MessageFormat;
+
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.repository.ChangesetPreProcessorFactory;
 import sonia.scm.repository.Repository;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.text.MessageFormat;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -57,12 +51,6 @@ import java.util.regex.Pattern;
 public class RedmineChangesetPreProcessorFactory
         implements ChangesetPreProcessorFactory
 {
-
-  /** Field description */
-  public static final String KEY_PATTERN = "({0}-[0-9]+)";
-
-  /** Field description */
-  public static final String PROPERTY_REDMINE_PROJECTKEYS = "redmine.project-keys";
 
   /** Field description */
   public static final String PROPERTY_REDMINE_URL = "redmine.url";
@@ -86,29 +74,14 @@ public class RedmineChangesetPreProcessorFactory
   {
     RedmineChangesetPreProcessor cpp = null;
     String redmineUrl = repository.getProperty(PROPERTY_REDMINE_URL);
-    String projectKeys = repository.getProperty(PROPERTY_REDMINE_PROJECTKEYS);
 
-    if (Util.isNotEmpty(redmineUrl) && Util.isNotEmpty(projectKeys))
+    if (Util.isNotEmpty(redmineUrl) )
     {
       redmineUrl = HttpUtil.getUriWithoutEndSeperator(redmineUrl);
 
       String replacementPattern = MessageFormat.format(REPLACEMENT_LINK,
                                     redmineUrl);
-      List<Pattern> patternList = new ArrayList<Pattern>();
-
-      for (String key : projectKeys.split(","))
-      {
-        key = key.trim().toUpperCase();
-
-        if (Util.isNotEmpty(key))
-        {
-          String p = MessageFormat.format(KEY_PATTERN, key);
-
-          patternList.add(Pattern.compile(p));
-        }
-      }
-
-      cpp = new RedmineChangesetPreProcessor(replacementPattern, patternList);
+      cpp = new RedmineChangesetPreProcessor(replacementPattern);
     }
 
     return cpp;

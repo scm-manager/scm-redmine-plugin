@@ -35,15 +35,12 @@ package sonia.scm.redmine;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPreProcessor;
 import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -52,19 +49,22 @@ import java.util.regex.Pattern;
 public class RedmineChangesetPreProcessor implements ChangesetPreProcessor
 {
 
+    /** Field description */
+    public static final String KEY_PATTERN = "\\((#)[0-9]*\\)";
+
+    
   /**
    * Constructs ...
    *
    *
    *
    * @param keyReplacementPattern
-   * @param projectKeys
+   * @param pattern
    */
-  public RedmineChangesetPreProcessor(String keyReplacementPattern,
-                                   Collection<Pattern> projectKeys)
+  public RedmineChangesetPreProcessor(String keyReplacementPattern)
   {
     this.keyReplacementPattern = keyReplacementPattern;
-    this.projectKeys = projectKeys;
+    this.projectPattern = Pattern.compile( KEY_PATTERN );
   }
 
   //~--- methods --------------------------------------------------------------
@@ -82,25 +82,23 @@ public class RedmineChangesetPreProcessor implements ChangesetPreProcessor
 
     if (Util.isNotEmpty(description))
     {
-      for (Pattern p : projectKeys)
+    StringBuffer sb = new StringBuffer();
+    Matcher m = projectPattern.matcher(description);
+
+    while (m.find())
+    {
+      m.appendReplacement(sb, keyReplacementPattern);
+
+      if (issueHandler != null)
       {
-        StringBuffer sb = new StringBuffer();
-        Matcher m = p.matcher(description);
-
-        while (m.find())
-        {
-          m.appendReplacement(sb, keyReplacementPattern);
-
-          if (issueHandler != null)
-          {
-            issueHandler.handleIssue(new Integer(m.group()), changeset);
-          }
-        }
-
-        m.appendTail(sb);
-        description = sb.toString();
+        String key = m.group().replaceAll( "[^0-9]", "" );
+        issueHandler.handleIssue(new Integer(key), changeset);
       }
     }
+
+    m.appendTail(sb);
+    description = sb.toString();
+  }
 
     changeset.setDescription(description);
   }
@@ -127,5 +125,5 @@ public class RedmineChangesetPreProcessor implements ChangesetPreProcessor
   private String keyReplacementPattern;
 
   /** Field description */
-  private Collection<Pattern> projectKeys;
+  private Pattern projectPattern;
 }

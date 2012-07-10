@@ -52,7 +52,7 @@ public class RestRedmineHandlerFactory implements RedmineHandlerFactory
 
         RedmineManager mgr = new RedmineManager( urlString, username, password );
 
-        handler = new RestRedmineHandler(mgr, username);
+        handler = new RestRedmineHandler(mgr);
       }
       catch (NullPointerException ex)
       {

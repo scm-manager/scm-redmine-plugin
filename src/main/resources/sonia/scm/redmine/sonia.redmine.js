@@ -35,10 +35,7 @@ Sonia.redmine.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
   
   formTitleText: 'redmine',
   urlText: 'Url',
-  projectKeysText: 'Project Keys',
-  
   urlHelpText: 'Url of redmine installation (with contextpath).',
-  projectKeysHelpText: 'Comma separated project keys e.g.: SCM, JENKINS.',
   
   autoCloseText: 'Enable Auto-Close',
   autoCloseHelpText: 'Enables the auto close function. SCM-Manager searches for \n\
@@ -74,11 +71,6 @@ Sonia.redmine.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
         property: 'redmine.url',
         vtype: 'url',
         helpText: this.urlHelpText
-      },{
-        name: 'redmineProjectKeys',
-        fieldLabel: this.projectKeysText,
-        property: 'redmine.project-keys',
-        helpText: this.projectKeysHelpText
       },{
         id: 'redmineUpdateIssues',
         name: 'redmineUpdateIssues',
