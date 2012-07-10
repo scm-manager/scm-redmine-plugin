@@ -29,37 +29,37 @@
  * 
  */
 
-Ext.ns('Sonia.jira');
+Ext.ns('Sonia.redmine');
 
-Sonia.jira.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
+Sonia.redmine.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
   
-  formTitleText: 'Jira',
+  formTitleText: 'redmine',
   urlText: 'Url',
   projectKeysText: 'Project Keys',
   
-  urlHelpText: 'Url of Jira installation (with contextpath).',
+  urlHelpText: 'Url of redmine installation (with contextpath).',
   projectKeysHelpText: 'Comma separated project keys e.g.: SCM, JENKINS.',
   
   autoCloseText: 'Enable Auto-Close',
   autoCloseHelpText: 'Enables the auto close function. SCM-Manager searches for \n\
                       issue keys and auto close words in commit messages. If \n\
                       both found in a message SCM-Manager closes the issue in \n\
-                      the jira server. <strong>Note:</strong> It is necessary \n\
-                      that users have the same password in SCM-Manager and Jira.',
+                      the redmine server. <strong>Note:</strong> It is necessary \n\
+                      that users have the same password in SCM-Manager and redmine.',
   
-  updateIssuesText: 'Update Jira Issues',
+  updateIssuesText: 'Update redmine Issues',
   updateIssuesHelpText: 'Enable the automatic update function. SCM-Manager searches for\n\
                          issue keys in commit messages. If a issue id is found SCM-Manager\n\
                          updates the issue with a comment. <strong>Note:</strong> It \n\
                          is necessary that users have the same password in SCM-Manager \n\
-                         and Jira.',
+                         and redmine.',
   
   autoCloseWordsText: 'Auto-Close Words',
   autoCloseWordsHelpText: 'Comma separated list of words to enable the auto close function. \n\
                            Each commit message of a changeset is being searched for these words.',
   
   usernameTransformerText: 'Transform Username',
-  usernameTransformerHelpText: 'Pattern to create a username for the jira server.</br>\n\
+  usernameTransformerHelpText: 'Pattern to create a username for the redmine server.</br>\n\
                                 {0} - name of the current user</br>\n\
                                 {1} - mail address of the current user</br>\n\
                                 {2} - display name of the current user',
@@ -69,64 +69,64 @@ Sonia.jira.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
     var config = {
       title: this.formTitleText,
       items: [{
-        name: 'jiraUrl',
+        name: 'redmineUrl',
         fieldLabel: this.urlText,
-        property: 'jira.url',
+        property: 'redmine.url',
         vtype: 'url',
         helpText: this.urlHelpText
       },{
-        name: 'jiraProjectKeys',
+        name: 'redmineProjectKeys',
         fieldLabel: this.projectKeysText,
-        property: 'jira.project-keys',
+        property: 'redmine.project-keys',
         helpText: this.projectKeysHelpText
       },{
-        id: 'jiraUpdateIssues',
-        name: 'jiraUpdateIssues',
+        id: 'redmineUpdateIssues',
+        name: 'redmineUpdateIssues',
         xtype: 'checkbox',
         fieldLabel: this.updateIssuesText,
-        property: 'jira.update-issues',
+        property: 'redmine.update-issues',
         helpText: this.updateIssuesHelpText,
         listeners: {
           check: this.toggleUpdateIssues
         }
       },{
-        id: 'jiraAutoClose',
-        name: 'jiraAutoClose',
+        id: 'redmineAutoClose',
+        name: 'redmineAutoClose',
         xtype: 'checkbox',
         fieldLabel: this.autoCloseText,
-        property: 'jira.auto-close',
+        property: 'redmine.auto-close',
         helpText: this.autoCloseHelpText
       },{
-        id: 'jiraAutoCloseWords',
-        name: 'jiraAutoCloseWords',
+        id: 'redmineAutoCloseWords',
+        name: 'redmineAutoCloseWords',
         fieldLabel: this.autoCloseWordsText,
-        property: 'jira.auto-close-words',
+        property: 'redmine.auto-close-words',
         helpText: this.autoCloseWordsHelpText,
         value: 'fixed, fix, closed, close, resolved, resolve'
       },{
-        id: 'jiraUsernameTransformer',
-        name: 'jiraUsernameTransformer',
+        id: 'redmineUsernameTransformer',
+        name: 'redmineUsernameTransformer',
         fieldLabel: this.usernameTransformerText,
-        property: 'jira.auto-close-username-transformer',
+        property: 'redmine.auto-close-username-transformer',
         helpText: this.usernameTransformerHelpText,
         value: '{0}'
       }]
     }
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
-    Sonia.jira.ConfigPanel.superclass.initComponent.apply(this, arguments);
+    Sonia.redmine.ConfigPanel.superclass.initComponent.apply(this, arguments);
   },
   
   loadExtraProperties: function(item){
-    var cmp = Ext.getCmp('jiraUpdateIssues');
+    var cmp = Ext.getCmp('redmineUpdateIssues');
     this.toggleUpdateIssues.call(cmp);
   },
   
   toggleUpdateIssues: function(){
     var cmps = [
-      Ext.getCmp( 'jiraAutoClose' ),
-      Ext.getCmp( 'jiraAutoCloseWords' ),
-      Ext.getCmp( 'jiraUsernameTransformer' )
+      Ext.getCmp( 'redmineAutoClose' ),
+      Ext.getCmp( 'redmineAutoCloseWords' ),
+      Ext.getCmp( 'redmineUsernameTransformer' )
     ];
     
     Ext.each(cmps, function(cmp){
@@ -143,13 +143,13 @@ Sonia.jira.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
 });
 
 // register xtype
-Ext.reg("jiraConfigPanel", Sonia.jira.ConfigPanel);
+Ext.reg("redmineConfigPanel", Sonia.redmine.ConfigPanel);
 
 // register panel
 Sonia.repository.openListeners.push(function(repository, panels){
   if (Sonia.repository.isOwner(repository)){
     panels.push({
-      xtype: 'jiraConfigPanel',
+      xtype: 'redmineConfigPanel',
       item: repository
     });
   }

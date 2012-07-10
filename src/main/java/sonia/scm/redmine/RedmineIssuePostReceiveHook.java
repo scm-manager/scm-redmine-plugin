@@ -66,7 +66,7 @@ public class RedmineIssuePostReceiveHook implements RepositoryHook
   public static final Collection<RepositoryHookType> TYPES =
     Arrays.asList(RepositoryHookType.POST_RECEIVE);
 
-  /** the logger for JiraIssuePostReceiveHook */
+  /** the logger for RedmineIssuePostReceiveHook */
   private static final Logger logger =
     LoggerFactory.getLogger(RedmineIssuePostReceiveHook.class);
 
@@ -112,7 +112,7 @@ public class RedmineIssuePostReceiveHook implements RepositoryHook
       }
       else if (logger.isTraceEnabled())
       {
-        logger.trace("jira auto-close is disabled");
+        logger.trace("redmine auto-close is disabled");
       }
     }
     else if (logger.isErrorEnabled())
@@ -172,7 +172,7 @@ public class RedmineIssuePostReceiveHook implements RepositoryHook
       try
       {
         request = requestFactory.createRequest(configuration, repository);
-        jcpp.setJiraIssueHandler(new RedmineIssueHandler(templateHandler,
+        jcpp.setRedmineIssueHandler(new RedmineIssueHandler(templateHandler,
                 request));
 
         for (Changeset c : changesets)

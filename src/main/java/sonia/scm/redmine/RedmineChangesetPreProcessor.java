@@ -93,7 +93,7 @@ public class RedmineChangesetPreProcessor implements ChangesetPreProcessor
 
           if (issueHandler != null)
           {
-            issueHandler.handleIssue(m.group(), changeset);
+            issueHandler.handleIssue(new Integer(m.group()), changeset);
           }
         }
 
@@ -113,7 +113,7 @@ public class RedmineChangesetPreProcessor implements ChangesetPreProcessor
    *
    * @param issueHandler
    */
-  public void setJiraIssueHandler(RedmineIssueHandler issueHandler)
+  public void setRedmineIssueHandler(RedmineIssueHandler issueHandler)
   {
     this.issueHandler = issueHandler;
   }

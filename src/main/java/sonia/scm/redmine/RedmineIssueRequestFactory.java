@@ -68,7 +68,7 @@ public class RedmineIssueRequestFactory
   /** Field description */
   public static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
 
-  /** the logger for JiraIssueRequestFactory */
+  /** the logger for RedmineIssueRequestFactory */
   private static final Logger logger =
     LoggerFactory.getLogger(RedmineIssueRequestFactory.class);
 

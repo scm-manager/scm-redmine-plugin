@@ -40,6 +40,8 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.Changeset;
 
+import com.taskadapter.redmineapi.RedmineException;
+
 /**
  *
  * @author Marvin Froeder marvin_at_marvinformatics_dot_com
@@ -47,7 +49,7 @@ import sonia.scm.repository.Changeset;
 public class RedmineIssueHandler
 {
 
-  /** the logger for JiraIssueHandler */
+  /** the logger for redmineIssueHandler */
   private static final Logger logger =
     LoggerFactory.getLogger(RedmineIssueHandler.class);
 
@@ -76,7 +78,7 @@ public class RedmineIssueHandler
    * @param issueId
    * @param changeset
    */
-  public void handleIssue(String issueId, Changeset changeset)
+  public void handleIssue(Integer issueId, Changeset changeset)
   {
     if (request.getConfiguration().isAutoCloseEnabled())
     {
@@ -122,7 +124,7 @@ public class RedmineIssueHandler
    * @param issueId
    * @param autoCloseWord
    */
-  private void closeIssue(Changeset changeset, String issueId,
+  private void closeIssue(Changeset changeset, Integer issueId,
                           String autoCloseWord)
   {
     if (logger.isDebugEnabled())
@@ -133,7 +135,7 @@ public class RedmineIssueHandler
 
     try
     {
-      RedmineHandler handler = request.createJiraHandler();
+      RedmineHandler handler = request.createRedmineHandler();
       String comment = templateHandler.render(Template.CLOSE_SIMPLE, request,
                          changeset, autoCloseWord);
 
@@ -144,9 +146,9 @@ public class RedmineIssueHandler
     {
       logger.error("could render template", ex);
     }
-    catch (RemineException ex)
+    catch (RedmineException ex)
     {
-      logger.error("could not close jira issue", ex);
+      logger.error("could not close redmine issue", ex);
     }
   }
 
@@ -194,7 +196,7 @@ public class RedmineIssueHandler
    * @param changeset
    * @param issueId
    */
-  private void updateIssue(Changeset changeset, String issueId)
+  private void updateIssue(Changeset changeset, Integer issueId)
   {
     if (logger.isDebugEnabled())
     {
@@ -204,7 +206,7 @@ public class RedmineIssueHandler
 
     try
     {
-      RedmineHandler handler = request.createJiraHandler();
+      RedmineHandler handler = request.createRedmineHandler();
       String comment = templateHandler.render(Template.UPDATE_SIMPLE, request,
                          changeset);
 
@@ -214,9 +216,9 @@ public class RedmineIssueHandler
     {
       logger.error("could render template", ex);
     }
-    catch (RemineException ex)
+    catch (RedmineException ex)
     {
-      logger.error("could not close jira issue", ex);
+      logger.error("could not close redmine issue", ex);
     }
   }
 

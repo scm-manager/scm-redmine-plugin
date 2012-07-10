@@ -56,28 +56,28 @@ public class RedmineConfiguration implements Validateable
 {
 
   /** Field description */
-  public static final String PROPERTY_AUTOCLOSE = "jira.auto-close";
+  public static final String PROPERTY_AUTOCLOSE = "redmine.auto-close";
 
   /** Field description */
-  public static final String PROPERTY_AUTOCLOSEWORDS = "jira.auto-close-words";
+  public static final String PROPERTY_AUTOCLOSEWORDS = "redmine.auto-close-words";
 
   /** Field description */
-  public static final String PROPERTY_JIRA_PROJECTKEYS = "jira.project-keys";
+  public static final String PROPERTY_REDMINE_PROJECTKEYS = "redmine.project-keys";
 
   /** Field description */
-  public static final String PROPERTY_JIRA_URL = "jira.url";
+  public static final String PROPERTY_REDMINE_URL = "redmine.url";
 
   /** Field description */
-  public static final String PROPERTY_UPDATEISSUES = "jira.update-issues";
+  public static final String PROPERTY_UPDATEISSUES = "redmine.update-issues";
 
   /** Field description */
   public static final String PROPERTY_USERNAMETRANSFORMER =
-    "jira.auto-close-username-transformer";
+    "redmine.auto-close-username-transformer";
 
   /** Field description */
   public static final String SEPARATOR = ",";
 
-  /** the logger for JiraConfiguration */
+  /** the logger for redmine Configuration */
   private static final Logger logger =
     LoggerFactory.getLogger(RedmineConfiguration.class);
 
@@ -91,8 +91,8 @@ public class RedmineConfiguration implements Validateable
    */
   public RedmineConfiguration(Repository repository)
   {
-    url = repository.getProperty(PROPERTY_JIRA_URL);
-    projectsKeys = getListProperty(repository, PROPERTY_JIRA_PROJECTKEYS);
+    url = repository.getProperty(PROPERTY_REDMINE_URL);
+    projectsKeys = getListProperty(repository, PROPERTY_REDMINE_PROJECTKEYS);
     updateIssues = getBooleanProperty(repository, PROPERTY_UPDATEISSUES);
     autoClose = getBooleanProperty(repository, PROPERTY_AUTOCLOSE);
     autoCloseWords = getListProperty(repository, PROPERTY_AUTOCLOSEWORDS);

@@ -55,7 +55,7 @@ public interface RedmineHandlerFactory
    * @throws RemineConnectException
  * @throws RemineException 
    */
-  public RedmineHandler createJiraHandler(String url, String username,
+  public RedmineHandler createRedmineHandler(String url, String username,
           String password)
           throws RedmineException;
 }

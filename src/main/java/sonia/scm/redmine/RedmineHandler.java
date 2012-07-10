@@ -33,6 +33,8 @@
 
 package sonia.scm.redmine;
 
+import com.taskadapter.redmineapi.RedmineException;
+
 /**
  *
  * @author Marvin Froeder marvin_at_marvinformatics_dot_com
@@ -49,7 +51,7 @@ public interface RedmineHandler
    *
    * @throws RemineException
    */
-  public void addComment(String issueId, String comment) throws RemineException;
+  public void addComment(Integer issueId, String comment) throws RedmineException;
 
   /**
    * Method description
@@ -60,7 +62,7 @@ public interface RedmineHandler
    *
    * @throws RemineException
    */
-  public void close(String issueId, String autoCloseWord) throws RemineException;
+  public void close(Integer issueId, String autoCloseWord) throws RedmineException;
 
   /**
    * Method description
@@ -68,5 +70,5 @@ public interface RedmineHandler
    *
    * @throws RemineException
    */
-  public void logout() throws RemineException;
+  public void logout() throws RedmineException;
 }

@@ -35,9 +35,9 @@
 <plugin>
 
   <information>
-    <author>Sebastian Sdorra</author>
+    <author>Marvin Froeder</author>
     <category>Issue-Tracking</category>
-    <wiki>https://bitbucket.org/sdorra/scm-manager/wiki/jira-plugin</wiki>
+    <wiki>https://bitbucket.org/velo/scm-redmine-plugin</wiki>
   </information>
 
   <conditions>
@@ -45,11 +45,11 @@
   </conditions>
   
   <packages>
-    <package>sonia.scm.jira</package>
+    <package>sonia.scm.redmine</package>
   </packages>
 
   <resources>
-    <script>/sonia/scm/jira/sonia.jira.js</script>
+    <script>/sonia/scm/redmine/sonia.redmine.js</script>
   </resources>
 
 </plugin>

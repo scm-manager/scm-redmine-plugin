@@ -35,12 +35,12 @@ package sonia.scm.redmine;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.repository.Repository;
-
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.Closeable;
 import java.io.IOException;
+
+import sonia.scm.repository.Repository;
+
+import com.taskadapter.redmineapi.RedmineException;
 
 /**
  *
@@ -89,7 +89,7 @@ public class RedmineIssueRequest implements Closeable
       {
         handler.logout();
       }
-      catch (RemineException ex)
+      catch (RedmineException ex)
       {
         throw new IOException("could not logout", ex);
       }
@@ -104,11 +104,11 @@ public class RedmineIssueRequest implements Closeable
    *
    * @throws RemineConnectException
    */
-  public RedmineHandler createJiraHandler() throws RemineConnectException
+  public RedmineHandler createRedmineHandler() throws RedmineException
   {
     if (handler == null)
     {
-      handler = handlerFactory.createJiraHandler(configuration.getUrl(),
+      handler = handlerFactory.createRedmineHandler(configuration.getUrl(),
               username, password);
     }
 

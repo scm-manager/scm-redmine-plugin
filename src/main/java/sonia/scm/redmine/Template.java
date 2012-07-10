@@ -42,19 +42,19 @@ public class Template
 
   /** Field description */
   public static final Template UPDATE_SIMPLE =
-    new Template("update-simple", "/sonia/scm/jira/update/simple.ftl");
+    new Template("update-simple", "/sonia/scm/redmine/update/simple.ftl");
 
   /** Field description */
   public static final Template UPDATE_EXTENDED =
-    new Template("update-extended", "/sonia/scm/jira/update/extended.ftl");
+    new Template("update-extended", "/sonia/scm/redmine/update/extended.ftl");
 
   /** Field description */
   public static final Template CLOSE_SIMPLE =
-    new Template("close-simple", "/sonia/scm/jira/autoclose/simple.ftl");
+    new Template("close-simple", "/sonia/scm/redmine/autoclose/simple.ftl");
 
   /** Field description */
   public static final Template CLOSE_EXTENDED =
-    new Template("close-extended", "/sonia/scm/jira/autoclose/extended.ftl");
+    new Template("close-extended", "/sonia/scm/redmine/autoclose/extended.ftl");
 
   //~--- constructors ---------------------------------------------------------
 

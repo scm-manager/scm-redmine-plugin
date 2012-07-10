@@ -62,10 +62,10 @@ public class RedmineChangesetPreProcessorFactory
   public static final String KEY_PATTERN = "({0}-[0-9]+)";
 
   /** Field description */
-  public static final String PROPERTY_JIRA_PROJECTKEYS = "jira.project-keys";
+  public static final String PROPERTY_REDMINE_PROJECTKEYS = "redmine.project-keys";
 
   /** Field description */
-  public static final String PROPERTY_JIRA_URL = "jira.url";
+  public static final String PROPERTY_REDMINE_URL = "redmine.url";
 
   /** Field description */
   public static final String REPLACEMENT_LINK =
@@ -85,15 +85,15 @@ public class RedmineChangesetPreProcessorFactory
   public RedmineChangesetPreProcessor createPreProcessor(Repository repository)
   {
     RedmineChangesetPreProcessor cpp = null;
-    String jiraUrl = repository.getProperty(PROPERTY_JIRA_URL);
-    String projectKeys = repository.getProperty(PROPERTY_JIRA_PROJECTKEYS);
+    String redmineUrl = repository.getProperty(PROPERTY_REDMINE_URL);
+    String projectKeys = repository.getProperty(PROPERTY_REDMINE_PROJECTKEYS);
 
-    if (Util.isNotEmpty(jiraUrl) && Util.isNotEmpty(projectKeys))
+    if (Util.isNotEmpty(redmineUrl) && Util.isNotEmpty(projectKeys))
     {
-      jiraUrl = HttpUtil.getUriWithoutEndSeperator(jiraUrl);
+      redmineUrl = HttpUtil.getUriWithoutEndSeperator(redmineUrl);
 
       String replacementPattern = MessageFormat.format(REPLACEMENT_LINK,
-                                    jiraUrl);
+                                    redmineUrl);
       List<Pattern> patternList = new ArrayList<Pattern>();
 
       for (String key : projectKeys.split(","))
