@@ -57,7 +57,7 @@ public class RedmineChangesetPreProcessorFactory
 
   /** Field description */
   public static final String REPLACEMENT_LINK =
-    "<a target=\"_blank\" href=\"{0}/browse/$0\">$0</a>";
+    "<a target=\"_blank\" href=\"{0}/issues/$1\">$0</a>";
 
   //~--- methods --------------------------------------------------------------
 

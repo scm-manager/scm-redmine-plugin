@@ -50,7 +50,7 @@ public class RedmineChangesetPreProcessor implements ChangesetPreProcessor
 {
 
     /** Field description */
-    public static final String KEY_PATTERN = "\\((#)[0-9]*\\)";
+    public static final String KEY_PATTERN = "\\(#([0-9]*)\\)";
 
     
   /**
@@ -91,7 +91,7 @@ public class RedmineChangesetPreProcessor implements ChangesetPreProcessor
 
       if (issueHandler != null)
       {
-        String key = m.group().replaceAll( "[^0-9]", "" );
+        String key = m.group(1);
         issueHandler.handleIssue(new Integer(key), changeset);
       }
     }
