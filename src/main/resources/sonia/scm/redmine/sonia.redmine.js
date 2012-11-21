@@ -69,7 +69,7 @@ Sonia.redmine.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
         name: 'redmineUrl',
         fieldLabel: this.urlText,
         property: 'redmine.url',
-        vtype: 'url',
+        vtype: 'urlsimple',
         helpText: this.urlHelpText
       },{
         id: 'redmineUpdateIssues',
@@ -147,3 +147,10 @@ Sonia.repository.openListeners.push(function(repository, panels){
   }
 });
 
+// custom Vtype for vtype:'IPAddress'
+Ext.apply(Ext.form.VTypes, {
+    urlsimple:  function(v) {
+		return /^[a-z]+:\/\//i.test(v);
+    },
+    urlsimpleText: 'Must be an url or ip address (including protocol prefix) for example http://www.your-server.com',
+});
