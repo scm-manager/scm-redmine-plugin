@@ -152,5 +152,5 @@ Ext.apply(Ext.form.VTypes, {
     urlsimple:  function(v) {
 		return /^[a-z]+:\/\//i.test(v);
     },
-    urlsimpleText: 'Must be an url or ip address (including protocol prefix) for example http://www.your-server.com',
+    urlsimpleText: 'Must be an url or ip address (including protocol prefix) for example http://www.your-server.com'
 });
