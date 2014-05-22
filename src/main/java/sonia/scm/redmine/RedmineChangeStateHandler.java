@@ -113,7 +113,8 @@ public class RedmineChangeStateHandler extends RedmineHandler
         logger.info("close issue {} by keyword {}", issueId, keyword);
 
         Issue issue = getManager().getIssueById(issueId);
-
+        
+        // TODO: this will only work with the default workflow
         issue.setStatusId(5);
         issue.setNotes(comment);
         getManager().update(issue);
