@@ -31,17 +31,19 @@
 
 
 
-package sonia.scm.redmine;
+package sonia.scm.redmine.config;
 
 //~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.PropertiesAware;
+import sonia.scm.Validateable;
+import sonia.scm.util.Util;
+
+//~--- JDK imports ------------------------------------------------------------
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import sonia.scm.Validateable;
-import sonia.scm.repository.Repository;
-import sonia.scm.util.Util;
 
 /**
  *
@@ -51,23 +53,23 @@ public class RedmineConfiguration implements Validateable
 {
 
   /** Field description */
-  public static final String PROPERTY_AUTOCLOSE = "redmine.auto-close";
+  static final String PROPERTY_AUTOCLOSE = "redmine.auto-close";
 
   /** Field description */
-  public static final String PROPERTY_AUTOCLOSEWORDS = "redmine.auto-close-words";
+  static final String PROPERTY_AUTOCLOSEWORDS = "redmine.auto-close-words";
 
   /** Field description */
-  public static final String PROPERTY_REDMINE_URL = "redmine.url";
+  static final String PROPERTY_REDMINE_URL = "redmine.url";
 
   /** Field description */
-  public static final String PROPERTY_UPDATEISSUES = "redmine.update-issues";
+  static final String PROPERTY_UPDATEISSUES = "redmine.update-issues";
 
   /** Field description */
-  public static final String PROPERTY_USERNAMETRANSFORMER =
+  static final String PROPERTY_USERNAMETRANSFORMER =
     "redmine.auto-close-username-transformer";
 
   /** Field description */
-  public static final String SEPARATOR = ",";
+  static final String SEPARATOR = ",";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -75,16 +77,16 @@ public class RedmineConfiguration implements Validateable
    * Constructs ...
    *
    *
-   * @param repository
+   * @param propsAware
    */
-  public RedmineConfiguration(Repository repository)
+  public RedmineConfiguration(PropertiesAware propsAware)
   {
-    url = repository.getProperty(PROPERTY_REDMINE_URL);
-    updateIssues = getBooleanProperty(repository, PROPERTY_UPDATEISSUES);
-    autoClose = getBooleanProperty(repository, PROPERTY_AUTOCLOSE);
-    autoCloseWords = getListProperty(repository, PROPERTY_AUTOCLOSEWORDS);
+    url = propsAware.getProperty(PROPERTY_REDMINE_URL);
+    updateIssues = getBooleanProperty(propsAware, PROPERTY_UPDATEISSUES);
+    autoClose = getBooleanProperty(propsAware, PROPERTY_AUTOCLOSE);
+    autoCloseWords = getListProperty(propsAware, PROPERTY_AUTOCLOSEWORDS);
     usernameTransformPattern =
-      repository.getProperty(PROPERTY_USERNAMETRANSFORMER);
+      propsAware.getProperty(PROPERTY_USERNAMETRANSFORMER);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -131,7 +133,7 @@ public class RedmineConfiguration implements Validateable
   public boolean isAutoCloseEnabled()
   {
     return isUpdateIssuesEnabled() && autoClose
-           && Util.isNotEmpty(autoCloseWords);
+      && Util.isNotEmpty(autoCloseWords);
   }
 
   /**
@@ -162,14 +164,16 @@ public class RedmineConfiguration implements Validateable
    *
    *
    * @param repository
+   *
+   * @param propsAware
    * @param key
    *
    * @return
    */
-  private boolean getBooleanProperty(Repository repository, String key)
+  private boolean getBooleanProperty(PropertiesAware propsAware, String key)
   {
     boolean result = false;
-    String value = repository.getProperty(key);
+    String value = propsAware.getProperty(key);
 
     if (Util.isNotEmpty(value))
     {
@@ -184,14 +188,16 @@ public class RedmineConfiguration implements Validateable
    *
    *
    * @param repository
+   *
+   * @param propsAware
    * @param key
    *
    * @return
    */
-  private List<String> getListProperty(Repository repository, String key)
+  private List<String> getListProperty(PropertiesAware propsAware, String key)
   {
     List<String> values = null;
-    String valueString = repository.getProperty(key);
+    String valueString = propsAware.getProperty(key);
 
     if (Util.isNotEmpty(valueString))
     {
