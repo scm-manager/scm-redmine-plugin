@@ -33,11 +33,14 @@ package sonia.scm.redmine;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
+import com.google.common.collect.Iterables;
 
 import com.taskadapter.redmineapi.RedmineException;
 import com.taskadapter.redmineapi.bean.Issue;
+import com.taskadapter.redmineapi.bean.IssueStatus;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +56,8 @@ import sonia.scm.template.TemplateEngineFactory;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -105,23 +110,29 @@ public class RedmineChangeStateHandler extends RedmineHandler
 
     try
     {
-
       String comment = createComment(request, keyword);
 
       if (!Strings.isNullOrEmpty(comment))
       {
-        logger.info("close issue {} by keyword {}", issueId, keyword);
-
+        logger.info("change state of issue {} by keyword {}", issueId, keyword);
+        
         Issue issue = getManager().getIssueById(issueId);
         
-        // TODO: this will only work with the default workflow
-        issue.setStatusId(5);
+        IssueStatus status = getIssueStatusByKeyword(keyword);
+        if (status != null)
+        {
+          issue.setStatusId(status.getId());
+        } 
+        else 
+        {
+          logger.warn("could not find keyword {} in issue status list", keyword);
+        }
         issue.setNotes(comment);
         getManager().update(issue);
       }
       else
       {
-        logger.warn("generate comment for close is null or empty");
+        logger.warn("generated comment for change state attempt is null or empty");
       }
 
     }
@@ -131,6 +142,20 @@ public class RedmineChangeStateHandler extends RedmineHandler
     }
   }
 
+  private IssueStatus getIssueStatusByKeyword(String keyword)
+  {
+    IssueStatus status = null;
+    for (IssueStatus s : getStatusList())
+    {
+      if (s.getName().equalsIgnoreCase(keyword))
+      {
+        status = s;
+        break;
+      }
+    }
+    return status;
+  }
+  
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -142,9 +167,26 @@ public class RedmineChangeStateHandler extends RedmineHandler
   @Override
   public Iterable<String> getKeywords()
   {
-    return configuration.getAutoCloseWords();
+    return Iterables.transform(getStatusList(), new Function<IssueStatus, String>(){
+      @Override
+      public String apply(IssueStatus input) {
+        return input.getName();
+      }
+    });
   }
 
+  private List<IssueStatus> getStatusList(){
+    if (statusList == null){
+      try {
+        statusList = getManager().getStatuses();
+      } catch (RedmineException ex){
+        logger.warn("failed to fetch issue status list", ex);
+        return Collections.emptyList();
+      }
+    }
+    return statusList;
+  }
+  
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -162,4 +204,6 @@ public class RedmineChangeStateHandler extends RedmineHandler
   {
     return engine.getTemplate(TEMPLATE);
   }
+  
+  private List<IssueStatus> statusList;
 }

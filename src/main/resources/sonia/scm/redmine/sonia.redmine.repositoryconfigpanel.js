@@ -62,20 +62,7 @@ Sonia.redmine.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
         xtype: 'checkbox',
         fieldLabel: Sonia.redmine.I18n.autoCloseText,
         property: 'redmine.auto-close',
-        helpText: Sonia.redmine.I18n.autoCloseHelpText,
-        listeners: {
-            check: {
-                fn: this.toggleAutoClose,
-                scope: this
-            }
-        }
-      },{
-        id: 'redmineAutoCloseWords',
-        name: 'redmineAutoCloseWords',
-        fieldLabel: Sonia.redmine.I18n.autoCloseWordsText,
-        property: 'redmine.auto-close-words',
-        helpText: Sonia.redmine.I18n.autoCloseWordsHelpText,
-        value: 'fixed, fix, closed, close, resolved, resolve'
+        helpText: Sonia.redmine.I18n.autoCloseHelpText
       },{
         id: 'redmineUsernameTransformer',
         name: 'redmineUsernameTransformer',
@@ -96,20 +83,11 @@ Sonia.redmine.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
   },
   
   toggleUpdateIssues: function(checkbox){
-    var autoClose = Ext.getCmp( 'redmineAutoClose' );
     var cmps = [
-      autoClose,
+      Ext.getCmp( 'redmineAutoClose' ),
       Ext.getCmp( 'redmineUsernameTransformer' )
     ];
     
-    Sonia.redmine.toggleCmps(cmps, checkbox);
-    this.toggleAutoClose(autoClose);
-  },
-  
-  toggleAutoClose: function(checkbox){
-    var cmps = [
-      Ext.getCmp( 'redmineAutoCloseWords' )
-    ];
     Sonia.redmine.toggleCmps(cmps, checkbox);
   }
   

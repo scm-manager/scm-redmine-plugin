@@ -62,20 +62,7 @@ Sonia.redmine.GlobalConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
         xtype: 'checkbox',
         inputValue: 'true',
         fieldLabel: Sonia.redmine.I18n.autoCloseText,
-        helpText: Sonia.redmine.I18n.autoCloseHelpText,
-        listeners: {
-          check: {
-            fn: this.toggleAutoClose,
-            scope: this
-          }
-        }
-      },{
-        id: 'redmineGlobalAutoCloseWords',
-        name: 'autoCloseWords',
-        xtype : 'textfield',
-        fieldLabel: Sonia.redmine.I18n.autoCloseWordsText,
-        helpText: Sonia.redmine.I18n.autoCloseWordsHelpText,
-        value: 'fixed, fix, closed, close, resolved, resolve'
+        helpText: Sonia.redmine.I18n.autoCloseHelpText
       },{
         id: 'redmineGlobalUsernameTransformer',
         name: 'usernameTransformPattern',
@@ -90,84 +77,75 @@ Sonia.redmine.GlobalConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
         inputValue: 'true',
         helpText: Sonia.redmine.I18n.repositoryConfigurationHelpText
       }]
-  };
+    };
 
-  Ext.apply(this, Ext.apply(this.initialConfig, config));
-  Sonia.redmine.GlobalConfigPanel.superclass.initComponent.apply(this, arguments);
-},
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.redmine.GlobalConfigPanel.superclass.initComponent.apply(this, arguments);
+  },
 
-onSubmit: function(values){
-  this.el.mask(this.submitText);
-  Ext.Ajax.request({
-    url: restUrl + 'plugins/redmine/global-config.json',
-    method: 'POST',
-    jsonData: values,
-    scope: this,
-    disableCaching: true,
-    success: function(){
-      this.el.unmask();
-    },
-    failure: function(){
-      this.el.unmask();
-      Ext.MessageBox.show({
-        title: Sonia.redmine.I18n.errorBoxTitle,
-        msg: Sonia.redmine.I18n.errorOnSubmitText,
-        buttons: Ext.MessageBox.OK,
-        icon: Ext.MessageBox.ERROR
-      });
-    }
-  });
-},
+  onSubmit: function(values){
+    this.el.mask(this.submitText);
+    Ext.Ajax.request({
+      url: restUrl + 'plugins/redmine/global-config.json',
+      method: 'POST',
+      jsonData: values,
+      scope: this,
+      disableCaching: true,
+      success: function(){
+        this.el.unmask();
+      },
+      failure: function(){
+        this.el.unmask();
+        Ext.MessageBox.show({
+          title: Sonia.redmine.I18n.errorBoxTitle,
+          msg: Sonia.redmine.I18n.errorOnSubmitText,
+          buttons: Ext.MessageBox.OK,
+          icon: Ext.MessageBox.ERROR
+        });
+      }
+    });
+  },
 
-onLoad: function(el){
-  var tid = setTimeout( function(){
-    el.mask(this.loadingText);
-  }, 100);
-  Ext.Ajax.request({
-    url: restUrl + 'plugins/redmine/global-config.json',
-    method: 'GET',
-    scope: this,
-    disableCaching: true,
-    success: function(response){
-      var obj = Ext.decode(response.responseText);
-      this.load(obj);
+  onLoad: function(el){
+    var tid = setTimeout( function(){
+      el.mask(this.loadingText);
+    }, 100);
+    Ext.Ajax.request({
+      url: restUrl + 'plugins/redmine/global-config.json',
+      method: 'GET',
+      scope: this,
+      disableCaching: true,
+      success: function(response){
+        var obj = Ext.decode(response.responseText);
+        this.load(obj);
 
-      var cmp = Ext.getCmp('redmineGlobalUpdateIssues');
-      this.toggleUpdateIssues(cmp);
+        var cmp = Ext.getCmp('redmineGlobalUpdateIssues');
+        this.toggleUpdateIssues(cmp);
 
-      clearTimeout(tid);
-      el.unmask();
-    },
-    failure: function(){
-      el.unmask();
-      clearTimeout(tid);
-      Ext.MessageBox.show({
-        title: Sonia.redmine.I18n.errorBoxTitle,
-        msg: Sonia.redmine.I18n.errorOnLoadText,
-        buttons: Ext.MessageBox.OK,
-        icon: Ext.MessageBox.ERROR
-      });
-    }
-  });
-},
+        clearTimeout(tid);
+        el.unmask();
+      },
+      failure: function(){
+        el.unmask();
+        clearTimeout(tid);
+        Ext.MessageBox.show({
+          title: Sonia.redmine.I18n.errorBoxTitle,
+          msg: Sonia.redmine.I18n.errorOnLoadText,
+          buttons: Ext.MessageBox.OK,
+          icon: Ext.MessageBox.ERROR
+        });
+      }
+    });
+  },
   
-toggleUpdateIssues: function(checkbox){
-  var autoClose = Ext.getCmp( 'redmineGlobalAutoClose' );
-  var cmps = [
-    autoClose,
-    Ext.getCmp( 'redmineGlobalUsernameTransformer' )
-  ];
+  toggleUpdateIssues: function(checkbox){
+    var cmps = [
+      Ext.getCmp( 'redmineGlobalAutoClose' ),
+      Ext.getCmp( 'redmineGlobalUsernameTransformer' )
+    ];
 
-  Sonia.redmine.toggleCmps(cmps, checkbox);
-  this.toggleAutoClose(autoClose);
-},
-  
-toggleAutoClose: function(checkbox){
-  var cmps = [
-    Ext.getCmp( 'redmineGlobalAutoCloseWords' )
-  ];
-  Sonia.redmine.toggleCmps(cmps, checkbox);
-}
+    Sonia.redmine.toggleCmps(cmps, checkbox);
+  },
 
 });
 

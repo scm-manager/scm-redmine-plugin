@@ -37,12 +37,12 @@ Sonia.redmine.I18n = {
   urlText: 'Url',
   urlHelpText: 'Url of redmine installation (with contextpath).',
   
-  autoCloseText: 'Enable Auto-Close',
-  autoCloseHelpText: 'Enables the auto close function. SCM-Manager searches for \n\
-                      issue keys and auto close words in commit messages. If \n\
-                      both found in a message SCM-Manager closes the issue in \n\
-                      the redmine server. <strong>Note:</strong> It is necessary \n\
-                      that users have the same password in SCM-Manager and redmine.',
+  autoCloseText: 'Enable State Change',
+  autoCloseHelpText: 'Enables the state changes function. SCM-Manager searches for \n\
+                      issue keys and issue status keywords in commit messages. If \n\
+                      both found in a message SCM-Manager changes the state of the issue in \n\
+                      Redmine. <strong>Note:</strong> It is necessary \n\
+                      that users have the same password in SCM-Manager and Redmine.',
   
   updateIssuesText: 'Update redmine Issues',
   updateIssuesHelpText: 'Enable the automatic update function. SCM-Manager searches for\n\
@@ -50,10 +50,6 @@ Sonia.redmine.I18n = {
                          updates the issue with a comment. <strong>Note:</strong> It \n\
                          is necessary that users have the same password in SCM-Manager \n\
                          and redmine.',
-  
-  autoCloseWordsText: 'Auto-Close Words',
-  autoCloseWordsHelpText: 'Comma separated list of words to enable the auto close function. \n\
-                           Each commit message of a changeset is being searched for these words.',
   
   usernameTransformerText: 'Transform Username',
   usernameTransformerHelpText: 'Pattern to create a username for the redmine server.</br>\n\
