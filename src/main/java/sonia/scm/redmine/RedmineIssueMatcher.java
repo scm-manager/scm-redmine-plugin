@@ -58,7 +58,7 @@ public class RedmineIssueMatcher implements IssueMatcher
     "<a target=\"_blank\" href=\"{0}/issues/$1\">$0</a>";
 
   /** Field description */
-  private static final Pattern KEY_PATTERN = Pattern.compile("\\(#(\\d+)\\)");
+  private static final Pattern KEY_PATTERN = Pattern.compile("#(\\d+)");
 
   //~--- constructors ---------------------------------------------------------
 
