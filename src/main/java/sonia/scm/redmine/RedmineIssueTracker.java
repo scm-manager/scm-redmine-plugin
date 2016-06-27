@@ -36,6 +36,7 @@ package sonia.scm.redmine;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import org.apache.shiro.SecurityUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,8 +49,12 @@ import sonia.scm.issuetracker.IssueRequest;
 import sonia.scm.issuetracker.LinkHandler;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.redmine.config.RedmineConfiguration;
+import sonia.scm.redmine.config.RedmineGlobalConfiguration;
 import sonia.scm.repository.Repository;
+import sonia.scm.security.Role;
 import sonia.scm.store.DataStoreFactory;
+import sonia.scm.store.Store;
+import sonia.scm.store.StoreFactory;
 import sonia.scm.template.TemplateEngineFactory;
 
 /**
@@ -76,16 +81,17 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTrack
    * Constructs ...
    *
    *
+   * @param storeFactory
    * @param dataStoreFactory
    * @param templateEngineFactory
    * @param linkHandlerProvider
    */
   @Inject
-  public RedmineIssueTracker(DataStoreFactory dataStoreFactory,
-    TemplateEngineFactory templateEngineFactory,
-    Provider<LinkHandler> linkHandlerProvider)
+  public RedmineIssueTracker(StoreFactory storeFactory, DataStoreFactory dataStoreFactory,
+    TemplateEngineFactory templateEngineFactory, Provider<LinkHandler> linkHandlerProvider)
   {
     super(NAME, dataStoreFactory);
+    this.globalConfigurationStore = storeFactory.getStore(RedmineGlobalConfiguration.class, NAME);
     this.templateEngineFactory = templateEngineFactory;
     this.linkHandlerProvider = linkHandlerProvider;
   }
@@ -186,17 +192,41 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTrack
     {
       logger.debug("repository config for {} is not valid",
         repository.getName());
+      cfg = getGlobalConfiguration();
+    }
+
+    if (!cfg.isValid())
+    {
+      logger.debug("no valid configuration for repository {} found",
+        repository.getName());
       cfg = null;
     }
 
     return cfg;
   }
 
+  public void setGlobalConfiguration(RedmineGlobalConfiguration updatedConfig) {
+    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    globalConfigurationStore.set(updatedConfig);
+  }
+  
+  public RedmineGlobalConfiguration getGlobalConfiguration() {
+    RedmineGlobalConfiguration configuration = globalConfigurationStore.get();
+    if (configuration == null){
+      configuration = new RedmineGlobalConfiguration();
+    }
+    return configuration;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
+  private final Store<RedmineGlobalConfiguration> globalConfigurationStore;
+  
   /** Field description */
   private final Provider<LinkHandler> linkHandlerProvider;
 
   /** Field description */
   private final TemplateEngineFactory templateEngineFactory;
+
+
 }

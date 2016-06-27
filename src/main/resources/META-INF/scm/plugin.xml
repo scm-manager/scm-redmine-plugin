@@ -50,6 +50,7 @@
 
   <resources>
     <script>/sonia/scm/redmine/sonia.redmine.js</script>
+    <script>/sonia/scm/redmine/sonia.redmine.globalconfigpanel.js</script>
   </resources>
 
 </plugin>

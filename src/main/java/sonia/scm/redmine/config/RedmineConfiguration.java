@@ -35,6 +35,8 @@ package sonia.scm.redmine.config;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import sonia.scm.PropertiesAware;
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
@@ -43,12 +45,18 @@ import sonia.scm.util.Util;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import sonia.scm.xml.XmlSetStringAdapter;
 
 /**
  *
+ * @author Sebastian Sdorra
  * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class RedmineConfiguration implements Validateable
 {
 
@@ -75,6 +83,12 @@ public class RedmineConfiguration implements Validateable
 
   /**
    * Constructs ...
+   */
+  public RedmineConfiguration() {
+  }
+  
+  /**
+   * Constructs ...
    *
    *
    * @param propsAware
@@ -84,7 +98,7 @@ public class RedmineConfiguration implements Validateable
     url = propsAware.getProperty(PROPERTY_REDMINE_URL);
     updateIssues = getBooleanProperty(propsAware, PROPERTY_UPDATEISSUES);
     autoClose = getBooleanProperty(propsAware, PROPERTY_AUTOCLOSE);
-    autoCloseWords = getListProperty(propsAware, PROPERTY_AUTOCLOSEWORDS);
+    autoCloseWords = getSetProperty(propsAware, PROPERTY_AUTOCLOSEWORDS);
     usernameTransformPattern =
       propsAware.getProperty(PROPERTY_USERNAMETRANSFORMER);
   }
@@ -97,7 +111,7 @@ public class RedmineConfiguration implements Validateable
    *
    * @return
    */
-  public List<String> getAutoCloseWords()
+  public Set<String> getAutoCloseWords()
   {
     return autoCloseWords;
   }
@@ -194,18 +208,18 @@ public class RedmineConfiguration implements Validateable
    *
    * @return
    */
-  private List<String> getListProperty(PropertiesAware propsAware, String key)
+  private Set<String> getSetProperty(PropertiesAware propsAware, String key)
   {
-    List<String> values = null;
+    Set<String> values;
     String valueString = propsAware.getProperty(key);
 
     if (Util.isNotEmpty(valueString))
     {
-      values = Arrays.asList(valueString.split(SEPARATOR));
+      values = Sets.newLinkedHashSet(Arrays.asList(valueString.split(SEPARATOR)));
     }
     else
     {
-      values = Collections.emptyList();
+      values = Collections.emptySet();
     }
 
     return values;
@@ -217,7 +231,10 @@ public class RedmineConfiguration implements Validateable
   private boolean autoClose;
 
   /** Field description */
-  private List<String> autoCloseWords;
+  @XmlJavaTypeAdapter(XmlSetStringAdapter.class)
+  private Set<String> autoCloseWords = Sets.newLinkedHashSet(
+    Lists.newArrayList("fixed","fix", "closed", "close", "resolved", "resolve")
+  );
 
   /** Field description */
   private boolean updateIssues;
@@ -226,5 +243,5 @@ public class RedmineConfiguration implements Validateable
   private String url;
 
   /** Field description */
-  private String usernameTransformPattern;
+  private String usernameTransformPattern = "{0}";
 }

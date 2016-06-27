@@ -31,9 +31,9 @@
 
 Ext.ns('Sonia.redmine');
 
-Sonia.redmine.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
+Sonia.redmine.I18n = {
+  formTitleText: 'Redmine',
   
-  formTitleText: 'redmine',
   urlText: 'Url',
   urlHelpText: 'Url of redmine installation (with contextpath).',
   
@@ -60,92 +60,41 @@ Sonia.redmine.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
                                 {0} - name of the current user</br>\n\
                                 {1} - mail address of the current user</br>\n\
                                 {2} - display name of the current user',
-  
-  initComponent: function(){
     
-    var config = {
-      title: this.formTitleText,
-      items: [{
-        name: 'redmineUrl',
-        fieldLabel: this.urlText,
-        property: 'redmine.url',
-        vtype: 'urlsimple',
-        helpText: this.urlHelpText
-      },{
-        id: 'redmineUpdateIssues',
-        name: 'redmineUpdateIssues',
-        xtype: 'checkbox',
-        fieldLabel: this.updateIssuesText,
-        property: 'redmine.update-issues',
-        helpText: this.updateIssuesHelpText
-      },{
-        id: 'redmineAutoClose',
-        name: 'redmineAutoClose',
-        xtype: 'checkbox',
-        fieldLabel: this.autoCloseText,
-        property: 'redmine.auto-close',
-        helpText: this.autoCloseHelpText,
-        listeners: {
-            check: this.toggleUpdateIssues
-          }
-      },{
-        id: 'redmineAutoCloseWords',
-        name: 'redmineAutoCloseWords',
-        fieldLabel: this.autoCloseWordsText,
-        property: 'redmine.auto-close-words',
-        helpText: this.autoCloseWordsHelpText,
-        value: 'fixed, fix, closed, close, resolved, resolve'
-      },{
-        id: 'redmineUsernameTransformer',
-        name: 'redmineUsernameTransformer',
-        fieldLabel: this.usernameTransformerText,
-        property: 'redmine.auto-close-username-transformer',
-        helpText: this.usernameTransformerHelpText,
-        value: '{0}'
-      }]
-    }
-    
-    Ext.apply(this, Ext.apply(this.initialConfig, config));
-    Sonia.redmine.ConfigPanel.superclass.initComponent.apply(this, arguments);
-  },
-  
-  loadExtraProperties: function(item){
-    var cmp = Ext.getCmp('redmineAutoClose');
-    this.toggleUpdateIssues.call(cmp);
-  },
-  
-  toggleUpdateIssues: function(){
-    var cmps = [
-      Ext.getCmp( 'redmineAutoClose' ),
-      Ext.getCmp( 'redmineAutoCloseWords' ),
-      Ext.getCmp( 'redmineUsernameTransformer' )
-    ];
-    
-    Ext.each(cmps, function(cmp){
-      cmp.setReadOnly(!this.checked);
-      if ( ! this.checked ){
-        cmp.addClass('x-item-disabled');
+  repositoryConfigurationText: 'Do not allow repository configuration',
+  repositoryConfigurationHelpText: 'Do not allow repository owners to configure Redmine instances. \n\
+    You have to restart your application server after changing this value.',
+
+  // errors
+  errorBoxTitle: 'Error',
+  errorOnSubmitText: 'Error during config submit.',
+  errorOnLoadText: 'Error during config load.'
+};
+
+Sonia.redmine.toggleCmps = function(cmps, scope){
+  Ext.each(cmps, function(cmp){
+    var checked = this.getValue();
+    // If cmp is a checkbox, use enable/disable.
+    if (cmp.getXType() === "checkbox") {
+      if (!checked) {
+        cmp.disable();
+      } else {
+        cmp.enable();
+      }
+    } else {
+      // Add/remove CSS class which indicates disabling.
+      if (!checked ) {
+        if ( ! cmp.readOnly ){
+          cmp.addClass('x-item-disabled');
+        }
       } else {
         cmp.removeClass('x-item-disabled');
       }
-    }, this);
-  }
-  
-  
-});
-
-// register xtype
-Ext.reg("redmineConfigPanel", Sonia.redmine.ConfigPanel);
-
-// register panel
-Sonia.repository.openListeners.push(function(repository, panels){
-  if (Sonia.repository.isOwner(repository)){
-    panels.push({
-      xtype: 'redmineConfigPanel',
-      item: repository
-    });
-  }
-});
+      
+      cmp.setReadOnly(!checked);
+    }
+  }, scope);
+};
 
 // custom Vtype for vtype:'IPAddress'
 Ext.apply(Ext.form.VTypes, {
