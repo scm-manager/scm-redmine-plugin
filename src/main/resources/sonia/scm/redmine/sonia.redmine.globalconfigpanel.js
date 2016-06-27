@@ -145,7 +145,7 @@ Sonia.redmine.GlobalConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
     ];
 
     Sonia.redmine.toggleCmps(cmps, checkbox);
-  },
+  }
 
 });
 
