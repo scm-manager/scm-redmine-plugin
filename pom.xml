@@ -48,53 +48,30 @@
 
   <build>
     <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.4</version>
+        <configuration>
+          <useStandardDocletOptions>true</useStandardDocletOptions>
+          <charset>${project.build.sourceEncoding}</charset>
+          <encoding>${project.build.sourceEncoding}</encoding>
+          <docencoding>${project.build.sourceEncoding}</docencoding>
+          <breakiterator>true</breakiterator>
+          <version>true</version>
+          <author>true</author>
+          <keywords>true</keywords>
+          <links>
+            <link>http://download.oracle.com/javase/7/docs/api/</link>
+            <link>http://www.slf4j.org/api/</link>
+          </links>
+        </configuration>
+      </plugin>
+
     </plugins>
-    <pluginManagement>
-      <plugins>
-        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-        <plugin>
-          <groupId>org.eclipse.m2e</groupId>
-          <artifactId>lifecycle-mapping</artifactId>
-          <version>1.0.0</version>
-          <configuration>
-            <lifecycleMappingMetadata>
-              <pluginExecutions>
-                <pluginExecution>
-                  <pluginExecutionFilter>
-                    <groupId>sonia.scm.maven</groupId>
-                    <artifactId>scm-maven-plugin</artifactId>
-                    <versionRange>[1.9,)</versionRange>
-                    <goals>
-                      <goal>fix-descriptor</goal>
-                    </goals>
-                  </pluginExecutionFilter>
-                  <action>
-                    <ignore />
-                  </action>
-                </pluginExecution>
-              </pluginExecutions>
-            </lifecycleMappingMetadata>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
   </build>
 
-  <pluginRepositories>
-
-    <pluginRepository>
-      <id>codehaus.org</id>
-      <name>CodeHaus Plugin Snapshots</name>
-      <url>http://repository.codehaus.org</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-
-  </pluginRepositories>
 
   <repositories>
 
@@ -105,5 +82,42 @@
     </repository>
 
   </repositories>
+
+  <profiles>
+    <profile>
+      <id>APIviz</id>
+      <activation>
+        <property>
+          <name>sonia.apiviz</name>
+          <value>true</value>
+        </property>
+      </activation>
+
+      <build>
+        <plugins>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.8.1</version>
+            <configuration>
+              <doclet>org.jboss.apiviz.APIviz</doclet>
+              <docletArtifact>
+                <groupId>org.jboss.apiviz</groupId>
+                <artifactId>apiviz</artifactId>
+                <version>1.3.2.GA</version>
+              </docletArtifact>
+              <additionalparam>
+                -sourceclasspath ${project.build.outputDirectory}
+                -nopackagediagram
+              </additionalparam>
+            </configuration>
+          </plugin>
+
+        </plugins>
+      </build>
+
+    </profile>
+  </profiles>
 
 </project>
