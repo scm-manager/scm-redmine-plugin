@@ -40,12 +40,16 @@ import com.taskadapter.redmineapi.RedmineManager;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.issuetracker.Credentials;
 import sonia.scm.issuetracker.IssueRequest;
 import sonia.scm.issuetracker.LinkHandler;
 import sonia.scm.issuetracker.TemplateBasedHandler;
 import sonia.scm.redmine.config.RedmineConfiguration;
 import sonia.scm.security.Role;
+import sonia.scm.template.Template;
+import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
 import sonia.scm.user.User;
 
@@ -55,6 +59,7 @@ import java.io.Closeable;
 import java.io.IOException;
 
 import java.text.MessageFormat;
+import java.util.Locale;
 
 /**
  *
@@ -63,6 +68,11 @@ import java.text.MessageFormat;
 public abstract class RedmineHandler extends TemplateBasedHandler
   implements Closeable
 {
+
+  private static final Logger logger = LoggerFactory.getLogger(RedmineHandler.class);
+
+  /** Field description */
+  private static final String TEMPLATE_BASE_PATH = "scm/template/";
 
   /**
    * Constructs ...
@@ -174,6 +184,20 @@ public abstract class RedmineHandler extends TemplateBasedHandler
 
     return username;
   }
+
+  @Override
+  protected Template loadTemplate(TemplateEngine engine) throws IOException {
+    String templatePath = buildTemplatePath();
+    logger.debug("load template {}", templatePath);
+    return engine.getTemplate(templatePath);
+  }
+
+  private String buildTemplatePath() {
+    String type = configuration.getTextFormatting().name().toLowerCase(Locale.ENGLISH);
+    return TEMPLATE_BASE_PATH + type + "/" + getTemplateName();
+  }
+
+  protected abstract String getTemplateName();
 
   //~--- fields ---------------------------------------------------------------
 

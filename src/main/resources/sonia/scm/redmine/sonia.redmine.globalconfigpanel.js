@@ -34,7 +34,6 @@ Ext.ns('Sonia.redmine');
 Sonia.redmine.GlobalConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
 
   initComponent: function(){
-
     var config = {
       title: Sonia.redmine.I18n.formTitleText,
       items: [{
@@ -43,7 +42,7 @@ Sonia.redmine.GlobalConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
         fieldLabel: Sonia.redmine.I18n.urlText,
         vtype: 'urlsimple',
         helpText: Sonia.redmine.I18n.urlHelpText
-      },{
+      }, {
         id: 'redmineGlobalUpdateIssues',
         name: 'updateIssues',
         xtype: 'checkbox',
@@ -56,6 +55,20 @@ Sonia.redmine.GlobalConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
             scope: this
           }
         }
+      },{
+        id: 'redmineTextFormatting',
+        name: 'textFormatting',
+        xtype: 'combo',
+        store: Sonia.redmine.createTextFormattingStore(),
+        mode: 'local',
+        triggerAction: 'all',
+        editable: false,
+        allowBlank: true,
+        valueField: 'enumValue',
+        displayField: 'displayName',
+        hiddenName: 'textFormatting',
+        fieldLabel: Sonia.redmine.I18n.textFormattingText,
+        helpText: Sonia.redmine.I18n.textFormattingHelpText
       },{
         id: 'redmineGlobalAutoClose',
         name: 'autoClose',
@@ -140,6 +153,7 @@ Sonia.redmine.GlobalConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   
   toggleUpdateIssues: function(checkbox){
     var cmps = [
+      Ext.getCmp( 'redmineTextFormatting' ),
       Ext.getCmp( 'redmineGlobalAutoClose' ),
       Ext.getCmp( 'redmineGlobalUsernameTransformer' )
     ];

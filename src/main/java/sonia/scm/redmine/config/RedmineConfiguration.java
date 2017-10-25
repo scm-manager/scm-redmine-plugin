@@ -35,6 +35,7 @@ package sonia.scm.redmine.config;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
 import sonia.scm.PropertiesAware;
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
@@ -66,8 +67,7 @@ public class RedmineConfiguration implements Validateable
   static final String PROPERTY_USERNAMETRANSFORMER =
     "redmine.auto-close-username-transformer";
 
-  /** Field description */
-  static final String SEPARATOR = ",";
+  static final String PROPERTY_TEXT_FORMATTING = "redmine.text-formatting";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -89,6 +89,10 @@ public class RedmineConfiguration implements Validateable
     updateIssues = getBooleanProperty(propsAware, PROPERTY_UPDATEISSUES);
     autoClose = getBooleanProperty(propsAware, PROPERTY_AUTOCLOSE);
     usernameTransformPattern = propsAware.getProperty(PROPERTY_USERNAMETRANSFORMER);
+    String textFormattingProperty = propsAware.getProperty(PROPERTY_TEXT_FORMATTING);
+    if (!Strings.isNullOrEmpty(textFormattingProperty)) {
+      textFormatting = TextFormatting.valueOf(textFormattingProperty);
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -137,6 +141,10 @@ public class RedmineConfiguration implements Validateable
     return isValid() && updateIssues;
   }
 
+  public TextFormatting getTextFormatting() {
+    return textFormatting;
+  }
+
   /**
    * Method description
    *
@@ -151,9 +159,6 @@ public class RedmineConfiguration implements Validateable
 
   /**
    * Method description
-   *
-   *
-   * @param repository
    *
    * @param propsAware
    * @param key
@@ -186,4 +191,7 @@ public class RedmineConfiguration implements Validateable
 
   /** Field description */
   private String usernameTransformPattern = "{0}";
+
+  /** Field description */
+  private TextFormatting textFormatting = TextFormatting.TEXTILE;
 }

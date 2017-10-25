@@ -63,7 +63,7 @@ public class RedmineCommentHandler extends RedmineHandler
 {
 
   /** Field description */
-  private static final String TEMPLATE = "scm/template/update.mustache";
+  private static final String TEMPLATE_NAME = "update.mustache";
 
   /**
    * the logger for RedmineCommentHandler
@@ -128,19 +128,8 @@ public class RedmineCommentHandler extends RedmineHandler
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param engine
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   @Override
-  protected Template loadTemplate(TemplateEngine engine) throws IOException
-  {
-    return engine.getTemplate(TEMPLATE);
+  protected String getTemplateName() {
+    return TEMPLATE_NAME;
   }
 }

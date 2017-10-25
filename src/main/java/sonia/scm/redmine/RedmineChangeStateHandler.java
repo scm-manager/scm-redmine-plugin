@@ -68,7 +68,7 @@ public class RedmineChangeStateHandler extends RedmineHandler
 {
 
   /** Field description */
-  private static final String TEMPLATE = "scm/template/changeState.mustache";
+  private static final String TEMPLATE_NAME = "changeState.mustache";
 
   /**
    * the logger for RedmineChangeStateHandler
@@ -189,20 +189,9 @@ public class RedmineChangeStateHandler extends RedmineHandler
   
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param engine
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   @Override
-  protected Template loadTemplate(TemplateEngine engine) throws IOException
-  {
-    return engine.getTemplate(TEMPLATE);
+  protected String getTemplateName() {
+    return TEMPLATE_NAME;
   }
   
   private List<IssueStatus> statusList;

@@ -57,6 +57,22 @@ Sonia.redmine.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
             }
         }
       },{
+        id: 'redmineTextFormatting',
+        name: 'redmineTextFormatting',
+        xtype: 'combo',
+        store: Sonia.redmine.createTextFormattingStore(),
+        mode: 'local',
+        triggerAction: 'all',
+        editable: false,
+        allowBlank: true,
+        value: 'TEXTILE',
+        valueField: 'enumValue',
+        displayField: 'displayName',
+        hiddenName: 'textFormatting',
+        property: 'redmine.text-formatting',
+        fieldLabel: Sonia.redmine.I18n.textFormattingText,
+        helpText: Sonia.redmine.I18n.textFormattingHelpText
+      },{
         id: 'redmineAutoClose',
         name: 'redmineAutoClose',
         xtype: 'checkbox',
@@ -78,17 +94,40 @@ Sonia.redmine.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
   },
   
   loadExtraProperties: function(item){
+    console.log(item);
     var cmp = Ext.getCmp('redmineUpdateIssues');
     this.toggleUpdateIssues(cmp);
   },
   
   toggleUpdateIssues: function(checkbox){
     var cmps = [
+      Ext.getCmp( 'redmineTextFormatting' ),
       Ext.getCmp( 'redmineAutoClose' ),
       Ext.getCmp( 'redmineUsernameTransformer' )
     ];
     
     Sonia.redmine.toggleCmps(cmps, checkbox);
+  },
+
+  storeExtraProperties: function(item) {
+    // fix textformatting property
+    if (item.textFormatting) {
+      for ( var k in item.properties) {
+        var property = item.properties[k];
+        if (property.key == 'redmine.text-formatting') {
+          property.value = item.textFormatting;
+          break;
+        }
+      }
+
+      if (item.textFormatting) {
+        item.properties.push({
+          key: 'redmine.text-formatting',
+          value: item.textFormatting
+        });
+      }
+    }
+    delete item.textFormatting;
   }
   
 });

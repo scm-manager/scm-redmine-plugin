@@ -50,6 +50,9 @@ Sonia.redmine.I18n = {
                          updates the issue with a comment. <strong>Note:</strong> It \n\
                          is necessary that users have the same password in SCM-Manager \n\
                          and redmine.',
+
+  textFormattingText: 'Text Formatting',
+  textFormattingHelpText: 'Type of text formatting used for redmine comments.',
   
   usernameTransformerText: 'Transform Username',
   usernameTransformerHelpText: 'Pattern to create a username for the redmine server.</br>\n\
@@ -65,6 +68,13 @@ Sonia.redmine.I18n = {
   errorBoxTitle: 'Error',
   errorOnSubmitText: 'Error during config submit.',
   errorOnLoadText: 'Error during config load.'
+};
+
+Sonia.redmine.createTextFormattingStore = function() {
+  return new Ext.data.ArrayStore({
+    fields: ['displayName', 'enumValue'],
+    data: [['Textile', 'TEXTILE'], ['Markdown', 'MARKDOWN']]
+  });
 };
 
 Sonia.redmine.toggleCmps = function(cmps, scope){
