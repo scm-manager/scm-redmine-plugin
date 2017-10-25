@@ -27,3 +27,5 @@ Desktop DF$
 # vagrant
 .vagrant
 .git
+.idea
+\.iml$
