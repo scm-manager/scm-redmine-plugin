@@ -1,19 +1,19 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,16 +24,13 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
-
 
 
 package sonia.scm.redmine.config;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 import sonia.scm.PropertiesAware;
@@ -51,40 +48,24 @@ import javax.xml.bind.annotation.XmlAccessorType;
  * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class RedmineConfiguration implements Validateable
-{
+public class RedmineConfiguration implements Validateable {
 
-  /** Field description */
   static final String PROPERTY_AUTOCLOSE = "redmine.auto-close";
-
-  /** Field description */
   static final String PROPERTY_REDMINE_URL = "redmine.url";
-
-  /** Field description */
   static final String PROPERTY_UPDATEISSUES = "redmine.update-issues";
-
-  /** Field description */
-  static final String PROPERTY_USERNAMETRANSFORMER =
-    "redmine.auto-close-username-transformer";
-
+  static final String PROPERTY_USERNAMETRANSFORMER = "redmine.auto-close-username-transformer";
   static final String PROPERTY_TEXT_FORMATTING = "redmine.text-formatting";
 
-  //~--- constructors ---------------------------------------------------------
+  private boolean autoClose;
+  private boolean updateIssues;
+  private String url;
+  private String usernameTransformPattern = "{0}";
+  private TextFormatting textFormatting = TextFormatting.TEXTILE;
 
-  /**
-   * Constructs ...
-   */
   public RedmineConfiguration() {
   }
-  
-  /**
-   * Constructs ...
-   *
-   *
-   * @param propsAware
-   */
-  public RedmineConfiguration(PropertiesAware propsAware)
-  {
+
+  public RedmineConfiguration(PropertiesAware propsAware) {
     url = propsAware.getProperty(PROPERTY_REDMINE_URL);
     updateIssues = getBooleanProperty(propsAware, PROPERTY_UPDATEISSUES);
     autoClose = getBooleanProperty(propsAware, PROPERTY_AUTOCLOSE);
@@ -95,49 +76,19 @@ public class RedmineConfiguration implements Validateable
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getUrl()
-  {
+  public String getUrl() {
     return url;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getUsernameTransformPattern()
-  {
+  public String getUsernameTransformPattern() {
     return usernameTransformPattern;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public boolean isAutoCloseEnabled()
-  {
+  public boolean isAutoCloseEnabled() {
     return isUpdateIssuesEnabled() && autoClose;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public boolean isUpdateIssuesEnabled()
-  {
+  public boolean isUpdateIssuesEnabled() {
     return isValid() && updateIssues;
   }
 
@@ -145,53 +96,19 @@ public class RedmineConfiguration implements Validateable
     return textFormatting;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public boolean isValid()
-  {
+  public boolean isValid() {
     return Util.isNotEmpty(url);
   }
 
-  /**
-   * Method description
-   *
-   * @param propsAware
-   * @param key
-   *
-   * @return
-   */
-  private boolean getBooleanProperty(PropertiesAware propsAware, String key)
-  {
+  private boolean getBooleanProperty(PropertiesAware propsAware, String key) {
     boolean result = false;
     String value = propsAware.getProperty(key);
 
-    if (Util.isNotEmpty(value))
-    {
+    if (Util.isNotEmpty(value)) {
       result = Boolean.parseBoolean(value);
     }
 
     return result;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private boolean autoClose;
-
-  /** Field description */
-  private boolean updateIssues;
-
-  /** Field description */
-  private String url;
-
-  /** Field description */
-  private String usernameTransformPattern = "{0}";
-
-  /** Field description */
-  private TextFormatting textFormatting = TextFormatting.TEXTILE;
 }

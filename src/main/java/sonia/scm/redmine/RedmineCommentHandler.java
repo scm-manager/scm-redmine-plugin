@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer. 2. Redistributions in
  * binary form must reproduce the above copyright notice, this list of
@@ -11,7 +11,7 @@
  * materials provided with the distribution. 3. Neither the name of SCM-Manager;
  * nor the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -22,16 +22,13 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
-
 
 
 package sonia.scm.redmine;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
@@ -46,85 +43,47 @@ import sonia.scm.issuetracker.CommentHandler;
 import sonia.scm.issuetracker.IssueRequest;
 import sonia.scm.issuetracker.LinkHandler;
 import sonia.scm.redmine.config.RedmineConfiguration;
-import sonia.scm.template.Template;
-import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 /**
- *
  * @author Sebastian Sdorra
  */
 public class RedmineCommentHandler extends RedmineHandler
-  implements CommentHandler
-{
+  implements CommentHandler {
 
-  /** Field description */
   private static final String TEMPLATE_NAME = "update.mustache";
-
-  /**
-   * the logger for RedmineCommentHandler
-   */
   private static final Logger logger =
     LoggerFactory.getLogger(RedmineCommentHandler.class);
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param templateEngineFactory
-   * @param linkHandler
-   * @param configuration
-   * @param request
-   */
   public RedmineCommentHandler(TemplateEngineFactory templateEngineFactory,
-    LinkHandler linkHandler, RedmineConfiguration configuration,
-    IssueRequest request)
-  {
+                               LinkHandler linkHandler, RedmineConfiguration configuration,
+                               IssueRequest request) {
     super(templateEngineFactory, linkHandler, configuration, request);
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param issueIdString
-   */
   @Override
-  public void commentIssue(String issueIdString)
-  {
+  public void commentIssue(String issueIdString) {
     int issueId = parseIssueId(issueIdString);
 
-    try
-    {
-
+    try {
       String comment = createComment(request);
 
-      if (!Strings.isNullOrEmpty(comment))
-      {
+      if (!Strings.isNullOrEmpty(comment)) {
         logger.info("add comment to issue {}", issueId);
 
         Issue issue = getManager().getIssueById(issueId);
 
         issue.setNotes(comment);
         getManager().update(issue);
-      }
-      else
-      {
+      } else {
         logger.warn("generate comment is null or empty");
       }
 
-    }
-    catch (RedmineException ex)
-    {
-      throw Throwables.propagate(ex);
+    } catch (RedmineException ex) {
+      throw new RuntimeException(ex);
     }
   }
 

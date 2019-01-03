@@ -1,9 +1,8 @@
 # netbeans temp & private files
 /?target/
-release.properties
 nbactions.*\.xml
-nb-configuration.xml
-nbproject/
+/?nbproject/
+nb-configuration\.xml
 # MacOS X Files
 \.DS_Store$
 \._\.DS_Store$
@@ -24,8 +23,14 @@ Desktop DF$
 \.project
 \.classpath
 \.settings
-# vagrant
-.vagrant
-.git
-.idea
-\.iml$
+# idea files
+\.iml
+\.idea$
+# jrebel
+rebel.xml
+\.pyc
+# ui
+scm-ui/build
+scm-ui/coverage
+/?node_modules/
+

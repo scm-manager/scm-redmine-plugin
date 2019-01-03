@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer. 2. Redistributions in
  * binary form must reproduce the above copyright notice, this list of
@@ -11,7 +11,7 @@
  * materials provided with the distribution. 3. Neither the name of SCM-Manager;
  * nor the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -22,11 +22,9 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
-
 
 
 package sonia.scm.redmine;
@@ -47,14 +45,14 @@ import sonia.scm.issuetracker.DataStoreBasedIssueTrack;
 import sonia.scm.issuetracker.IssueMatcher;
 import sonia.scm.issuetracker.IssueRequest;
 import sonia.scm.issuetracker.LinkHandler;
-import sonia.scm.plugin.ext.Extension;
+import sonia.scm.plugin.Extension;
 import sonia.scm.redmine.config.RedmineConfiguration;
 import sonia.scm.redmine.config.RedmineGlobalConfiguration;
 import sonia.scm.repository.Repository;
 import sonia.scm.security.Role;
+import sonia.scm.store.ConfigurationStore;
+import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.DataStoreFactory;
-import sonia.scm.store.Store;
-import sonia.scm.store.StoreFactory;
 import sonia.scm.template.TemplateEngineFactory;
 
 /**
@@ -63,88 +61,54 @@ import sonia.scm.template.TemplateEngineFactory;
  */
 @Singleton
 @Extension
-public class RedmineIssueTracker extends DataStoreBasedIssueTrack
-{
+public class RedmineIssueTracker extends DataStoreBasedIssueTrack {
 
-  /** Field description */
   private static final String NAME = "redmine";
 
-  /**
-   * the logger for RedmineIssueTracker
-   */
   private static final Logger logger =
     LoggerFactory.getLogger(RedmineIssueTracker.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final ConfigurationStore<RedmineGlobalConfiguration> globalConfigurationStore;
+  private final Provider<LinkHandler> linkHandlerProvider;
+  private final TemplateEngineFactory templateEngineFactory;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param storeFactory
-   * @param dataStoreFactory
-   * @param templateEngineFactory
-   * @param linkHandlerProvider
-   */
+
+
+
   @Inject
-  public RedmineIssueTracker(StoreFactory storeFactory, DataStoreFactory dataStoreFactory,
-    TemplateEngineFactory templateEngineFactory, Provider<LinkHandler> linkHandlerProvider)
-  {
+  public RedmineIssueTracker(ConfigurationStoreFactory storeFactory, DataStoreFactory dataStoreFactory,
+                             TemplateEngineFactory templateEngineFactory, Provider<LinkHandler> linkHandlerProvider) {
     super(NAME, dataStoreFactory);
-    this.globalConfigurationStore = storeFactory.getStore(RedmineGlobalConfiguration.class, NAME);
+    this.globalConfigurationStore = storeFactory.withType(RedmineGlobalConfiguration.class).withName(NAME).build();
     this.templateEngineFactory = templateEngineFactory;
     this.linkHandlerProvider = linkHandlerProvider;
   }
-  
-  
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
+
+
   @Override
-  protected ChangeStateHandler getChangeStateHandler(IssueRequest request)
-  {
+  protected ChangeStateHandler getChangeStateHandler(IssueRequest request) {
     ChangeStateHandler changeStateHandler = null;
     RedmineConfiguration cfg = resolveConfiguration(request.getRepository());
 
-    if ((cfg != null) && cfg.isAutoCloseEnabled())
-    {
+    if ((cfg != null) && cfg.isAutoCloseEnabled()) {
       changeStateHandler = new RedmineChangeStateHandler(templateEngineFactory,
         linkHandlerProvider.get(), cfg, request);
-    }
-    else
-    {
+    } else {
       logger.debug("configuration is not valid or change state is disabled");
     }
 
     return changeStateHandler;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
   @Override
-  protected CommentHandler getCommentHandler(IssueRequest request)
-  {
+  protected CommentHandler getCommentHandler(IssueRequest request) {
     CommentHandler commentHandler = null;
     RedmineConfiguration cfg = resolveConfiguration(request.getRepository());
 
-    if ((cfg != null) && cfg.isUpdateIssuesEnabled())
-    {
+    if ((cfg != null) && cfg.isUpdateIssuesEnabled()) {
       commentHandler = new RedmineCommentHandler(templateEngineFactory,
         linkHandlerProvider.get(), cfg, request);
-    }
-    else
-    {
+    } else {
       logger.debug("configuration is not valid or update is disabled");
     }
 
@@ -152,51 +116,28 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTrack
   }
 
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
   @Override
-  public IssueMatcher createMatcher(Repository repository)
-  {
+  public IssueMatcher createMatcher(Repository repository) {
     IssueMatcher matcher = null;
     RedmineConfiguration config = resolveConfiguration(repository);
 
-    if (config != null)
-    {
+    if (config != null) {
       matcher = new RedmineIssueMatcher(config);
     }
 
     return matcher;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  public RedmineConfiguration resolveConfiguration(Repository repository)
-  {
+  public RedmineConfiguration resolveConfiguration(Repository repository) {
     RedmineConfiguration cfg = new RedmineConfiguration(repository);
 
-    if (!cfg.isValid())
-    {
+    if (!cfg.isValid()) {
       logger.debug("repository config for {} is not valid",
         repository.getName());
       cfg = getGlobalConfiguration();
     }
 
-    if (!cfg.isValid())
-    {
+    if (!cfg.isValid()) {
       logger.debug("no valid configuration for repository {} found",
         repository.getName());
       cfg = null;
@@ -209,24 +150,14 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTrack
     SecurityUtils.getSubject().checkRole(Role.ADMIN);
     globalConfigurationStore.set(updatedConfig);
   }
-  
+
   public RedmineGlobalConfiguration getGlobalConfiguration() {
     RedmineGlobalConfiguration configuration = globalConfigurationStore.get();
-    if (configuration == null){
+    if (configuration == null) {
       configuration = new RedmineGlobalConfiguration();
     }
     return configuration;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  private final Store<RedmineGlobalConfiguration> globalConfigurationStore;
-  
-  /** Field description */
-  private final Provider<LinkHandler> linkHandlerProvider;
-
-  /** Field description */
-  private final TemplateEngineFactory templateEngineFactory;
 
 
 }
