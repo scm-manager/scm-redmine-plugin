@@ -8,7 +8,8 @@
         "textFormatting": "Text formatting",
         "autoClose": "Auto close issues",
         "updateIssues": "Update issues",
-        "usernameTransformPattern": "Username transform pattern"
+        "usernameTransformPattern": "Username transform pattern",
+        "disableRepositoryConfiguration": "Disable repository specific configuration"
       }
     }
   }

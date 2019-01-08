@@ -27,6 +27,7 @@ class RedmineConfigurationForm extends React.Component<
   }
 
   configChangeHandler = (value: string, name: string) => {
+
     this.setState(
       {
         [name]: value
@@ -44,29 +45,35 @@ class RedmineConfigurationForm extends React.Component<
         {this.renderTextFormattingDropDown()}
         {this.renderCheckbox("autoClose")}
         {this.renderCheckbox("updateIssues")}
+        {this.renderCheckbox("disableRepositoryConfiguration")}
       </>
     );
   }
 
   renderInputField = (name: string) => {
-    const { readOnly, t} = this.props;
-    return <InputField
-      label={t("scm-redmine-plugin.config.form." + name)}
-      onChange={this.configChangeHandler}
-      value={this.state.url}
-      disabled={readOnly}
-    />
-  }
+    const { readOnly, t } = this.props;
+    return (
+      <InputField
+        label={t("scm-redmine-plugin.config.form." + name)}
+        onChange={this.configChangeHandler}
+        value={this.state[name]}
+        name={name}
+        disabled={readOnly}
+      />
+    );
+  };
 
   renderCheckbox = (name: string) => {
-    const {readOnly, t} = this.props;
-    return <Checkbox
-      name={name}
-      label={t("scm-redmine-plugin.config.form." + name)}
-      checked={this.state[name]}
-      onChange={this.configChangeHandler}
-      disabled={readOnly}
-    />;
+    const { readOnly, t } = this.props;
+    return (
+      <Checkbox
+        name={name}
+        label={t("scm-redmine-plugin.config.form." + name)}
+        checked={this.state[name]}
+        onChange={this.configChangeHandler}
+        disabled={readOnly}
+      />
+    );
   };
 
   renderTextFormattingDropDown = () => {
