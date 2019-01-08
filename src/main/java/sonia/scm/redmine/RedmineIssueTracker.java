@@ -41,7 +41,8 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.issuetracker.ChangeStateHandler;
 import sonia.scm.issuetracker.CommentHandler;
 
-import sonia.scm.issuetracker.DataStoreBasedIssueTrack;
+import sonia.scm.issuetracker.DataStoreBasedIssueTracker;
+import sonia.scm.issuetracker.IssueLinkFactory;
 import sonia.scm.issuetracker.IssueMatcher;
 import sonia.scm.issuetracker.IssueRequest;
 import sonia.scm.issuetracker.LinkHandler;
@@ -55,13 +56,15 @@ import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.template.TemplateEngineFactory;
 
+import java.util.Optional;
+
 /**
  *
  * @author Sebastian Sdorra
  */
 @Singleton
 @Extension
-public class RedmineIssueTracker extends DataStoreBasedIssueTrack {
+public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
 
   private static final String NAME = "redmine";
 
@@ -71,8 +74,6 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTrack {
   private final ConfigurationStore<RedmineGlobalConfiguration> globalConfigurationStore;
   private final Provider<LinkHandler> linkHandlerProvider;
   private final TemplateEngineFactory templateEngineFactory;
-
-
 
 
   @Inject
@@ -117,7 +118,7 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTrack {
 
 
   @Override
-  public IssueMatcher createMatcher(Repository repository) {
+  public Optional<IssueMatcher> createMatcher(Repository repository) {
     IssueMatcher matcher = null;
     RedmineConfiguration config = resolveConfiguration(repository);
 
@@ -125,7 +126,12 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTrack {
       matcher = new RedmineIssueMatcher(config);
     }
 
-    return matcher;
+    return Optional.of(matcher);
+  }
+
+  @Override
+  public Optional<IssueLinkFactory> createLinkFactory(Repository repository) {
+    return Optional.empty();
   }
 
   public RedmineConfiguration resolveConfiguration(Repository repository) {

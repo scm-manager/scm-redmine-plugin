@@ -109,7 +109,6 @@ public class RedmineIssueMatcher implements IssueMatcher
    *
    * @return
    */
-  @Override
   public String getReplacement(Matcher matcher)
   {
     String replacement = null;

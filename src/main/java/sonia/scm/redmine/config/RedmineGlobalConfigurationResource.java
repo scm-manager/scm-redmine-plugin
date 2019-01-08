@@ -51,10 +51,9 @@ import sonia.scm.security.Role;
 /**
  * @author Sebastian Sdorra
  */
-@Path("plugins/redmine/global-config")
+@Path("v2/redmine/configuration")
 public class RedmineGlobalConfigurationResource {
   private RedmineIssueTracker tracker;
-
 
   private static final Logger logger =
     LoggerFactory.getLogger(RedmineGlobalConfigurationResource.class);
@@ -71,6 +70,7 @@ public class RedmineGlobalConfigurationResource {
   }
 
   @POST
+  @Path("")
   @Consumes({MediaType.APPLICATION_JSON})
   public Response updateConfiguration(RedmineGlobalConfiguration updatedConfig) {
     tracker.setGlobalConfiguration(updatedConfig);
@@ -78,8 +78,8 @@ public class RedmineGlobalConfigurationResource {
     return Response.ok().build();
   }
 
-
   @GET
+  @Path("")
   @Produces({MediaType.APPLICATION_JSON})
   public Response getConfiguration() {
     return Response.ok(tracker.getGlobalConfiguration()).build();
