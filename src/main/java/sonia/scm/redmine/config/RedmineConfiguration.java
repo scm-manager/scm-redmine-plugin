@@ -33,6 +33,9 @@ package sonia.scm.redmine.config;
 
 
 import com.google.common.base.Strings;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import sonia.scm.PropertiesAware;
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
@@ -47,6 +50,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
  * @author Sebastian Sdorra
  * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
+@AllArgsConstructor
+@Getter
+@Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RedmineConfiguration implements Validateable {
 
@@ -56,11 +62,11 @@ public class RedmineConfiguration implements Validateable {
   static final String PROPERTY_USERNAMETRANSFORMER = "redmine.auto-close-username-transformer";
   static final String PROPERTY_TEXT_FORMATTING = "redmine.text-formatting";
 
+  private String url;
+  private TextFormatting textFormatting = TextFormatting.TEXTILE;
+  private String usernameTransformPattern = "{0}";
   private boolean autoClose;
   private boolean updateIssues;
-  private String url;
-  private String usernameTransformPattern = "{0}";
-  private TextFormatting textFormatting = TextFormatting.TEXTILE;
 
   public RedmineConfiguration() {
   }
@@ -76,10 +82,6 @@ public class RedmineConfiguration implements Validateable {
     }
   }
 
-  public String getUrl() {
-    return url;
-  }
-
   public String getUsernameTransformPattern() {
     return usernameTransformPattern;
   }
@@ -90,10 +92,6 @@ public class RedmineConfiguration implements Validateable {
 
   public boolean isUpdateIssuesEnabled() {
     return isValid() && updateIssues;
-  }
-
-  public TextFormatting getTextFormatting() {
-    return textFormatting;
   }
 
   @Override

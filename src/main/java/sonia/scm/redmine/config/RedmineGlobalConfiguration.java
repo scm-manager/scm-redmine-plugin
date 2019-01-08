@@ -31,6 +31,9 @@
 
 package sonia.scm.redmine.config;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -40,12 +43,14 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "redmine")
 @XmlAccessorType(XmlAccessType.FIELD)
+@Getter
+@Setter
 public class RedmineGlobalConfiguration extends RedmineConfiguration {
 
   private boolean disableRepositoryConfiguration;
 
-  public boolean isDisableRepositoryConfiguration() {
-    return disableRepositoryConfiguration;
-  }
+//  public boolean isDisableRepositoryConfiguration() {
+//    return disableRepositoryConfiguration;
+//  }
 
 }

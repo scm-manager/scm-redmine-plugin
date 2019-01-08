@@ -36,6 +36,7 @@ import com.google.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
@@ -53,13 +54,16 @@ import sonia.scm.security.Role;
  */
 @Path("v2/redmine/configuration")
 public class RedmineGlobalConfigurationResource {
+
   private RedmineIssueTracker tracker;
+
+  private RedmineConfigurationMapper mapper;
 
   private static final Logger logger =
     LoggerFactory.getLogger(RedmineGlobalConfigurationResource.class);
 
   @Inject
-  public RedmineGlobalConfigurationResource(RedmineIssueTracker tracker) {
+  public RedmineGlobalConfigurationResource(RedmineIssueTracker tracker, RedmineConfigurationMapper mapper) {
     if (!SecurityUtils.getSubject().hasRole(Role.ADMIN)) {
       logger.warn("user has not enough privileges to change global redmine configuration");
 
@@ -67,13 +71,14 @@ public class RedmineGlobalConfigurationResource {
     }
 
     this.tracker = tracker;
+    this.mapper = mapper;
   }
 
-  @POST
+  @PUT
   @Path("")
   @Consumes({MediaType.APPLICATION_JSON})
-  public Response updateConfiguration(RedmineGlobalConfiguration updatedConfig) {
-    tracker.setGlobalConfiguration(updatedConfig);
+  public Response updateConfiguration(RedmineGlobalConfigurationDto updatedConfig) {
+    tracker.setGlobalConfiguration(mapper.map(updatedConfig));
 
     return Response.ok().build();
   }
@@ -82,7 +87,7 @@ public class RedmineGlobalConfigurationResource {
   @Path("")
   @Produces({MediaType.APPLICATION_JSON})
   public Response getConfiguration() {
-    return Response.ok(tracker.getGlobalConfiguration()).build();
+    return Response.ok(mapper.map(tracker.getGlobalConfiguration())).build();
   }
 
 }
