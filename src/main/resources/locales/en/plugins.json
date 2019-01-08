@@ -1,0 +1,15 @@
+{
+  "scm-redmine-plugin": {
+    "config": {
+      "link": "Redmine",
+      "title": "Redmine",
+      "form": {
+        "url": "URL",
+        "textFormatting": "Text formatting",
+        "autoClose": "Auto close issues",
+        "updateIssues": "Update issues",
+        "usernameTransformPattern": "Username transform pattern"
+      }
+    }
+  }
+}

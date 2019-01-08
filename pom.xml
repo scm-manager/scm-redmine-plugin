@@ -14,7 +14,6 @@
   <artifactId>scm-redmine-plugin</artifactId>
   <version>2.0.0-SNAPSHOT</version>
   <name>scm-redmine-plugin</name>
-  <!--<packaging>smp</packaging>-->
   <url>https://bitbucket.org/velo/scm-redmine-plugin</url>
   <description>This plugin integrates Redmine to SCM-Manager.</description>
 
@@ -24,6 +23,12 @@
     <url>https://bitbucket.org/velo/scm-redmine-plugin</url>
     <tag>HEAD</tag>
   </scm>
+
+  <!--TODO: Remove! Only for development purposes!! Copy the issuetracker-plugin smp file to scm-home/plugins-->
+  <properties>
+    <scm.home>scm-home</scm.home>
+  </properties>
+
 
   <dependencies>
     <dependency>
