@@ -38,6 +38,7 @@ import org.apache.shiro.SecurityUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.issuetracker.ChangeStateHandler;
 import sonia.scm.issuetracker.CommentHandler;
 
@@ -56,6 +57,7 @@ import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.template.TemplateEngineFactory;
 
+import java.security.PermissionCollection;
 import java.util.Optional;
 
 /**
@@ -153,7 +155,7 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
   }
 
   public void setGlobalConfiguration(RedmineGlobalConfiguration updatedConfig) {
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    ConfigurationPermissions.write(Constants.NAME).check();
     globalConfigurationStore.set(updatedConfig);
   }
 

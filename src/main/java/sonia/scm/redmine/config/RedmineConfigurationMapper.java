@@ -8,6 +8,8 @@ import org.mapstruct.MappingTarget;
 import sonia.scm.api.v2.resources.BaseMapper;
 import sonia.scm.api.v2.resources.LinkBuilder;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
+import sonia.scm.config.ConfigurationPermissions;
+import sonia.scm.redmine.Constants;
 
 import javax.inject.Inject;
 
@@ -31,8 +33,9 @@ public abstract class RedmineConfigurationMapper extends BaseMapper {
   @AfterMapping
   public void addLinks(RedmineConfiguration source, @MappingTarget RedmineConfigurationDto target) {
     Links.Builder linksBuilder = linkingTo().self(self());
-    // TODO: Check permission
-    linksBuilder.single(Link.link("update", update()));
+    if (ConfigurationPermissions.write(Constants.NAME).isPermitted()) {
+      linksBuilder.single(Link.link("update", update()));
+    }
     target.add(linksBuilder.build());
   }
 

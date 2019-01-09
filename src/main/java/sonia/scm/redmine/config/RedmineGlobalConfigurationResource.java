@@ -46,6 +46,8 @@ import javax.ws.rs.core.Response;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.config.ConfigurationPermissions;
+import sonia.scm.redmine.Constants;
 import sonia.scm.redmine.RedmineIssueTracker;
 import sonia.scm.security.Role;
 
@@ -64,7 +66,7 @@ public class RedmineGlobalConfigurationResource {
 
   @Inject
   public RedmineGlobalConfigurationResource(RedmineIssueTracker tracker, RedmineConfigurationMapper mapper) {
-    if (!SecurityUtils.getSubject().hasRole(Role.ADMIN)) {
+    if (!ConfigurationPermissions.write(Constants.NAME).isPermitted()) {
       logger.warn("user has not enough privileges to change global redmine configuration");
 
       throw new WebApplicationException(Response.Status.FORBIDDEN);
