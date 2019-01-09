@@ -35,7 +35,6 @@ import com.google.inject.Inject;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -43,11 +42,11 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.config.ConfigurationPermissions;
+import sonia.scm.redmine.Constants;
 import sonia.scm.redmine.RedmineIssueTracker;
-import sonia.scm.security.Role;
 
 /**
  * @author Sebastian Sdorra
@@ -64,7 +63,7 @@ public class RedmineGlobalConfigurationResource {
 
   @Inject
   public RedmineGlobalConfigurationResource(RedmineIssueTracker tracker, RedmineConfigurationMapper mapper) {
-    if (!SecurityUtils.getSubject().hasRole(Role.ADMIN)) {
+    if (!ConfigurationPermissions.write(Constants.NAME).isPermitted()) {
       logger.warn("user has not enough privileges to change global redmine configuration");
 
       throw new WebApplicationException(Response.Status.FORBIDDEN);

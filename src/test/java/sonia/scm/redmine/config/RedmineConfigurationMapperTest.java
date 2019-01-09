@@ -1,12 +1,16 @@
 package sonia.scm.redmine.config;
 
+import com.github.sdorra.shiro.ShiroRule;
+import com.github.sdorra.shiro.SubjectAware;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
 
 import java.net.URI;
@@ -24,6 +28,9 @@ public class RedmineConfigurationMapperTest {
 
   private URI expectedBaseUri;
 
+  @Rule
+  public ShiroRule shiro = new ShiroRule();
+
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private ScmPathInfoStore scmPathInfoStore;
 
@@ -37,6 +44,10 @@ public class RedmineConfigurationMapperTest {
   }
 
   @Test
+  @SubjectAware(username = "trillian",
+    password = "secret",
+    configuration = "classpath:sonia/scm/redmine/shiro.ini"
+  )
   public void shouldMapAttributesToDto() {
     RedmineConfigurationDto dto = mapper.map(createConfiguration());
     assertEquals( "heartofgo.ld", dto.getUrl());
@@ -47,16 +58,24 @@ public class RedmineConfigurationMapperTest {
   }
 
   @Test
+  @SubjectAware(username = "trillian",
+    password = "secret",
+    configuration = "classpath:sonia/scm/redmine/shiro.ini"
+  )
   public void shouldAddHalLinksToDto() {
     RedmineConfigurationDto dto = mapper.map(createConfiguration());
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
+    assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("update").get().getHref());
   }
 
   @Test
-  //TODO This test fails b/c the mapper does not yet check permissions
+  @SubjectAware(username = "unpriv",
+    password = "secret",
+    configuration = "classpath:sonia/scm/redmine/shiro.ini"
+  )
   public void shouldNotAddUpdateLinkToDtoIfNotPermitted() {
     RedmineConfigurationDto dto = mapper.map(createConfiguration());
-//    assertFalse(dto.getLinks().getLinkBy("update").isPresent());
+    assertFalse(dto.getLinks().getLinkBy("update").isPresent());
   }
 
   @Test
@@ -70,6 +89,10 @@ public class RedmineConfigurationMapperTest {
   }
 
   @Test
+  @SubjectAware(username = "trillian",
+    password = "secret",
+    configuration = "classpath:sonia/scm/redmine/shiro.ini"
+  )
   public void shouldMapGlobalConfigurationAttributesToDto() {
     RedmineGlobalConfigurationDto dto = mapper.map(createGlobalConfiguration());
     assertFalse(dto.isDisableRepositoryConfiguration());

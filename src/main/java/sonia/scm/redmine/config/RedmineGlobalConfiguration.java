@@ -49,8 +49,4 @@ public class RedmineGlobalConfiguration extends RedmineConfiguration {
 
   private boolean disableRepositoryConfiguration;
 
-//  public boolean isDisableRepositoryConfiguration() {
-//    return disableRepositoryConfiguration;
-//  }
-
 }

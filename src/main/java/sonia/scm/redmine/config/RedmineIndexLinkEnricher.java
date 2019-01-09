@@ -1,7 +1,5 @@
 package sonia.scm.redmine.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sonia.scm.api.v2.resources.Enrich;
 import sonia.scm.api.v2.resources.Index;
 import sonia.scm.api.v2.resources.LinkAppender;
