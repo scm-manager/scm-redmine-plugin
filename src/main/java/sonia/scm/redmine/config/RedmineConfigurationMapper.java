@@ -38,6 +38,7 @@ public abstract class RedmineConfigurationMapper extends BaseMapper {
     Links.Builder linksBuilder = linkingTo().self(globalSelf());
     if (ConfigurationPermissions.write(Constants.NAME).isPermitted()) {
       linksBuilder.single(Link.link("update", globalUpdate()));
+
     }
     target.add(linksBuilder.build());
   }

@@ -37,6 +37,7 @@ import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.issuetracker.ChangeStateHandler;
 import sonia.scm.issuetracker.CommentHandler;
 
@@ -53,6 +54,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.template.TemplateEngineFactory;
 
+import java.security.PermissionCollection;
 import java.util.Optional;
 
 /**
