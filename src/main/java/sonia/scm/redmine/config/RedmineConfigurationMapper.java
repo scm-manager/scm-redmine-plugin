@@ -40,13 +40,13 @@ public abstract class RedmineConfigurationMapper extends BaseMapper {
   }
 
   private String self() {
-    LinkBuilder linkBuilder = new LinkBuilder(scmPathInfoStore.get(), RedmineGlobalConfigurationResource.class);
-    return linkBuilder.method("getConfiguration").parameters().href();
+    LinkBuilder linkBuilder = new LinkBuilder(scmPathInfoStore.get(), RedmineConfigurationResource.class);
+    return linkBuilder.method("getGlobalConfiguration").parameters().href();
   }
 
   private String update() {
-    LinkBuilder linkBuilder = new LinkBuilder(scmPathInfoStore.get(), RedmineGlobalConfigurationResource.class);
-    return linkBuilder.method("updateConfiguration").parameters().href();
+    LinkBuilder linkBuilder = new LinkBuilder(scmPathInfoStore.get(), RedmineConfigurationResource.class);
+    return linkBuilder.method("updateGlobalConfiguration").parameters().href();
   }
 
 }

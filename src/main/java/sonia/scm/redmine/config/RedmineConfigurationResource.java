@@ -37,6 +37,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
@@ -47,22 +48,28 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.redmine.Constants;
 import sonia.scm.redmine.RedmineIssueTracker;
+import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryManager;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 /**
  * @author Sebastian Sdorra
  */
 @Path("v2/redmine/configuration")
-public class RedmineGlobalConfigurationResource {
+public class RedmineConfigurationResource {
 
   private RedmineIssueTracker tracker;
-
   private RedmineConfigurationMapper mapper;
+  private RepositoryManager repositoryManager;
 
   private static final Logger logger =
-    LoggerFactory.getLogger(RedmineGlobalConfigurationResource.class);
+    LoggerFactory.getLogger(RedmineConfigurationResource.class);
 
   @Inject
-  public RedmineGlobalConfigurationResource(RedmineIssueTracker tracker, RedmineConfigurationMapper mapper) {
+  public RedmineConfigurationResource(RedmineIssueTracker tracker, RedmineConfigurationMapper mapper, RepositoryManager repositoryManager) {
     if (!ConfigurationPermissions.write(Constants.NAME).isPermitted()) {
       logger.warn("user has not enough privileges to change global redmine configuration");
 
@@ -71,22 +78,49 @@ public class RedmineGlobalConfigurationResource {
 
     this.tracker = tracker;
     this.mapper = mapper;
+    this.repositoryManager = repositoryManager;
   }
 
   @PUT
-  @Path("")
+  @Path("/")
   @Consumes({MediaType.APPLICATION_JSON})
-  public Response updateConfiguration(RedmineGlobalConfigurationDto updatedConfig) {
+  public Response updateGlobalConfiguration(RedmineGlobalConfigurationDto updatedConfig) {
     tracker.setGlobalConfiguration(mapper.map(updatedConfig));
 
     return Response.ok().build();
   }
 
   @GET
-  @Path("")
+  @Path("/")
   @Produces({MediaType.APPLICATION_JSON})
-  public Response getConfiguration() {
+  public Response getGlobalConfiguration() {
     return Response.ok(mapper.map(tracker.getGlobalConfiguration())).build();
+  }
+
+  @PUT
+  @Path("/{namespace}/{name}")
+  @Consumes({MediaType.APPLICATION_JSON})
+  public Response updateConfiguration(RedmineConfigurationDto updatedConfig) {
+    //TODO
+//    tracker.setConfiguration(mapper.map(updatedConfig));
+
+    return Response.ok().build();
+  }
+
+  @GET
+  @Path("/{namespace}/{name}")
+  @Produces({MediaType.APPLICATION_JSON})
+  public Response getConfiguration(@PathParam("namespace") String namespace, @PathParam("name") String name) {
+    Repository repository = loadRepository(namespace, name);
+    return Response.ok(repository).build();
+  }
+
+  private Repository loadRepository(String namespace, String name) {
+    Repository repository = repositoryManager.get(new NamespaceAndName(namespace, name));
+    if (repository == null) {
+      throw notFound(entity(new NamespaceAndName(namespace, name)));
+    }
+    return repository;
   }
 
 }

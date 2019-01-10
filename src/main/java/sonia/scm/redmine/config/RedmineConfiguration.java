@@ -56,12 +56,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RedmineConfiguration implements Validateable {
 
-  static final String PROPERTY_AUTOCLOSE = "redmine.auto-close";
-  static final String PROPERTY_REDMINE_URL = "redmine.url";
-  static final String PROPERTY_UPDATEISSUES = "redmine.update-issues";
-  static final String PROPERTY_USERNAMETRANSFORMER = "redmine.auto-close-username-transformer";
-  static final String PROPERTY_TEXT_FORMATTING = "redmine.text-formatting";
-
   private String url;
   private TextFormatting textFormatting = TextFormatting.TEXTILE;
   private String usernameTransformPattern = "{0}";
@@ -69,17 +63,6 @@ public class RedmineConfiguration implements Validateable {
   private boolean updateIssues;
 
   public RedmineConfiguration() {
-  }
-
-  public RedmineConfiguration(PropertiesAware propsAware) {
-    url = propsAware.getProperty(PROPERTY_REDMINE_URL);
-    updateIssues = getBooleanProperty(propsAware, PROPERTY_UPDATEISSUES);
-    autoClose = getBooleanProperty(propsAware, PROPERTY_AUTOCLOSE);
-    usernameTransformPattern = propsAware.getProperty(PROPERTY_USERNAMETRANSFORMER);
-    String textFormattingProperty = propsAware.getProperty(PROPERTY_TEXT_FORMATTING);
-    if (!Strings.isNullOrEmpty(textFormattingProperty)) {
-      textFormatting = TextFormatting.valueOf(textFormattingProperty);
-    }
   }
 
   public String getUsernameTransformPattern() {
@@ -99,14 +82,4 @@ public class RedmineConfiguration implements Validateable {
     return Util.isNotEmpty(url);
   }
 
-  private boolean getBooleanProperty(PropertiesAware propsAware, String key) {
-    boolean result = false;
-    String value = propsAware.getProperty(key);
-
-    if (Util.isNotEmpty(value)) {
-      result = Boolean.parseBoolean(value);
-    }
-
-    return result;
-  }
 }

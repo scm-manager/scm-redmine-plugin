@@ -48,20 +48,18 @@ import sonia.scm.issuetracker.IssueMatcher;
 import sonia.scm.issuetracker.IssueRequest;
 import sonia.scm.issuetracker.LinkHandler;
 import sonia.scm.plugin.Extension;
+import sonia.scm.redmine.config.RedmineConfigStore;
 import sonia.scm.redmine.config.RedmineConfiguration;
 import sonia.scm.redmine.config.RedmineGlobalConfiguration;
 import sonia.scm.repository.Repository;
-import sonia.scm.security.Role;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.template.TemplateEngineFactory;
 
-import java.security.PermissionCollection;
 import java.util.Optional;
 
 /**
- *
  * @author Sebastian Sdorra
  */
 @Singleton
@@ -74,17 +72,21 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
     LoggerFactory.getLogger(RedmineIssueTracker.class);
 
   private final ConfigurationStore<RedmineGlobalConfiguration> globalConfigurationStore;
+  private final RedmineConfigStore configStore;
+
   private final Provider<LinkHandler> linkHandlerProvider;
   private final TemplateEngineFactory templateEngineFactory;
 
 
   @Inject
   public RedmineIssueTracker(ConfigurationStoreFactory storeFactory, DataStoreFactory dataStoreFactory,
-                             TemplateEngineFactory templateEngineFactory, Provider<LinkHandler> linkHandlerProvider) {
+                             TemplateEngineFactory templateEngineFactory, Provider<LinkHandler> linkHandlerProvider,
+                             RedmineConfigStore configStore) {
     super(NAME, dataStoreFactory);
     this.globalConfigurationStore = storeFactory.withType(RedmineGlobalConfiguration.class).withName(NAME).build();
     this.templateEngineFactory = templateEngineFactory;
     this.linkHandlerProvider = linkHandlerProvider;
+    this.configStore = configStore;
   }
 
 
@@ -137,7 +139,7 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
   }
 
   public RedmineConfiguration resolveConfiguration(Repository repository) {
-    RedmineConfiguration cfg = new RedmineConfiguration(repository);
+    RedmineConfiguration cfg = configStore.getConfiguration(repository);
 
     if (!cfg.isValid()) {
       logger.debug("repository config for {} is not valid",
@@ -156,15 +158,11 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
 
   public void setGlobalConfiguration(RedmineGlobalConfiguration updatedConfig) {
     ConfigurationPermissions.write(Constants.NAME).check();
-    globalConfigurationStore.set(updatedConfig);
+    configStore.storeConfiguration(updatedConfig);
   }
 
   public RedmineGlobalConfiguration getGlobalConfiguration() {
-    RedmineGlobalConfiguration configuration = globalConfigurationStore.get();
-    if (configuration == null) {
-      configuration = new RedmineGlobalConfiguration();
-    }
-    return configuration;
+    return configStore.getConfiguration();
   }
 
 
