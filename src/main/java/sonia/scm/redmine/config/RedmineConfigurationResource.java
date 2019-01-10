@@ -116,9 +116,9 @@ public class RedmineConfigurationResource {
   @Produces({MediaType.APPLICATION_JSON})
   public Response getConfiguration(@PathParam("namespace") String namespace, @PathParam("name") String name) {
     Repository repository = loadRepository(namespace, name);
-    RepositoryPermissions.permissionRead(repository);
-
-    return Response.ok(repository).build();
+    RepositoryPermissions.permissionRead(repository).check();
+    RedmineConfiguration configuration = tracker.getRepositoryConfigurationOrEmpty(repository);
+    return Response.ok(mapper.map(configuration, repository)).build();
   }
 
   private Repository loadRepository(String namespace, String name) {

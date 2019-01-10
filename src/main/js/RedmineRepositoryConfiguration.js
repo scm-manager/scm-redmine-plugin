@@ -3,7 +3,7 @@ import React from "react";
 import { translate }from "react-i18next";
 import { Title } from "@scm-manager/ui-components";
 import Configuration from "@scm-manager/ui-components/src/config/Configuration";
-import RedmineGlobalConfigurationForm from "./RedmineGlobalConfigurationForm";
+import RedmineRepositoryConfigurationForm from "./RedmineRepositoryConfigurationForm";
 
 type Props = {
   link: string,
@@ -11,7 +11,7 @@ type Props = {
   t: string => string
 };
 
-class RedmineGlobalConfiguration extends React.Component<Props> {
+class RedmineRepositoryConfiguration extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
   }
@@ -24,11 +24,11 @@ class RedmineGlobalConfiguration extends React.Component<Props> {
         <Title title={t("scm-redmine-plugin.config.title")} />
         <Configuration
           link={link}
-          render={props => <RedmineGlobalConfigurationForm {...props} />}
+          render={props => <RedmineRepositoryConfigurationForm {...props} />}
         />
       </div>
     );
   }
 }
 
-export default translate("plugins")(RedmineGlobalConfiguration);
+export default translate("plugins")(RedmineRepositoryConfiguration);

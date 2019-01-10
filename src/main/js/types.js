@@ -10,3 +10,8 @@ export type RedmineConfiguration = {
   textFormatting: string,
   _links: Links
 };
+
+
+export type RedmineGlobalConfiguration = RedmineConfiguration & {
+  disableRepositoryConfiguration: boolean
+}

@@ -2,6 +2,7 @@
 
 import { ConfigurationBinder as cfgBinder } from "@scm-manager/ui-components";
 import RedmineGlobalConfiguration from "./RedmineGlobalConfiguration";
+import RedmineRepositoryConfiguration from "./RedmineRepositoryConfiguration";
 
 
 cfgBinder.bindGlobal(
@@ -11,3 +12,4 @@ cfgBinder.bindGlobal(
   RedmineGlobalConfiguration
 );
 
+cfgBinder.bindRepository("/redmine", "scm-redmine-plugin.config.link", "redmineConfig", RedmineRepositoryConfiguration);

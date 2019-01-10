@@ -1,9 +1,8 @@
 package sonia.scm.redmine.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sonia.scm.api.v2.resources.Enrich;
 import sonia.scm.api.v2.resources.LinkAppender;
+import sonia.scm.api.v2.resources.LinkBuilder;
 import sonia.scm.api.v2.resources.LinkEnricher;
 import sonia.scm.api.v2.resources.LinkEnricherContext;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
@@ -18,22 +17,28 @@ import javax.inject.Provider;
 public class RedmineRepositoryConfigLinkEnricher implements LinkEnricher {
 
   private Provider<ScmPathInfoStore> scmPathInfoStoreProvider;
-  private Logger log = LoggerFactory.getLogger(RedmineRepositoryConfigLinkEnricher.class);
+  private final RedmineConfigStore redmineConfigStore;
 
   @Inject
-  public RedmineRepositoryConfigLinkEnricher(Provider<ScmPathInfoStore> scmPathInfoStoreProvider) {
+  public RedmineRepositoryConfigLinkEnricher(Provider<ScmPathInfoStore> scmPathInfoStoreProvider,
+                                             RedmineConfigStore redmineConfigStore) {
     this.scmPathInfoStoreProvider = scmPathInfoStoreProvider;
+    this.redmineConfigStore = redmineConfigStore;
   }
 
   @Override
   public void enrich(LinkEnricherContext context, LinkAppender appender) {
-    log.error("==================");
-    log.error("==================");
-    log.error("==================");
-    log.error("==================");
-    log.error("==================");
-    appender.appendOne("foo", "pczora.de");
+    Repository repository = context.oneRequireByType(Repository.class);
+    if (!redmineConfigStore.getConfiguration().isDisableRepositoryConfiguration()) {
+      String linkBuilder = new LinkBuilder(scmPathInfoStoreProvider.get().get(), RedmineConfigurationResource.class)
+        .method("getConfiguration")
+        .parameters(repository.getNamespace(), repository.getName())
+        .href();
+
+      appender.appendOne("redmineConfig", linkBuilder);
+    }
   }
+
 
 
 }

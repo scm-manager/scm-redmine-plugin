@@ -32,11 +32,9 @@
 package sonia.scm.redmine.config;
 
 
-import com.google.common.base.Strings;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import sonia.scm.PropertiesAware;
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
 
@@ -44,6 +42,7 @@ import sonia.scm.util.Util;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -53,6 +52,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 @AllArgsConstructor
 @Getter
 @Setter
+@XmlRootElement(name = "redmineConfig")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RedmineConfiguration implements Validateable {
 

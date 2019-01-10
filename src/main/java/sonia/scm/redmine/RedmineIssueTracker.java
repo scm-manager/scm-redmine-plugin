@@ -34,11 +34,9 @@ package sonia.scm.redmine;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import org.apache.shiro.SecurityUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.issuetracker.ChangeStateHandler;
 import sonia.scm.issuetracker.CommentHandler;
 
@@ -147,7 +145,6 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
         repository.getName());
       cfg = null;
     }
-
     return cfg;
   }
 
@@ -157,6 +154,18 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
 
   public void setRepositoryConfiguration(RedmineConfiguration updatedConfig, Repository repository) {
     configStore.storeConfiguration(updatedConfig, repository);
+  }
+
+  public RedmineConfiguration getRepositoryConfiguration(Repository repository) {
+    return configStore.getConfiguration(repository);
+  }
+
+  public RedmineConfiguration getRepositoryConfigurationOrEmpty(Repository repository) {
+    RedmineConfiguration configuration = configStore.getConfiguration(repository);
+    if (configuration == null) {
+      return new RedmineConfiguration();
+    }
+    return configuration;
   }
 
   public RedmineGlobalConfiguration getGlobalConfiguration() {

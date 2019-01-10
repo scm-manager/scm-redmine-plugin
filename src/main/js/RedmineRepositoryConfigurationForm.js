@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import type { RedmineConfiguration } from "./RedmineConfiguration";
+import type { RedmineConfiguration } from "./types";
 import DropDown from "@scm-manager/ui-components/src/forms/DropDown";
 import { translate } from "react-i18next";
 import { InputField } from "@scm-manager/ui-components";
@@ -15,7 +15,7 @@ type Props = {
   t: string => string
 };
 
-class RedmineConfigurationForm extends React.Component<
+class RedmineRepositoryConfigurationForm extends React.Component<
   Props,
   RedmineConfiguration
 > {
@@ -45,7 +45,6 @@ class RedmineConfigurationForm extends React.Component<
         {this.renderTextFormattingDropDown()}
         {this.renderCheckbox("autoClose")}
         {this.renderCheckbox("updateIssues")}
-        {this.renderCheckbox("disableRepositoryConfiguration")}
       </>
     );
   }
@@ -105,4 +104,4 @@ class RedmineConfigurationForm extends React.Component<
   };
 }
 
-export default translate("plugins")(RedmineConfigurationForm);
+export default translate("plugins")(RedmineRepositoryConfigurationForm);

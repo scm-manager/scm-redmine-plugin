@@ -43,7 +43,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name = "redmine")
+@XmlRootElement(name = "redmineGlobalConfiguration")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter
 @Setter

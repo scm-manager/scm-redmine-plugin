@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
+import sonia.scm.repository.Repository;
 
 import java.net.URI;
 
@@ -49,7 +50,7 @@ public class RedmineConfigurationMapperTest {
     configuration = "classpath:sonia/scm/redmine/shiro.ini"
   )
   public void shouldMapAttributesToDto() {
-    RedmineConfigurationDto dto = mapper.map(createConfiguration());
+    RedmineConfigurationDto dto = mapper.map(createConfiguration(), createRepository());
     assertEquals( "heartofgo.ld", dto.getUrl());
     assertEquals(TextFormatting.MARKDOWN, dto.getTextFormatting());
     assertEquals("UTPattern", dto.getUsernameTransformPattern());
@@ -63,9 +64,9 @@ public class RedmineConfigurationMapperTest {
     configuration = "classpath:sonia/scm/redmine/shiro.ini"
   )
   public void shouldAddHalLinksToDto() {
-    RedmineConfigurationDto dto = mapper.map(createConfiguration());
-    assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
-    assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("update").get().getHref());
+    RedmineConfigurationDto dto = mapper.map(createConfiguration(), createRepository());
+    assertEquals(expectedBaseUri.toString() + "foo/bar", dto.getLinks().getLinkBy("self").get().getHref());
+    assertEquals(expectedBaseUri.toString() + "foo/bar", dto.getLinks().getLinkBy("update").get().getHref());
   }
 
   @Test
@@ -74,7 +75,7 @@ public class RedmineConfigurationMapperTest {
     configuration = "classpath:sonia/scm/redmine/shiro.ini"
   )
   public void shouldNotAddUpdateLinkToDtoIfNotPermitted() {
-    RedmineConfigurationDto dto = mapper.map(createConfiguration());
+    RedmineConfigurationDto dto = mapper.map(createConfiguration(), createRepository());
     assertFalse(dto.getLinks().getLinkBy("update").isPresent());
   }
 
@@ -138,5 +139,9 @@ public class RedmineConfigurationMapperTest {
     configuration.setUpdateIssues(false);
     configuration.setDisableRepositoryConfiguration(false);
     return configuration;
+  }
+
+  private Repository createRepository() {
+    return new Repository("42", "GIT", "foo", "bar");
   }
 }
