@@ -46,7 +46,7 @@ public class RedmineIndexLinkEnricherTest {
   @Test
   public void testEnrich() {
     enricher.enrich(LinkEnricherContext.of(), appender);
-    verify(appender).appendOne("redmineConfig", "https://scm-manager.org/scm/api/v2/redmine/configuration");
+    verify(appender).appendOne("redmineConfig", "https://scm-manager.org/scm/api/v2/redmine/configuration/");
   }
 
 }

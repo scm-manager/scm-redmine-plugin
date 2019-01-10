@@ -40,7 +40,7 @@ public class RedmineConfigurationMapperTest {
   @Before
   public void init() {
     when(scmPathInfoStore.get().getApiRestUri()).thenReturn(baseUri);
-    expectedBaseUri = baseUri.resolve("v2/redmine/configuration");
+    expectedBaseUri = baseUri.resolve("v2/redmine/configuration/");
   }
 
   @Test
