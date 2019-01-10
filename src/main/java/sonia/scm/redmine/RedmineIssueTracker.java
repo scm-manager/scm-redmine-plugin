@@ -52,8 +52,6 @@ import sonia.scm.redmine.config.RedmineConfigStore;
 import sonia.scm.redmine.config.RedmineConfiguration;
 import sonia.scm.redmine.config.RedmineGlobalConfiguration;
 import sonia.scm.repository.Repository;
-import sonia.scm.store.ConfigurationStore;
-import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.template.TemplateEngineFactory;
 
@@ -71,7 +69,6 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
   private static final Logger logger =
     LoggerFactory.getLogger(RedmineIssueTracker.class);
 
-  private final ConfigurationStore<RedmineGlobalConfiguration> globalConfigurationStore;
   private final RedmineConfigStore configStore;
 
   private final Provider<LinkHandler> linkHandlerProvider;
@@ -79,14 +76,12 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
 
 
   @Inject
-  public RedmineIssueTracker(ConfigurationStoreFactory storeFactory, DataStoreFactory dataStoreFactory,
-                             TemplateEngineFactory templateEngineFactory, Provider<LinkHandler> linkHandlerProvider,
-                             RedmineConfigStore configStore) {
+  public RedmineIssueTracker(RedmineConfigStore configStore, DataStoreFactory dataStoreFactory,
+                             TemplateEngineFactory templateEngineFactory, Provider<LinkHandler> linkHandlerProvider) {
     super(NAME, dataStoreFactory);
-    this.globalConfigurationStore = storeFactory.withType(RedmineGlobalConfiguration.class).withName(NAME).build();
+    this.configStore = configStore;
     this.templateEngineFactory = templateEngineFactory;
     this.linkHandlerProvider = linkHandlerProvider;
-    this.configStore = configStore;
   }
 
 
@@ -157,8 +152,11 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
   }
 
   public void setGlobalConfiguration(RedmineGlobalConfiguration updatedConfig) {
-    ConfigurationPermissions.write(Constants.NAME).check();
     configStore.storeConfiguration(updatedConfig);
+  }
+
+  public void setRepositoryConfiguration(RedmineConfiguration updatedConfig, Repository repository) {
+    configStore.storeConfiguration(updatedConfig, repository);
   }
 
   public RedmineGlobalConfiguration getGlobalConfiguration() {

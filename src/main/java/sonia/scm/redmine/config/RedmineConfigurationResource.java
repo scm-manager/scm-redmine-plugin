@@ -51,6 +51,7 @@ import sonia.scm.redmine.RedmineIssueTracker;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryPermissions;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
@@ -85,8 +86,9 @@ public class RedmineConfigurationResource {
   @Path("/")
   @Consumes({MediaType.APPLICATION_JSON})
   public Response updateGlobalConfiguration(RedmineGlobalConfigurationDto updatedConfig) {
-    tracker.setGlobalConfiguration(mapper.map(updatedConfig));
 
+    ConfigurationPermissions.write(Constants.NAME).check();
+    tracker.setGlobalConfiguration(mapper.map(updatedConfig));
     return Response.ok().build();
   }
 
@@ -94,15 +96,17 @@ public class RedmineConfigurationResource {
   @Path("/")
   @Produces({MediaType.APPLICATION_JSON})
   public Response getGlobalConfiguration() {
+    ConfigurationPermissions.read(Constants.NAME).check();
     return Response.ok(mapper.map(tracker.getGlobalConfiguration())).build();
   }
 
   @PUT
   @Path("/{namespace}/{name}")
   @Consumes({MediaType.APPLICATION_JSON})
-  public Response updateConfiguration(RedmineConfigurationDto updatedConfig) {
-    //TODO
-//    tracker.setConfiguration(mapper.map(updatedConfig));
+  public Response updateConfiguration(@PathParam("namespace") String namespace, @PathParam("name") String name, RedmineConfigurationDto updatedConfig) {
+    Repository repository = loadRepository(namespace, name);
+    RepositoryPermissions.modify(repository).check();
+    tracker.setRepositoryConfiguration(mapper.map(updatedConfig), repository);
 
     return Response.ok().build();
   }
@@ -112,6 +116,8 @@ public class RedmineConfigurationResource {
   @Produces({MediaType.APPLICATION_JSON})
   public Response getConfiguration(@PathParam("namespace") String namespace, @PathParam("name") String name) {
     Repository repository = loadRepository(namespace, name);
+    RepositoryPermissions.permissionRead(repository);
+
     return Response.ok(repository).build();
   }
 

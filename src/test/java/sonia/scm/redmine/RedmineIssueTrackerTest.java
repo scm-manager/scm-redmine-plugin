@@ -32,10 +32,6 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class RedmineIssueTrackerTest {
 
-  @Rule
-  public ShiroRule shiro = new ShiroRule();
-
-  private ConfigurationStoreFactory storeFactory = new InMemoryConfigurationStoreFactory();
   private DataStoreFactory dataStoreFactory = new InMemoryDataStoreFactory();
 
   @Mock
@@ -52,31 +48,13 @@ public class RedmineIssueTrackerTest {
     TemplateEngine templateEngine = mock(TemplateEngine.class);
     when(templateEngine.getType()).thenReturn(new TemplateType("foo", "bar", Collections.EMPTY_LIST));
     TemplateEngineFactory templateEngineFactory = new TemplateEngineFactory(Collections.emptySet(), templateEngine);
-    redmineIssueTracker = new RedmineIssueTracker(storeFactory, dataStoreFactory, templateEngineFactory, linkHandlerProvider, configStore);
+    redmineIssueTracker = new RedmineIssueTracker(configStore, dataStoreFactory, templateEngineFactory, linkHandlerProvider);
   }
 
-  @Test
-  @SubjectAware(
-    username = "trillian",
-    password = "secret",
-    configuration = "classpath:sonia/scm/redmine/shiro.ini"
-  )
   public void shouldWriteGlobalConfigToRedmineConfigStore() {
     RedmineGlobalConfiguration config = new RedmineGlobalConfiguration();
     redmineIssueTracker.setGlobalConfiguration(config);
     verify(configStore).storeConfiguration(config);
-  }
-
-  @Test(expected = org.apache.shiro.authz.UnauthorizedException.class)
-  @SubjectAware(
-    username = "unpriv",
-    password = "secret",
-    configuration = "classpath:sonia/scm/redmine/shiro.ini"
-  )
-  public void shouldNotWriteGlobalConfigToRedmineConfigStoreIfNotPermitted() {
-    RedmineGlobalConfiguration config = new RedmineGlobalConfiguration();
-
-    redmineIssueTracker.setGlobalConfiguration(config);
   }
 
   @Test
