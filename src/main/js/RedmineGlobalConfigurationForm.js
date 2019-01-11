@@ -55,6 +55,7 @@ class RedmineGlobalConfigurationForm extends React.Component<
     return (
       <InputField
         label={t("scm-redmine-plugin.config.form." + name)}
+        helpText={t("scm-redmine-plugin.config.form." + name + "-helptext")}
         onChange={this.configChangeHandler}
         value={this.state[name]}
         name={name}
@@ -69,6 +70,7 @@ class RedmineGlobalConfigurationForm extends React.Component<
       <Checkbox
         name={name}
         label={t("scm-redmine-plugin.config.form." + name)}
+        helpText={t("scm-redmine-plugin.config.form." + name + "-helptext")}
         checked={this.state[name]}
         onChange={this.configChangeHandler}
         disabled={readOnly}
