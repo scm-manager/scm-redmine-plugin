@@ -96,7 +96,7 @@ class RedmineRepositoryConfigurationForm extends React.Component<
   };
 
   handleDropDownChange = (selection: string) => {
-    this.setState({ ...this.state, textFormatting: selection });
+    // this.setState({ ...this.state, textFormatting: selection });
 
     this.configChangeHandler(selection, "textFormatting");
   };
