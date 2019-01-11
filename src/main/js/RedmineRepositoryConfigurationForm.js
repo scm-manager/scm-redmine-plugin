@@ -41,6 +41,8 @@ class RedmineRepositoryConfigurationForm extends React.Component<
     return (
       <>
         {this.renderInputField("url")}
+        {this.renderInputField("username")}
+        {this.renderInputField("password", "password")}
         {this.renderInputField("usernameTransformPattern")}
         {this.renderTextFormattingDropDown()}
         {this.renderCheckbox("autoClose")}
@@ -49,10 +51,11 @@ class RedmineRepositoryConfigurationForm extends React.Component<
     );
   }
 
-  renderInputField = (name: string) => {
+  renderInputField = (name: string, type?: string) => {
     const { readOnly, t } = this.props;
     return (
       <InputField
+        type={type}
         label={t("scm-redmine-plugin.config.form." + name)}
         helpText={t("scm-redmine-plugin.config.form." + name + "-helptext")}
         onChange={this.configChangeHandler}

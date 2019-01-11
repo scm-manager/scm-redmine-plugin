@@ -34,8 +34,10 @@ package sonia.scm.redmine.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import sonia.scm.Validateable;
+import sonia.scm.issuetracker.XmlEncryptionAdapter;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -43,6 +45,7 @@ import sonia.scm.util.Util;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
@@ -50,6 +53,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Marvin Froeder marvin_at_marvinformatics_dot_com
  */
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @XmlRootElement(name = "redmineConfig")
@@ -61,9 +65,9 @@ public class RedmineConfiguration implements Validateable {
   private String usernameTransformPattern = "{0}";
   private boolean autoClose;
   private boolean updateIssues;
-
-  public RedmineConfiguration() {
-  }
+  private String username;
+  @XmlJavaTypeAdapter(XmlEncryptionAdapter.class)
+  private String password;
 
   public String getUsernameTransformPattern() {
     return usernameTransformPattern;

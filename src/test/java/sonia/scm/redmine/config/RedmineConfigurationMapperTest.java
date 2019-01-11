@@ -110,7 +110,9 @@ public class RedmineConfigurationMapperTest {
       TextFormatting.MARKDOWN,
       "UTPattern",
       true,
-      false);
+      false,
+      "user",
+      "password");
   }
 
   private RedmineConfigurationDto createDto() {
@@ -118,7 +120,9 @@ public class RedmineConfigurationMapperTest {
       TextFormatting.MARKDOWN,
       "UTPattern",
       true,
-      false);
+      false,
+      "user",
+      "password");
   }
 
   private RedmineGlobalConfiguration createGlobalConfiguration() {

@@ -31,7 +31,6 @@
 
 package sonia.scm.redmine.config;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -52,8 +51,10 @@ public class RedmineGlobalConfiguration extends RedmineConfiguration {
 
   private boolean disableRepositoryConfiguration;
 
-  public RedmineGlobalConfiguration(String url, TextFormatting textFormatting, String usernameTransformPattern, boolean autoClose, boolean updateIssues, boolean disableRepositoryConfiguration) {
-    super(url, textFormatting, usernameTransformPattern, autoClose, updateIssues);
+  public RedmineGlobalConfiguration(String url, TextFormatting textFormatting, String usernameTransformPattern,
+                                    boolean autoClose, boolean updateIssues, boolean disableRepositoryConfiguration,
+                                    String username, String password) {
+    super(url, textFormatting, usernameTransformPattern, autoClose, updateIssues, username, password);
     this.disableRepositoryConfiguration = disableRepositoryConfiguration;
   }
 

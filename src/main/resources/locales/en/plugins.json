@@ -6,6 +6,10 @@
       "form": {
         "url": "URL",
         "url-helptext": "URL of Redmine installation (including context path).",
+        "username": "Username",
+        "username-helptext": "The Redmine user name",
+        "password": "Password",
+        "password-helptext": "The Redmine password",
         "textFormatting": "Text formatting",
         "textFormatting-helptext": "Type of text formatting used for redmine comments.",
         "autoClose": "Auto close issues",

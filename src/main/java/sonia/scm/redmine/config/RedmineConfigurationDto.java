@@ -18,6 +18,9 @@ public class RedmineConfigurationDto extends HalRepresentation {
   private String usernameTransformPattern = "{0}";
   private boolean autoClose;
   private boolean updateIssues;
+  private String username;
+  private String password;
+
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package

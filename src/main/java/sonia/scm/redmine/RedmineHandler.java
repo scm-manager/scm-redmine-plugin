@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer. 2. Redistributions in
  * binary form must reproduce the above copyright notice, this list of
@@ -11,7 +11,7 @@
  * materials provided with the distribution. 3. Neither the name of SCM-Manager;
  * nor the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -22,11 +22,9 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
-
 
 
 package sonia.scm.redmine;
@@ -42,7 +40,6 @@ import org.apache.shiro.subject.Subject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.issuetracker.Credentials;
 import sonia.scm.issuetracker.IssueRequest;
 import sonia.scm.issuetracker.LinkHandler;
 import sonia.scm.issuetracker.TemplateBasedHandler;
@@ -66,63 +63,35 @@ import java.util.Locale;
  * @author Sebastian Sdorra
  */
 public abstract class RedmineHandler extends TemplateBasedHandler
-  implements Closeable
-{
+  implements Closeable {
 
   private static final Logger logger = LoggerFactory.getLogger(RedmineHandler.class);
 
-  /** Field description */
   private static final String TEMPLATE_BASE_PATH = "scm/template/";
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param templateEngineFactory
-   * @param linkHandler
-   * @param configuration
-   * @param request
-   */
+  protected final RedmineConfiguration configuration;
+  protected final IssueRequest request;
+  private RedmineManager manager;
+
   public RedmineHandler(TemplateEngineFactory templateEngineFactory,
-    LinkHandler linkHandler, RedmineConfiguration configuration,
-    IssueRequest request)
-  {
+                        LinkHandler linkHandler, RedmineConfiguration configuration,
+                        IssueRequest request) {
     super(templateEngineFactory, linkHandler);
     this.configuration = configuration;
     this.request = request;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
-  @Override
-  public void close() throws IOException
-  {
+  public void close() {
 
     // do nothing
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public RedmineManager getManager()
-  {
-    if (manager == null)
-    {
-
-      // username and password from configuration ???
-      String username = getUsername();
-      String password = Credentials.current().getPassword();
+  public RedmineManager getManager() {
+    if (manager == null) {
+      String username = configuration.getUsername();
+      String password = configuration.getPassword();
 
       manager = new RedmineManager(configuration.getUrl(), username, password);
     }
@@ -130,55 +99,30 @@ public abstract class RedmineHandler extends TemplateBasedHandler
     return manager;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
-  protected int parseIssueId(String id)
-  {
+  protected int parseIssueId(String id) {
     return Integer.parseInt(id);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private String getUsername()
-  {
+  private String getUsername() {
     Subject subject = SecurityUtils.getSubject();
 
     subject.checkRole(Role.USER);
 
-    String username = null;
+    String username;
 
     User user = subject.getPrincipals().oneByType(User.class);
 
-    if (user != null)
-    {
+    if (user != null) {
       String transformPattern = configuration.getUsernameTransformPattern();
 
-      if (!Strings.isNullOrEmpty(transformPattern))
-      {
+      if (!Strings.isNullOrEmpty(transformPattern)) {
         username = user.getName();
-      }
-      else
-      {
+      } else {
         username = MessageFormat.format(transformPattern, user.getName(),
           user.getMail(), user.getDisplayName());
       }
-    }
-    else
-    {
+    } else {
       throw new RuntimeException("could not find current user");
     }
 
@@ -199,14 +143,5 @@ public abstract class RedmineHandler extends TemplateBasedHandler
 
   protected abstract String getTemplateName();
 
-  //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  protected final RedmineConfiguration configuration;
-
-  /** Field description */
-  protected final IssueRequest request;
-
-  /** Field description */
-  private RedmineManager manager;
 }

@@ -91,7 +91,9 @@ public class RedmineIssueTrackerTest {
       TextFormatting.MARKDOWN,
       "{0}",
       false,
-      false);
+      false,
+      "user",
+      "password");
   }
 
   private RedmineConfiguration createValidConfiguration() {
@@ -99,7 +101,9 @@ public class RedmineIssueTrackerTest {
       TextFormatting.MARKDOWN,
       "{0}",
       false,
-      false);
+      false,
+      "user",
+      "password");
   }
   private RedmineGlobalConfiguration createValidGlobalConfiguration() {
     return new RedmineGlobalConfiguration("http://h2g2.com",
@@ -107,6 +111,8 @@ public class RedmineIssueTrackerTest {
       "{0}",
       false,
       false,
-      false);
+      false,
+      "user",
+      "password");
   }
 }
