@@ -84,6 +84,11 @@
 
   <profiles>
     <profile>
+      <!-- If enabled, explicitly disables other profiles (i.e. link-ui). -->
+      <id>ci</id>
+    </profile>
+
+    <profile>
       <id>APIviz</id>
       <activation>
         <property>
@@ -119,6 +124,7 @@
     </profile>
 
     <profile>
+
       <id>link-ui</id>
       <activation>
         <activeByDefault>true</activeByDefault>
