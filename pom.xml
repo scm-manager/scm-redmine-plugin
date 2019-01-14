@@ -24,12 +24,6 @@
     <tag>HEAD</tag>
   </scm>
 
-  <!--TODO: Remove! Only for development purposes!! Copy the issuetracker-plugin smp file to scm-home/plugins-->
-  <properties>
-    <scm.home>scm-home</scm.home>
-  </properties>
-
-
   <dependencies>
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
