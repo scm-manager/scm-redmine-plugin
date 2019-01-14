@@ -1,10 +1,7 @@
 package sonia.scm.redmine;
 
-import com.github.sdorra.shiro.ShiroRule;
-import com.github.sdorra.shiro.SubjectAware;
 import com.google.inject.Provider;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -15,9 +12,7 @@ import sonia.scm.redmine.config.RedmineConfiguration;
 import sonia.scm.redmine.config.RedmineGlobalConfiguration;
 import sonia.scm.redmine.config.TextFormatting;
 import sonia.scm.repository.Repository;
-import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.DataStoreFactory;
-import sonia.scm.store.InMemoryConfigurationStoreFactory;
 import sonia.scm.store.InMemoryDataStoreFactory;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
