@@ -30,9 +30,7 @@
 package sonia.scm.redmine;
 
 
-import com.google.common.base.Function;
 import com.google.common.base.Strings;
-import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
 
 import com.taskadapter.redmineapi.RedmineException;
@@ -46,13 +44,8 @@ import sonia.scm.issuetracker.ChangeStateHandler;
 import sonia.scm.issuetracker.IssueRequest;
 import sonia.scm.issuetracker.LinkHandler;
 import sonia.scm.redmine.config.RedmineConfiguration;
-import sonia.scm.template.Template;
-import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -123,12 +116,7 @@ public class RedmineChangeStateHandler extends RedmineHandler
 
   @Override
   public Iterable<String> getKeywords() {
-    return Iterables.transform(getStatusList(), new Function<IssueStatus, String>() {
-      @Override
-      public String apply(IssueStatus input) {
-        return input.getName();
-      }
-    });
+    return Iterables.transform(getStatusList(), IssueStatus::getName);
   }
 
   private List<IssueStatus> getStatusList() {
