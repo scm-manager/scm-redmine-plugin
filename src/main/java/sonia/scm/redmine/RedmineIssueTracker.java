@@ -37,7 +37,6 @@ import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.issuetracker.ChangeStateHandler;
 import sonia.scm.issuetracker.CommentHandler;
 
@@ -54,8 +53,11 @@ import sonia.scm.repository.Repository;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.template.TemplateEngineFactory;
 
-import java.security.PermissionCollection;
+import java.text.MessageFormat;
 import java.util.Optional;
+
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 /**
  * @author Sebastian Sdorra
@@ -73,6 +75,9 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
 
   private final Provider<LinkHandler> linkHandlerProvider;
   private final TemplateEngineFactory templateEngineFactory;
+
+  private static final String REPLACEMENT_LINK =
+    "{0}issues/{1}";
 
 
   @Inject
@@ -125,13 +130,20 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
       matcher = new RedmineIssueMatcher(config);
     }
 
-    return Optional.of(matcher);
+    return Optional.ofNullable(matcher);
   }
 
   @Override
   public Optional<IssueLinkFactory> createLinkFactory(Repository repository) {
-    return Optional.empty();
+    RedmineConfiguration configuration = resolveConfiguration(repository);
+    String redmineUrl = configuration.getUrl();
+    if (redmineUrl == null) {
+      return Optional.empty();
+    } else {
+      return Optional.of(key -> MessageFormat.format(REPLACEMENT_LINK, redmineUrl, key.substring(1), key));
+    }
   }
+
 
   public RedmineConfiguration resolveConfiguration(Repository repository) {
     RedmineConfiguration cfg = configStore.getConfiguration(repository);
