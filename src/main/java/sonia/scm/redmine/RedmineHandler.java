@@ -31,6 +31,7 @@ package sonia.scm.redmine;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Preconditions;
 import com.taskadapter.redmineapi.RedmineManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,8 +91,8 @@ public abstract class RedmineHandler extends TemplateBasedHandler
   }
 
   protected int parseIssueId(String id) {
-
-    return Integer.parseInt(id);
+    Preconditions.checkArgument(id.startsWith("#"), "id does not look like a redmine issue id");
+    return Integer.parseInt(id.substring(1));
   }
 
   @Override
