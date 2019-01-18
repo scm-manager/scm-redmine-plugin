@@ -76,9 +76,6 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
   private final Provider<LinkHandler> linkHandlerProvider;
   private final TemplateEngineFactory templateEngineFactory;
 
-  private static final String REPLACEMENT_LINK =
-    "{0}issues/{1}";
-
 
   @Inject
   public RedmineIssueTracker(RedmineConfigStore configStore, DataStoreFactory dataStoreFactory,
@@ -140,7 +137,7 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
     if (redmineUrl == null) {
       return Optional.empty();
     } else {
-      return Optional.of(key -> MessageFormat.format(REPLACEMENT_LINK, redmineUrl, key.substring(1), key));
+      return Optional.of(new RedmineIssueLinkFactory(redmineUrl));
     }
   }
 

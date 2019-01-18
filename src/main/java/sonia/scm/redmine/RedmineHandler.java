@@ -90,11 +90,6 @@ public abstract class RedmineHandler extends TemplateBasedHandler
     return manager;
   }
 
-  protected int parseIssueId(String id) {
-    Preconditions.checkArgument(id.startsWith("#"), "id does not look like a redmine issue id");
-    return Integer.parseInt(id.substring(1));
-  }
-
   @Override
   protected Template loadTemplate(TemplateEngine engine) throws IOException {
     String templatePath = buildTemplatePath();

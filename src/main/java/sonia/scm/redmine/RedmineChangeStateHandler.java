@@ -76,7 +76,7 @@ public class RedmineChangeStateHandler extends RedmineHandler
 
   @Override
   public void changeState(String issueIdString, String keyword) {
-    int issueId = parseIssueId(issueIdString);
+    int issueId = Ids.parseAsInt(issueIdString);
 
     try {
       String comment = createComment(request, keyword);

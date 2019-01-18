@@ -66,7 +66,7 @@ public class RedmineCommentHandler extends RedmineHandler
 
   @Override
   public void commentIssue(String issueIdString) {
-    int issueId = parseIssueId(issueIdString);
+    int issueId = Ids.parseAsInt(issueIdString);
 
     try {
       String comment = createComment(request);
