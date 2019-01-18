@@ -43,6 +43,11 @@ public abstract class RedmineConfigurationMapper extends BaseMapper {
     target.add(linksBuilder.build());
   }
 
+  @AfterMapping
+  public void removePassword(RedmineGlobalConfiguration source, @MappingTarget RedmineGlobalConfigurationDto target) {
+    target.setPassword("DUMMY");
+  }
+
   private String globalSelf() {
     LinkBuilder linkBuilder = new LinkBuilder(scmPathInfoStore.get(), RedmineConfigurationResource.class);
     return linkBuilder.method("getGlobalConfiguration").parameters().href();
