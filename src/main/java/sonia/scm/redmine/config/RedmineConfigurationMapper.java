@@ -1,5 +1,6 @@
 package sonia.scm.redmine.config;
 
+import com.google.common.annotations.VisibleForTesting;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
 import org.mapstruct.AfterMapping;
@@ -21,17 +22,21 @@ import static de.otto.edison.hal.Links.linkingTo;
 @Mapper
 public abstract class RedmineConfigurationMapper extends BaseMapper {
 
+  @VisibleForTesting
+  @SuppressWarnings("squid:S2068")
+  static final String DUMMY_PASSWORD = "__DUMMY__";
+
   @Inject
   private ScmPathInfoStore scmPathInfoStore;
 
 
   public abstract RedmineConfigurationDto map(RedmineConfiguration configuration, @Context Repository repository);
 
-  public abstract RedmineConfiguration map(RedmineConfigurationDto configurationDto);
+  public abstract RedmineConfiguration map(RedmineConfigurationDto configurationDto, @Context RedmineConfiguration oldConfiguration);
 
   public abstract RedmineGlobalConfigurationDto map(RedmineGlobalConfiguration configuration);
 
-  public abstract RedmineGlobalConfiguration map(RedmineGlobalConfigurationDto configurationDto);
+  public abstract RedmineGlobalConfiguration map(RedmineGlobalConfigurationDto configurationDto, @Context RedmineGlobalConfiguration oldConfiguration);
 
   @AfterMapping
   public void addLinks(RedmineGlobalConfiguration source, @MappingTarget RedmineGlobalConfigurationDto target) {
@@ -44,8 +49,15 @@ public abstract class RedmineConfigurationMapper extends BaseMapper {
   }
 
   @AfterMapping
-  public void removePassword(RedmineGlobalConfiguration source, @MappingTarget RedmineGlobalConfigurationDto target) {
-    target.setPassword("DUMMY");
+  public void replacePasswordWithDummy(@MappingTarget RedmineConfigurationDto target) {
+    target.setPassword(DUMMY_PASSWORD);
+  }
+
+  @AfterMapping
+  public void restorePasswordOnDummy(@MappingTarget RedmineConfiguration target, @Context RedmineConfiguration oldConfiguration) {
+    if (DUMMY_PASSWORD.equals(target.getPassword())) {
+      target.setPassword(oldConfiguration.getPassword());
+    }
   }
 
   private String globalSelf() {

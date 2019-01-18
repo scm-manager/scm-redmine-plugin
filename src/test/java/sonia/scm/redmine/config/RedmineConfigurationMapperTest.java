@@ -23,6 +23,7 @@ import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("squid:S2068")
 public class RedmineConfigurationMapperTest {
 
   private URI baseUri = URI.create("http://example.com/base/");
@@ -80,7 +81,7 @@ public class RedmineConfigurationMapperTest {
 
   @Test
   public void shouldMapAttributesFromDto() {
-    RedmineConfiguration configuration = mapper.map(createDto());
+    RedmineConfiguration configuration = mapper.map(createDto(), createConfiguration());
     assertEquals( "heartofgo.ld", configuration.getUrl());
     assertEquals(TextFormatting.MARKDOWN, configuration.getTextFormatting());
     assertTrue(configuration.isAutoClose());
@@ -99,8 +100,58 @@ public class RedmineConfigurationMapperTest {
 
   @Test
   public void shouldMapGlobalConfigurationDtoAttributesFromDto() {
-    RedmineGlobalConfiguration configuration = mapper.map(createGlobalConfigurationDto());
+    RedmineGlobalConfiguration configuration = mapper.map(createGlobalConfigurationDto(), createGlobalConfiguration());
     assertFalse(configuration.isDisableRepositoryConfiguration());
+  }
+
+  @Test
+  @SubjectAware(
+    username = "trillian",
+    password = "secret",
+    configuration = "classpath:sonia/scm/redmine/shiro.ini"
+  )
+  public void shouldReplacePasswordAfterMappingOnGlobalDto() {
+    RedmineGlobalConfigurationDto configuration = mapper.map(createGlobalConfiguration());
+    assertEquals(RedmineConfigurationMapper.DUMMY_PASSWORD, configuration.getPassword());
+  }
+
+  @Test
+  @SubjectAware(
+    username = "trillian",
+    password = "secret",
+    configuration = "classpath:sonia/scm/redmine/shiro.ini"
+  )
+  public void shouldReplacePasswordAfterMappingDto() {
+    RedmineConfigurationDto configuration = mapper.map(createConfiguration(), createRepository());
+    assertEquals(RedmineConfigurationMapper.DUMMY_PASSWORD, configuration.getPassword());
+  }
+
+  @Test
+  @SubjectAware(
+    username = "trillian",
+    password = "secret",
+    configuration = "classpath:sonia/scm/redmine/shiro.ini"
+  )
+  public void shouldRestorePasswordAfterMappingFromGlobalDto() {
+    RedmineGlobalConfigurationDto dto = createGlobalConfigurationDto();
+    dto.setPassword(RedmineConfigurationMapper.DUMMY_PASSWORD);
+
+    RedmineGlobalConfiguration configuration = mapper.map(dto, createGlobalConfiguration());
+    assertEquals("secret", configuration.getPassword());
+  }
+
+  @Test
+  @SubjectAware(
+    username = "trillian",
+    password = "secret",
+    configuration = "classpath:sonia/scm/redmine/shiro.ini"
+  )
+  public void shouldRestorePasswordAfterMappingFromDto() {
+    RedmineConfigurationDto dto = createDto();
+    dto.setPassword(RedmineConfigurationMapper.DUMMY_PASSWORD);
+
+    RedmineConfiguration configuration = mapper.map(dto, createConfiguration());
+    assertEquals("secret", configuration.getPassword());
   }
 
   private RedmineConfiguration createConfiguration() {
@@ -108,8 +159,8 @@ public class RedmineConfigurationMapperTest {
       TextFormatting.MARKDOWN,
       true,
       false,
-      "user",
-      "password");
+      "trillian",
+      "secret");
   }
 
   private RedmineConfigurationDto createDto() {
@@ -117,13 +168,15 @@ public class RedmineConfigurationMapperTest {
       TextFormatting.MARKDOWN,
       true,
       false,
-      "user",
-      "password");
+      "trillian",
+      "secret");
   }
 
   private RedmineGlobalConfiguration createGlobalConfiguration() {
     RedmineGlobalConfiguration configuration = new RedmineGlobalConfiguration();
     configuration.setUrl("");
+    configuration.setUsername("trillian");
+    configuration.setPassword("secret");
     configuration.setTextFormatting(TextFormatting.TEXTILE);
     configuration.setUpdateIssues(false);
     configuration.setDisableRepositoryConfiguration(false);

@@ -86,9 +86,8 @@ public class RedmineConfigurationResource {
   @Path("/")
   @Consumes({MediaType.APPLICATION_JSON})
   public Response updateGlobalConfiguration(RedmineGlobalConfigurationDto updatedConfig) {
-
     ConfigurationPermissions.write(Constants.NAME).check();
-    tracker.setGlobalConfiguration(mapper.map(updatedConfig));
+    tracker.setGlobalConfiguration(mapper.map(updatedConfig, tracker.getGlobalConfiguration()));
     return Response.ok().build();
   }
 
@@ -106,8 +105,7 @@ public class RedmineConfigurationResource {
   public Response updateConfiguration(@PathParam("namespace") String namespace, @PathParam("name") String name, RedmineConfigurationDto updatedConfig) {
     Repository repository = loadRepository(namespace, name);
     RepositoryPermissions.modify(repository).check();
-    tracker.setRepositoryConfiguration(mapper.map(updatedConfig), repository);
-
+    tracker.setRepositoryConfiguration(mapper.map(updatedConfig, tracker.getRepositoryConfiguration(repository)), repository);
     return Response.ok().build();
   }
 
