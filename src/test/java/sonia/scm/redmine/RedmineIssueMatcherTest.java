@@ -70,11 +70,11 @@ public class RedmineIssueMatcherTest {
      */
     @Test
     public void testIssueMatching() {
-        assertIssueMatches("42", "fixed bug #42, by adding some stuff");
-        assertIssueMatches("422", "#422 should now be fixed");
-        assertIssueMatches("4222", "fixed #4222");
-        assertIssueMatches("4222", "fixed #4222");
-        assertIssueMatches("42", "old style issue id (#42)");
+        assertIssueMatches("#42", "fixed bug #42, by adding some stuff");
+        assertIssueMatches("#422", "#422 should now be fixed");
+        assertIssueMatches("#4222", "fixed #4222");
+        assertIssueMatches("#4222", "fixed #4222");
+        assertIssueMatches("#42", "old style issue id (#42)");
     }
     
     private void assertIssueMatches(String expectedKey, String message){
