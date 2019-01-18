@@ -2,7 +2,7 @@ package sonia.scm.redmine;
 
 import com.google.common.base.Preconditions;
 
-class Ids {
+final class Ids {
 
   private Ids() {
   }
