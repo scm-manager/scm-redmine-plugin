@@ -1,8 +1,7 @@
 // @flow
 import React from "react";
 import { translate }from "react-i18next";
-import { Title } from "@scm-manager/ui-components";
-import Configuration from "@scm-manager/ui-components/src/config/Configuration";
+import { Title, Configuration } from "@scm-manager/ui-components";
 import RedmineGlobalConfigurationForm from "./RedmineGlobalConfigurationForm";
 
 type Props = {

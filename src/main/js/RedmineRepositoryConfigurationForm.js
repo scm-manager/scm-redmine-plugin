@@ -1,10 +1,8 @@
 // @flow
 import React from "react";
 import type { RedmineConfiguration } from "./types";
-import DropDown from "@scm-manager/ui-components/src/forms/DropDown";
 import { translate } from "react-i18next";
-import { InputField } from "@scm-manager/ui-components";
-import Checkbox from "@scm-manager/ui-components/src/forms/Checkbox";
+import { InputField, DropDown, Checkbox } from "@scm-manager/ui-components";
 
 type Props = {
   initialConfiguration: RedmineConfiguration,

@@ -1,8 +1,8 @@
 // @flow
 import React from "react";
-import type { RedmineConfiguration, RedmineGlobalConfiguration } from "./types";
+import type { RedmineGlobalConfiguration } from "./types";
 import { translate } from "react-i18next";
-import Checkbox from "@scm-manager/ui-components/src/forms/Checkbox";
+import { Checkbox } from "@scm-manager/ui-components";
 import RedmineRepositoryConfigurationForm from "./RedmineRepositoryConfigurationForm";
 import RedmineRepositoryConfiguration from "./RedmineRepositoryConfiguration";
 
