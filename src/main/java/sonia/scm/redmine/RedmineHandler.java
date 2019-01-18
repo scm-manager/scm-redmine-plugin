@@ -31,7 +31,6 @@ package sonia.scm.redmine;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Preconditions;
 import com.taskadapter.redmineapi.RedmineManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

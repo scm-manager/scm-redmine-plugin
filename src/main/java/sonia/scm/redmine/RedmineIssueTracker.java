@@ -34,12 +34,10 @@ package sonia.scm.redmine;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.issuetracker.ChangeStateHandler;
 import sonia.scm.issuetracker.CommentHandler;
-
 import sonia.scm.issuetracker.DataStoreBasedIssueTracker;
 import sonia.scm.issuetracker.IssueLinkFactory;
 import sonia.scm.issuetracker.IssueMatcher;
@@ -53,11 +51,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.template.TemplateEngineFactory;
 
-import java.text.MessageFormat;
 import java.util.Optional;
-
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 
 /**
  * @author Sebastian Sdorra
