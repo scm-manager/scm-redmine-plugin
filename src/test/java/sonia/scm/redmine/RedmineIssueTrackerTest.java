@@ -84,7 +84,6 @@ public class RedmineIssueTrackerTest {
   private RedmineConfiguration createInvalidConfiguration() {
     return new RedmineConfiguration("",
       TextFormatting.MARKDOWN,
-      "{0}",
       false,
       false,
       "user",
@@ -94,7 +93,6 @@ public class RedmineIssueTrackerTest {
   private RedmineConfiguration createValidConfiguration() {
     return new RedmineConfiguration("http://h2g2.com",
       TextFormatting.MARKDOWN,
-      "{0}",
       false,
       false,
       "user",
@@ -103,7 +101,6 @@ public class RedmineIssueTrackerTest {
   private RedmineGlobalConfiguration createValidGlobalConfiguration() {
     return new RedmineGlobalConfiguration("http://h2g2.com",
       TextFormatting.MARKDOWN,
-      "{0}",
       false,
       false,
       false,

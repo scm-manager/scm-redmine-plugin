@@ -62,16 +62,11 @@ public class RedmineConfiguration implements Validateable {
 
   private String url;
   private TextFormatting textFormatting = TextFormatting.TEXTILE;
-  private String usernameTransformPattern = "{0}";
   private boolean autoClose;
   private boolean updateIssues;
   private String username;
   @XmlJavaTypeAdapter(XmlEncryptionAdapter.class)
   private String password;
-
-  public String getUsernameTransformPattern() {
-    return usernameTransformPattern;
-  }
 
   public boolean isAutoCloseEnabled() {
     return isUpdateIssuesEnabled() && autoClose;

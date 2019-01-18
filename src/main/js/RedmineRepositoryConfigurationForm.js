@@ -41,7 +41,6 @@ class RedmineRepositoryConfigurationForm extends React.Component<
         {this.renderInputField("url")}
         {this.renderInputField("username")}
         {this.renderInputField("password", "password")}
-        {this.renderInputField("usernameTransformPattern")}
         {this.renderTextFormattingDropDown()}
         {this.renderCheckbox("autoClose")}
         {this.renderCheckbox("updateIssues")}

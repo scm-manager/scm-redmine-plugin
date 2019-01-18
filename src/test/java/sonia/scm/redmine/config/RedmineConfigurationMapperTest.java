@@ -53,7 +53,6 @@ public class RedmineConfigurationMapperTest {
     RedmineConfigurationDto dto = mapper.map(createConfiguration(), createRepository());
     assertEquals( "heartofgo.ld", dto.getUrl());
     assertEquals(TextFormatting.MARKDOWN, dto.getTextFormatting());
-    assertEquals("UTPattern", dto.getUsernameTransformPattern());
     assertTrue(dto.isAutoClose());
     assertFalse(dto.isUpdateIssues());
   }
@@ -84,7 +83,6 @@ public class RedmineConfigurationMapperTest {
     RedmineConfiguration configuration = mapper.map(createDto());
     assertEquals( "heartofgo.ld", configuration.getUrl());
     assertEquals(TextFormatting.MARKDOWN, configuration.getTextFormatting());
-    assertEquals("UTPattern", configuration.getUsernameTransformPattern());
     assertTrue(configuration.isAutoClose());
     assertFalse(configuration.isUpdateIssues());
   }
@@ -108,7 +106,6 @@ public class RedmineConfigurationMapperTest {
   private RedmineConfiguration createConfiguration() {
     return new RedmineConfiguration("heartofgo.ld",
       TextFormatting.MARKDOWN,
-      "UTPattern",
       true,
       false,
       "user",
@@ -118,7 +115,6 @@ public class RedmineConfigurationMapperTest {
   private RedmineConfigurationDto createDto() {
     return new RedmineConfigurationDto("heartofgo.ld",
       TextFormatting.MARKDOWN,
-      "UTPattern",
       true,
       false,
       "user",
@@ -129,7 +125,6 @@ public class RedmineConfigurationMapperTest {
     RedmineGlobalConfiguration configuration = new RedmineGlobalConfiguration();
     configuration.setUrl("");
     configuration.setTextFormatting(TextFormatting.TEXTILE);
-    configuration.setUsernameTransformPattern("{0}");
     configuration.setUpdateIssues(false);
     configuration.setDisableRepositoryConfiguration(false);
     return configuration;
@@ -139,7 +134,6 @@ public class RedmineConfigurationMapperTest {
     RedmineGlobalConfigurationDto configuration = new RedmineGlobalConfigurationDto();
     configuration.setUrl("");
     configuration.setTextFormatting(TextFormatting.TEXTILE);
-    configuration.setUsernameTransformPattern("{0}");
     configuration.setUpdateIssues(false);
     configuration.setDisableRepositoryConfiguration(false);
     return configuration;

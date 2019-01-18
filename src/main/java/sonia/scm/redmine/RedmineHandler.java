@@ -31,32 +31,22 @@ package sonia.scm.redmine;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Strings;
-
 import com.taskadapter.redmineapi.RedmineManager;
-
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.issuetracker.IssueRequest;
 import sonia.scm.issuetracker.LinkHandler;
 import sonia.scm.issuetracker.TemplateBasedHandler;
 import sonia.scm.redmine.config.RedmineConfiguration;
-import sonia.scm.security.Role;
 import sonia.scm.template.Template;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
-import sonia.scm.user.User;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
 import java.io.IOException;
-
-import java.text.MessageFormat;
 import java.util.Locale;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -101,32 +91,6 @@ public abstract class RedmineHandler extends TemplateBasedHandler
 
   protected int parseIssueId(String id) {
     return Integer.parseInt(id);
-  }
-
-
-  private String getUsername() {
-    Subject subject = SecurityUtils.getSubject();
-
-    subject.checkRole(Role.USER);
-
-    String username;
-
-    User user = subject.getPrincipals().oneByType(User.class);
-
-    if (user != null) {
-      String transformPattern = configuration.getUsernameTransformPattern();
-
-      if (!Strings.isNullOrEmpty(transformPattern)) {
-        username = user.getName();
-      } else {
-        username = MessageFormat.format(transformPattern, user.getName(),
-          user.getMail(), user.getDisplayName());
-      }
-    } else {
-      throw new RuntimeException("could not find current user");
-    }
-
-    return username;
   }
 
   @Override

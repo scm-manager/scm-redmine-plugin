@@ -15,7 +15,6 @@ public class RedmineConfigurationDto extends HalRepresentation {
 
   private String url;
   private TextFormatting textFormatting = TextFormatting.TEXTILE;
-  private String usernameTransformPattern = "{0}";
   private boolean autoClose;
   private boolean updateIssues;
   private String username;
