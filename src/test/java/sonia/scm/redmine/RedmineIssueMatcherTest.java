@@ -82,10 +82,6 @@ public class RedmineIssueMatcherTest {
         Matcher matcher = pattern.matcher(message);
         assertTrue(matcher.find());
         assertEquals(expectedKey, issueMatcher.getKey(matcher));
-        assertEquals(
-            "<a target=\"_blank\" href=\"http://redmine.org/issues/$1\">$0</a>", 
-            issueMatcher.getReplacement(matcher)
-        );
     }
 
 }

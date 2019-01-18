@@ -127,7 +127,7 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
     RedmineConfiguration config = resolveConfiguration(repository);
 
     if (config != null) {
-      matcher = new RedmineIssueMatcher(config);
+      matcher = new RedmineIssueMatcher();
     }
 
     return Optional.ofNullable(matcher);

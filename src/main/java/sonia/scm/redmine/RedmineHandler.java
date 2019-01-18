@@ -90,6 +90,7 @@ public abstract class RedmineHandler extends TemplateBasedHandler
   }
 
   protected int parseIssueId(String id) {
+
     return Integer.parseInt(id);
   }
 

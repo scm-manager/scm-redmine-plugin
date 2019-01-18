@@ -33,18 +33,12 @@ package sonia.scm.redmine;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Strings;
-
 import sonia.scm.issuetracker.IssueMatcher;
-import sonia.scm.redmine.config.RedmineConfiguration;
-import sonia.scm.util.HttpUtil;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.text.MessageFormat;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -54,78 +48,17 @@ public class RedmineIssueMatcher implements IssueMatcher
 {
 
   /** Field description */
-  private static final String REPLACEMENT_LINK =
-    "<a target=\"_blank\" href=\"{0}/issues/$1\">$0</a>";
-
-  /** Field description */
   private static final Pattern KEY_PATTERN = Pattern.compile("(#\\d+)");
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param configuration
-   */
-  public RedmineIssueMatcher(RedmineConfiguration configuration)
-  {
-    this.configuration = configuration;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param matcher
-   *
-   * @return
-   */
   @Override
   public String getKey(Matcher matcher)
   {
     return matcher.group(1);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public Pattern getKeyPattern()
   {
     return KEY_PATTERN;
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @param matcher
-   *
-   * @return
-   */
-  public String getReplacement(Matcher matcher)
-  {
-    String replacement = null;
-    String url = configuration.getUrl();
-
-    if (!Strings.isNullOrEmpty(url))
-    {
-      url = HttpUtil.getUriWithoutEndSeperator(url);
-
-      replacement = MessageFormat.format(REPLACEMENT_LINK, url);
-    }
-
-    return replacement;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final RedmineConfiguration configuration;
 }
