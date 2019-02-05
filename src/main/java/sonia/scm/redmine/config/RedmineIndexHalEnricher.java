@@ -2,10 +2,10 @@ package sonia.scm.redmine.config;
 
 import sonia.scm.api.v2.resources.Enrich;
 import sonia.scm.api.v2.resources.Index;
-import sonia.scm.api.v2.resources.LinkAppender;
+import sonia.scm.api.v2.resources.HalAppender;
 import sonia.scm.api.v2.resources.LinkBuilder;
-import sonia.scm.api.v2.resources.LinkEnricher;
-import sonia.scm.api.v2.resources.LinkEnricherContext;
+import sonia.scm.api.v2.resources.HalEnricher;
+import sonia.scm.api.v2.resources.HalEnricherContext;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import sonia.scm.plugin.Extension;
 
@@ -14,12 +14,12 @@ import javax.inject.Provider;
 
 @Extension
 @Enrich(Index.class)
-public class RedmineIndexLinkEnricher implements LinkEnricher {
+public class RedmineIndexHalEnricher implements HalEnricher {
 
   private Provider<ScmPathInfoStore> scmPathInfoStoreProvider;
 
   @Inject
-  public RedmineIndexLinkEnricher(Provider<ScmPathInfoStore> scmPathInfoStoreProvider) {
+  public RedmineIndexHalEnricher(Provider<ScmPathInfoStore> scmPathInfoStoreProvider) {
     this.scmPathInfoStoreProvider = scmPathInfoStoreProvider;
   }
 
@@ -31,7 +31,7 @@ public class RedmineIndexLinkEnricher implements LinkEnricher {
   }
 
   @Override
-  public void enrich(LinkEnricherContext context, LinkAppender appender) {
-    appender.appendOne("redmineConfig", createLink());
+  public void enrich(HalEnricherContext context, HalAppender appender) {
+    appender.appendLink("redmineConfig", createLink());
   }
 }
