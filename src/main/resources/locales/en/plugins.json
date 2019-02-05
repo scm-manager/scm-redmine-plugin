@@ -17,7 +17,7 @@
         "updateIssues": "Update issues",
         "updateIssues-helptext": "Enable the automatic update function. SCM-Manager searches for issue keys in commit messages. If a issue id is found SCM-Manager  updates the issue with a comment.",
         "disableRepositoryConfiguration": "Disable repository specific configuration",
-        "disableRepositoryConfiguration-helptext": "Do not allow repository owners to configure Redmine instances.  You have to restart your application server after changing this value."
+        "disableRepositoryConfiguration-helptext": "Do not allow repository owners to configure Redmine instances."
       }
     }
   }
