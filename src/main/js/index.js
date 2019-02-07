@@ -12,4 +12,4 @@ cfgBinder.bindGlobal(
   RedmineGlobalConfiguration
 );
 
-cfgBinder.bindRepository("/redmine", "scm-redmine-plugin.config.link", "redmineConfig", RedmineRepositoryConfiguration);
+cfgBinder.bindRepositorySetting("/redmine", "scm-redmine-plugin.config.link", "redmineConfig", RedmineRepositoryConfiguration);

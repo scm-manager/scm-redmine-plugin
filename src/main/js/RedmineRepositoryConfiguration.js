@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import { translate }from "react-i18next";
-import { Title, Configuration } from "@scm-manager/ui-components";
+import { Subtitle, Configuration } from "@scm-manager/ui-components";
 import RedmineRepositoryConfigurationForm from "./RedmineRepositoryConfigurationForm";
 
 type Props = {
@@ -20,7 +20,7 @@ class RedmineRepositoryConfiguration extends React.Component<Props> {
 
     return (
       <div>
-        <Title title={t("scm-redmine-plugin.config.title")} />
+        <Subtitle subtitle={t("scm-redmine-plugin.config.title")} />
         <Configuration
           link={link}
           render={props => <RedmineRepositoryConfigurationForm {...props} />}
