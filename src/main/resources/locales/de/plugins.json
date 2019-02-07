@@ -1,0 +1,24 @@
+{
+  "scm-redmine-plugin": {
+    "config": {
+      "link": "Redmine",
+      "title": "Redmine",
+      "form": {
+        "url": "URL",
+        "url-helptext": "URL der Redmine Installation (inkl. Kontextpfad).",
+        "username": "Benutzername",
+        "username-helptext": "Der Redmine Benutzername",
+        "password": "Passwort",
+        "password-helptext": "Das Redmine Passwort",
+        "textFormatting": "Text Formatierung",
+        "textFormatting-helptext": "Art der Text Formatierung für die Redmine Kommentare.",
+        "autoClose": "Ticket Statusänderung",
+        "autoClose-helptext": "Aktiviert Statusänderungen. Der SCM-Manager sucht nach Ticket IDs und Ticket Status Schlüsselwörtern in den Commit Nachrichten. Der Status des Redmine Tickets wird bei einem Treffer entsprechend geändert.",
+        "updateIssues": "Ticket Aktualisierung mit Kommentar",
+        "updateIssues-helptext": "Aktiviert Aktualisierungen der Redmine Tickets. Der SCM-Manager sucht nach Ticket IDs in Commit Nachrichten. Wird ein Redmine Ticket gefunden, dann aktualisiert der SCM-Manager das Ticket mit einem Kommentar.",
+        "disableRepositoryConfiguration": "Deaktiviere die Repository spezifische Konfiguration.",
+        "disableRepositoryConfiguration-helptext": "Repository OWNER dürfen keine Redmine Instanzen konfigurieren. Der SCM-Manager Webserver muss nach dieser Änderung neugestartet werden."
+      }
+    }
+  }
+}
