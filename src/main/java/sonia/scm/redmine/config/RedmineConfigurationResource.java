@@ -104,7 +104,7 @@ public class RedmineConfigurationResource {
   @Consumes({MediaType.APPLICATION_JSON})
   public Response updateConfiguration(@PathParam("namespace") String namespace, @PathParam("name") String name, RedmineConfigurationDto updatedConfig) {
     Repository repository = loadRepository(namespace, name);
-    RepositoryPermissions.modify(repository).check();
+    RepositoryPermissions.custom(Constants.NAME, repository).check();
     tracker.setRepositoryConfiguration(mapper.map(updatedConfig, tracker.getRepositoryConfiguration(repository)), repository);
     return Response.ok().build();
   }
@@ -114,7 +114,7 @@ public class RedmineConfigurationResource {
   @Produces({MediaType.APPLICATION_JSON})
   public Response getConfiguration(@PathParam("namespace") String namespace, @PathParam("name") String name) {
     Repository repository = loadRepository(namespace, name);
-    RepositoryPermissions.permissionRead(repository).check();
+    RepositoryPermissions.custom(Constants.NAME, repository).check();
     RedmineConfiguration configuration = tracker.getRepositoryConfigurationOrEmpty(repository);
     return Response.ok(mapper.map(configuration, repository)).build();
   }

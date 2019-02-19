@@ -1,0 +1,8 @@
+<permissions>
+  <permission>
+    <value>configuration:read,write:redmine</value>
+  </permission>
+  <permission>
+    <value>repository:redmine:*</value>
+  </permission>
+</permissions>

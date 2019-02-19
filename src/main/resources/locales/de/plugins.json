@@ -20,5 +20,31 @@
         "disableRepositoryConfiguration-helptext": "Repository OWNER dürfen keine Redmine Instanzen konfigurieren. Der SCM-Manager Webserver muss nach dieser Änderung neugestartet werden."
       }
     }
+  },
+  "permissions": {
+    "configuration": {
+      "read,write": {
+        "redmine": {
+          "displayName": "Globale Redmine Konfiguiration ändern",
+          "description": "Darf die globale Redmine Konfiguration verändern"
+        }
+      }
+    },
+    "repository": {
+      "redmine": {
+        "*": {
+          "displayName": "Repository-spezifische Redmine Konfiguiration ändern",
+          "description": "Darf die repository-spezifischen Redmine Konfiguration verändern"
+        }
+      }
+    }
+  },
+  "verbs": {
+    "repository": {
+      "redmine": {
+        "displayName": "Redmine Konfiguration ändern",
+        "description": "Darf die Redmine Konfiguration verändern"
+      }
+    }
   }
 }

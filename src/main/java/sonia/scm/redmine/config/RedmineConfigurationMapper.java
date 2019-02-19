@@ -74,7 +74,7 @@ public abstract class RedmineConfigurationMapper extends BaseMapper {
   @AfterMapping
   public void addLinks(RedmineConfiguration source, @MappingTarget RedmineConfigurationDto target, @Context Repository repository) {
     Links.Builder linksBuilder = linkingTo().self(self(repository));
-    if (RepositoryPermissions.modify().isPermitted(repository)) {
+    if (RepositoryPermissions.custom(Constants.NAME, repository).isPermitted()) {
       linksBuilder.single(Link.link("update", update(repository)));
     }
     target.add(linksBuilder.build());
