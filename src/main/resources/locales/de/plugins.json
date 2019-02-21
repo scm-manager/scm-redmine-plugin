@@ -33,8 +33,8 @@
     "repository": {
       "redmine": {
         "*": {
-          "displayName": "Repository-spezifische Redmine Konfiguiration ändern",
-          "description": "Darf die repository-spezifischen Redmine Konfiguration verändern"
+          "displayName": "Repository-spezifische Redmine Konfiguration ändern",
+          "description": "Darf die repository-spezifische Redmine Konfiguration verändern"
         }
       }
     }

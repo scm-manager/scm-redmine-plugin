@@ -42,8 +42,8 @@
   "verbs": {
     "repository": {
       "redmine": {
-        "displayName": "configure Redmine",
-        "description": "May modify the repository specific Redmine configurations"
+        "displayName": "Configure Redmine",
+        "description": "May modify the repository specific Redmine configuration"
       }
     }
   }
