@@ -7,7 +7,9 @@ import sonia.scm.api.v2.resources.HalEnricher;
 import sonia.scm.api.v2.resources.HalEnricherContext;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import sonia.scm.plugin.Extension;
+import sonia.scm.redmine.Constants;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryPermissions;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -29,7 +31,7 @@ public class RedmineRepositoryConfigHalEnricher implements HalEnricher {
   @Override
   public void enrich(HalEnricherContext context, HalAppender appender) {
     Repository repository = context.oneRequireByType(Repository.class);
-    if (!redmineConfigStore.getConfiguration().isDisableRepositoryConfiguration()) {
+    if (!redmineConfigStore.getConfiguration().isDisableRepositoryConfiguration() && RepositoryPermissions.custom(Constants.NAME, repository).isPermitted()) {
       String linkBuilder = new LinkBuilder(scmPathInfoStoreProvider.get().get(), RedmineConfigurationResource.class)
         .method("getConfiguration")
         .parameters(repository.getNamespace(), repository.getName())

@@ -7,7 +7,9 @@ import sonia.scm.api.v2.resources.LinkBuilder;
 import sonia.scm.api.v2.resources.HalEnricher;
 import sonia.scm.api.v2.resources.HalEnricherContext;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
+import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.plugin.Extension;
+import sonia.scm.redmine.Constants;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -32,6 +34,8 @@ public class RedmineIndexHalEnricher implements HalEnricher {
 
   @Override
   public void enrich(HalEnricherContext context, HalAppender appender) {
-    appender.appendLink("redmineConfig", createLink());
+    if (ConfigurationPermissions.read(Constants.NAME).isPermitted()) {
+      appender.appendLink("redmineConfig", createLink());
+    }
   }
 }
