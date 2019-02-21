@@ -20,5 +20,31 @@
         "disableRepositoryConfiguration-helptext": "Do not allow repository owners to configure Redmine instances."
       }
     }
+  },
+  "permissions": {
+    "configuration": {
+      "read,write": {
+        "redmine": {
+          "displayName": "Modify global Redmine configuration",
+          "description": "May modify the global Redmine configuration"
+        }
+      }
+    },
+    "repository": {
+      "redmine": {
+        "*": {
+          "displayName": "Modify repository specific Redmine configuration",
+          "description": "May modify the repository specific Redmine configuration for all repositories"
+        }
+      }
+    }
+  },
+  "verbs": {
+    "repository": {
+      "redmine": {
+        "displayName": "Configure Redmine",
+        "description": "May modify the repository specific Redmine configuration"
+      }
+    }
   }
 }
