@@ -25,6 +25,10 @@
     <tag>HEAD</tag>
   </scm>
 
+
+  <properties>
+    <scm.home>scm-home</scm.home>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
