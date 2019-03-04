@@ -25,7 +25,7 @@
     "configuration": {
       "read,write": {
         "redmine": {
-          "displayName": "Globale Redmine Konfiguiration ändern",
+          "displayName": "Globale Redmine Konfiguration ändern",
           "description": "Darf die globale Redmine Konfiguration verändern"
         }
       }
