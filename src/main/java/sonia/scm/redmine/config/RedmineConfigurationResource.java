@@ -71,12 +71,6 @@ public class RedmineConfigurationResource {
 
   @Inject
   public RedmineConfigurationResource(RedmineIssueTracker tracker, RedmineConfigurationMapper mapper, RepositoryManager repositoryManager) {
-    if (!ConfigurationPermissions.write(Constants.NAME).isPermitted()) {
-      logger.warn("user has not enough privileges to change global redmine configuration");
-
-      throw new WebApplicationException(Response.Status.FORBIDDEN);
-    }
-
     this.tracker = tracker;
     this.mapper = mapper;
     this.repositoryManager = repositoryManager;
