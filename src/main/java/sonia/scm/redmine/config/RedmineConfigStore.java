@@ -8,8 +8,10 @@ import sonia.scm.store.ConfigurationStoreFactory;
 
 @Singleton
 public class RedmineConfigStore {
+
   public static final String NAME = "redmine";
-  private ConfigurationStoreFactory storeFactory;
+
+  private final ConfigurationStoreFactory storeFactory;
 
   @Inject
   public RedmineConfigStore(ConfigurationStoreFactory storeFactory) {
@@ -21,7 +23,11 @@ public class RedmineConfigStore {
   }
 
   public void storeConfiguration(RedmineConfiguration configuration, Repository repository) {
-    createStore(repository).set(configuration);
+    storeConfiguration(configuration, repository.getId());
+  }
+
+  public void storeConfiguration(RedmineConfiguration configuration, String repositoryId) {
+    createStore(repositoryId).set(configuration);
   }
 
   public RedmineGlobalConfiguration getConfiguration() {
@@ -29,11 +35,11 @@ public class RedmineConfigStore {
   }
 
   public RedmineConfiguration getConfiguration(Repository repository) {
-    return createStore(repository).getOptional().orElse(new RedmineConfiguration());
+    return createStore(repository.getId()).getOptional().orElse(new RedmineConfiguration());
   }
 
-  private ConfigurationStore<RedmineConfiguration> createStore(Repository repository) {
-    return storeFactory.withType(RedmineConfiguration.class).withName(NAME).forRepository(repository).build();
+  private ConfigurationStore<RedmineConfiguration> createStore(String repositoryId) {
+    return storeFactory.withType(RedmineConfiguration.class).withName(NAME).forRepository(repositoryId).build();
   }
 
   private ConfigurationStore<RedmineGlobalConfiguration> createGlobalStore() {
