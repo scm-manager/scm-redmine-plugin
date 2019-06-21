@@ -42,21 +42,12 @@ public class RedmineV2ConfigMigrationUpdateStep implements UpdateStep {
     LOG.debug("migrating repository specific redmine configuration for repository id {}", repositoryId);
     return new RedmineConfiguration(
       properties.get("redmine.url"),
-      getNullSafeEnum(properties, "redmine.text-formatting", TextFormatting.class),
-      Boolean.valueOf(properties.get("redmine.auto-close")),
-      Boolean.valueOf(properties.get("redmine.update-issues")),
+      properties.getEnum("redmine.text-formatting", TextFormatting.class).orElse(null),
+      properties.getBoolean("redmine.auto-close").orElse(false),
+      properties.getBoolean("redmine.update-issues").orElse(false),
       "",
       ""
     );
-  }
-
-  private <T extends Enum<T>> T getNullSafeEnum(V1Properties value, String propertyKey, Class<T> enumType) {
-    String name = value.get(propertyKey);
-    if (name == null) {
-      return null;
-    } else {
-      return Enum.valueOf(enumType, name);
-    }
   }
 
   @Override
