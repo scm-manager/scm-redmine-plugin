@@ -7,13 +7,13 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.redmine.config.RedmineConfigStore;
 import sonia.scm.redmine.config.RedmineConfiguration;
 import sonia.scm.redmine.config.TextFormatting;
-import sonia.scm.update.RepositoryV1PropertyReader;
 import sonia.scm.update.V1Properties;
 import sonia.scm.update.V1PropertyDAO;
 import sonia.scm.version.Version;
 
 import javax.inject.Inject;
 
+import static sonia.scm.update.V1PropertyReader.REPOSITORY_PROPERTY_READER;
 import static sonia.scm.version.Version.parse;
 
 @Extension
@@ -33,7 +33,7 @@ public class RedmineV2ConfigMigrationUpdateStep implements UpdateStep {
   @Override
   public void doUpdate() {
     v1PropertyDAO
-      .getProperties(new RepositoryV1PropertyReader())
+      .getProperties(REPOSITORY_PROPERTY_READER)
       .havingAnyOf("redmine.url", "redmine.text-formatting", "redmine.auto-close", "redmine.update-issues")
       .forEachEntry((key, properties) -> configStore.storeConfiguration(buildConfig(key, properties), key));
   }
