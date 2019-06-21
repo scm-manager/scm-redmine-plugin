@@ -17,15 +17,15 @@ import javax.inject.Inject;
 import static sonia.scm.version.Version.parse;
 
 @Extension
-public class RedmineV2ConfigMigration implements UpdateStep {
+public class RedmineV2ConfigMigrationUpdateStep implements UpdateStep {
 
-  private static final Logger LOG = LoggerFactory.getLogger(RedmineV2ConfigMigration.class);
+  private static final Logger LOG = LoggerFactory.getLogger(RedmineV2ConfigMigrationUpdateStep.class);
 
   private final V1PropertyDAO v1PropertyDAO;
   private final RedmineConfigStore configStore;
 
   @Inject
-  public RedmineV2ConfigMigration(V1PropertyDAO v1PropertyDAO, RedmineConfigStore configStore) {
+  public RedmineV2ConfigMigrationUpdateStep(V1PropertyDAO v1PropertyDAO, RedmineConfigStore configStore) {
     this.v1PropertyDAO = v1PropertyDAO;
     this.configStore = configStore;
   }
