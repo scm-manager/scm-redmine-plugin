@@ -8,25 +8,27 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
 import sonia.scm.redmine.config.RedmineConfigStore;
 import sonia.scm.redmine.config.RedmineGlobalConfiguration;
 import sonia.scm.redmine.config.TextFormatting;
+import sonia.scm.update.MapBasedPropertyReaderInstance;
 import sonia.scm.update.RepositoryV1PropertyReader;
 import sonia.scm.update.V1Properties;
+import sonia.scm.update.V1Property;
 import sonia.scm.update.V1PropertyDAO;
 import sonia.scm.update.V1PropertyReader;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -35,8 +37,6 @@ class RedmineV2ConfigMigrationUpdateStepTest {
 
   @Mock
   V1PropertyDAO v1PropertyDAO;
-  @Mock
-  V1PropertyReader.Instance v1PropertyReader;
   @Mock
   RedmineConfigStore configStore;
 
@@ -48,7 +48,7 @@ class RedmineV2ConfigMigrationUpdateStepTest {
 
   @BeforeEach
   void captureStoreCalls() {
-    doNothing().when(configStore).storeConfiguration(globalConfigurationCaptor.capture(), repositoryIdCaptor.capture());
+    lenient().doNothing().when(configStore).storeConfiguration(globalConfigurationCaptor.capture(), repositoryIdCaptor.capture());
   }
 
   @BeforeEach
@@ -57,7 +57,7 @@ class RedmineV2ConfigMigrationUpdateStepTest {
   }
 
   @Test
-  void shouldMigrateGlobalConfig() {
+  void shouldMigrateRepositoryConfig() {
     Map<String, String> mockedValues =
       ImmutableMap.of(
         "redmine.url", "http://redmine.example.com",
@@ -80,22 +80,25 @@ class RedmineV2ConfigMigrationUpdateStepTest {
       .hasFieldOrPropertyWithValue("updateIssues", true);
   }
 
-  protected void mockRepositoryProperties(PropertiesForRepository... mockedPropertiesForRepositories) {
-    when(v1PropertyDAO.getProperties(argThat(argument -> argument instanceof RepositoryV1PropertyReader))).thenReturn(v1PropertyReader);
-    Answer callbackWithProperties = invocation -> {
-      BiConsumer<String, V1Properties> callback = invocation.getArgument(0);
-      stream(mockedPropertiesForRepositories).forEach(
-        mockedProps ->
-          callback.accept(mockedProps.repositoryId, new V1Properties() {
-            @Override
-            public String get(String key) {
-              return mockedProps.properties.get(key);
-            }
-          })
+  @Test
+  void shouldSkipRepositoriesWithoutRedmineConfig() {
+    Map<String, String> mockedValues =
+      ImmutableMap.of(
+        "any", "value"
       );
-      return null;
-    };
-    doAnswer(callbackWithProperties).when(v1PropertyReader).forEachEntry(any());
+
+    mockRepositoryProperties(new PropertiesForRepository("repo", mockedValues));
+
+    updateStep.doUpdate();
+
+    verify(configStore, never()).storeConfiguration(any(), eq("repo"));
+  }
+
+  protected void mockRepositoryProperties(PropertiesForRepository... mockedPropertiesForRepositories) {
+    Map<String, V1Properties> map = new HashMap<>();
+    stream(mockedPropertiesForRepositories).forEach(p -> map.put(p.repositoryId, p.asProperties()));
+    V1PropertyReader.Instance v1PropertyReader = new MapBasedPropertyReaderInstance(map);
+    when(v1PropertyDAO.getProperties(argThat(argument -> argument instanceof RepositoryV1PropertyReader))).thenReturn(v1PropertyReader);
   }
 
   protected static class PropertiesForRepository {
@@ -105,6 +108,10 @@ class RedmineV2ConfigMigrationUpdateStepTest {
     public PropertiesForRepository(String repositoryId, Map<String, String> properties) {
       this.repositoryId = repositoryId;
       this.properties = properties;
+    }
+
+    V1Properties asProperties() {
+      return new V1Properties(properties.entrySet().stream().map(e -> new V1Property(e.getKey(), e.getValue())).collect(Collectors.toList()));
     }
   }
 }

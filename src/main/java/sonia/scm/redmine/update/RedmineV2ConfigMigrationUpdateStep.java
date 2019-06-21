@@ -34,19 +34,29 @@ public class RedmineV2ConfigMigrationUpdateStep implements UpdateStep {
   public void doUpdate() {
     v1PropertyDAO
       .getProperties(new RepositoryV1PropertyReader())
+      .havingAnyOf("redmine.url", "redmine.text-formatting", "redmine.auto-close", "redmine.update-issues")
       .forEachEntry((key, properties) -> configStore.storeConfiguration(buildConfig(key, properties), key));
   }
 
-  private RedmineConfiguration buildConfig(String key, V1Properties value) {
-    LOG.debug("migrating repository specific redmine configuration for repository id {}", key);
+  private RedmineConfiguration buildConfig(String repositoryId, V1Properties properties) {
+    LOG.debug("migrating repository specific redmine configuration for repository id {}", repositoryId);
     return new RedmineConfiguration(
-      value.get("redmine.url"),
-      TextFormatting.valueOf(value.get("redmine.text-formatting")),
-      Boolean.valueOf(value.get("redmine.auto-close")),
-      Boolean.valueOf(value.get("redmine.update-issues")),
+      properties.get("redmine.url"),
+      getNullSafeEnum(properties, "redmine.text-formatting", TextFormatting.class),
+      Boolean.valueOf(properties.get("redmine.auto-close")),
+      Boolean.valueOf(properties.get("redmine.update-issues")),
       "",
       ""
     );
+  }
+
+  private <T extends Enum<T>> T getNullSafeEnum(V1Properties value, String propertyKey, Class<T> enumType) {
+    String name = value.get(propertyKey);
+    if (name == null) {
+      return null;
+    } else {
+      return Enum.valueOf(enumType, name);
+    }
   }
 
   @Override
