@@ -1,6 +1,7 @@
 package sonia.scm.redmine.update;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -13,7 +14,7 @@ import static sonia.scm.redmine.config.TextFormatting.TEXTILE;
 import static sonia.scm.redmine.update.RedmineV2GlobalConfigMigrationUpdateStep.*;
 
 @ExtendWith(MockitoExtension.class)
-public class RedmineV2GlobalConfigMigrationUpdateStepTest {
+class RedmineV2GlobalConfigMigrationUpdateStepTest {
 
   RedmineV2GlobalConfigMigrationUpdateStep updateStep;
 
@@ -24,32 +25,62 @@ public class RedmineV2GlobalConfigMigrationUpdateStepTest {
     updateStep = new RedmineV2GlobalConfigMigrationUpdateStep(storeFactory);
   }
 
-  @BeforeEach
-  void createRedmineV1XMLInMemory() {
-    V1RedmineGlobalConfiguration redmineGlobalConfiguration = new V1RedmineGlobalConfiguration();
-    redmineGlobalConfiguration.setUrl("test.de");
-    redmineGlobalConfiguration.setPassword("1234");
-    redmineGlobalConfiguration.setAutoClose(false);
-    redmineGlobalConfiguration.setUsername("tester");
-    redmineGlobalConfiguration.setTextFormatting(TEXTILE);
-    redmineGlobalConfiguration.setDisableRepositoryConfiguration(false);
-    redmineGlobalConfiguration.setUpdateIssues(true);
-    storeFactory.withType(V1RedmineGlobalConfiguration.class).withName("redmine").build().set(redmineGlobalConfiguration);
+  @Nested
+  class WithExistingV1Config {
+
+    @BeforeEach
+    void createRedmineV1XMLInMemory() {
+      V1RedmineGlobalConfiguration redmineGlobalConfiguration = new V1RedmineGlobalConfiguration();
+      redmineGlobalConfiguration.setUrl("test.de");
+      redmineGlobalConfiguration.setPassword("1234");
+      redmineGlobalConfiguration.setAutoClose(false);
+      redmineGlobalConfiguration.setUsername("tester");
+      redmineGlobalConfiguration.setTextFormatting(TEXTILE);
+      redmineGlobalConfiguration.setDisableRepositoryConfiguration(false);
+      redmineGlobalConfiguration.setUpdateIssues(true);
+      storeFactory.withType(V1RedmineGlobalConfiguration.class).withName("redmine").build().set(redmineGlobalConfiguration);
+    }
+
+    @Test
+    void shouldMigrateGlobalConfiguration() {
+      updateStep.doUpdate();
+      ConfigurationStore<RedmineGlobalConfiguration> testStore = storeFactory.get("redmine");
+      RedmineGlobalConfiguration redmineGlobalConfiguration = testStore.get();
+      assertThat(redmineGlobalConfiguration.getUrl()).isEqualToIgnoringCase("test.de");
+      assertThat(redmineGlobalConfiguration.isAutoClose()).isFalse();
+      assertThat(redmineGlobalConfiguration.getTextFormatting()).isEqualTo(TEXTILE);
+      assertThat(redmineGlobalConfiguration.isDisableRepositoryConfiguration()).isFalse();
+      assertThat(redmineGlobalConfiguration.isUpdateIssues()).isTrue();
+
+      //Username and password does not exist in V1 and should not be migrated
+      assertThat(redmineGlobalConfiguration.getUsername()).isEmpty();
+      assertThat(redmineGlobalConfiguration.getPassword()).isEmpty();
+    }
   }
 
-  @Test
-  void shouldMigrateGlobalConfiguration() {
-    updateStep.doUpdate();
-    ConfigurationStore<RedmineGlobalConfiguration> testStore = storeFactory.get("redmine");
-    RedmineGlobalConfiguration redmineGlobalConfiguration = testStore.get();
-    assertThat(redmineGlobalConfiguration.getUrl()).isEqualToIgnoringCase("test.de");
-    assertThat(redmineGlobalConfiguration.isAutoClose()).isFalse();
-    assertThat(redmineGlobalConfiguration.getTextFormatting()).isEqualTo(TEXTILE);
-    assertThat(redmineGlobalConfiguration.isDisableRepositoryConfiguration()).isFalse();
-    assertThat(redmineGlobalConfiguration.isUpdateIssues()).isTrue();
+  @Nested
+  class WithExistingV2Config {
+    @BeforeEach
+    void createRedmineV2XMLInMemory() {
+      RedmineGlobalConfiguration globalConfiguration = new RedmineGlobalConfiguration();
+      storeFactory.withType(RedmineGlobalConfiguration.class).withName("redmine").build().set(globalConfiguration);
+    }
 
-    //Username and password does not exist in V1 and should not be migrated
-    assertThat(redmineGlobalConfiguration.getUsername()).isEmpty();
-    assertThat(redmineGlobalConfiguration.getPassword()).isEmpty();
+    @Test
+    void shouldNotFailForExistingV2Config() {
+      updateStep.doUpdate();
+    }
+  }
+
+  @Nested
+  class WithoutAnyConfig {
+    @BeforeEach
+    void createRedmineV2XMLInMemory() {
+    }
+
+    @Test
+    void shouldNotFailForMissingConfig() {
+      updateStep.doUpdate();
+    }
   }
 }
