@@ -18,6 +18,7 @@ import static sonia.scm.version.Version.parse;
 @Extension
 public class RedmineV2GlobalConfigMigrationUpdateStep implements UpdateStep {
 
+  public static final String STORE_NAME = "redmine";
   private final ConfigurationStoreFactory storeFactory;
 
   @Inject
@@ -27,9 +28,9 @@ public class RedmineV2GlobalConfigMigrationUpdateStep implements UpdateStep {
 
   @Override
   public void doUpdate() {
-    if (existsV1Config()) {
-      storeFactory.withType(V1RedmineGlobalConfiguration.class).withName("redmine").build().getOptional()
-        .ifPresent(
+    Optional<V1RedmineGlobalConfiguration> optionalConfig = storeFactory.withType(V1RedmineGlobalConfiguration.class).withName(STORE_NAME).build().getOptional();
+    if (isV1Config(optionalConfig)) {
+      optionalConfig.ifPresent(
           v1RedmineConfig -> {
             RedmineGlobalConfiguration v2RedmineConfig = new RedmineGlobalConfiguration(
               v1RedmineConfig.getUrl(),
@@ -40,17 +41,16 @@ public class RedmineV2GlobalConfigMigrationUpdateStep implements UpdateStep {
               "",
               ""
             );
-            storeFactory.withType(RedmineGlobalConfiguration.class).withName("redmine").build().set(v2RedmineConfig);
+            storeFactory.withType(RedmineGlobalConfiguration.class).withName(STORE_NAME).build().set(v2RedmineConfig);
           }
         );
     }
   }
 
-  private boolean existsV1Config() {
-    Optional<RedmineGlobalConfiguration> v2Config = storeFactory.withType(RedmineGlobalConfiguration.class).withName("redmine").build().getOptional();
-    if (v2Config.isPresent()) {
+  private boolean isV1Config(Optional<V1RedmineGlobalConfiguration> optionalConfig) {
+    if (optionalConfig.isPresent()) {
       try {
-        return v2Config.get() instanceof V1RedmineGlobalConfiguration;
+        return optionalConfig.get() instanceof V1RedmineGlobalConfiguration;
       } catch (ClassCastException e) {
         return true;
       }
