@@ -44,7 +44,7 @@ class RedmineV2GlobalConfigMigrationUpdateStepTest {
     @Test
     void shouldMigrateGlobalConfiguration() {
       updateStep.doUpdate();
-      ConfigurationStore<RedmineGlobalConfiguration> testStore = storeFactory.get("redmine");
+      ConfigurationStore<RedmineGlobalConfiguration> testStore = storeFactory.get("redmine",null);
       RedmineGlobalConfiguration redmineGlobalConfiguration = testStore.get();
       assertThat(redmineGlobalConfiguration.getUrl()).isEqualToIgnoringCase("test.de");
       assertThat(redmineGlobalConfiguration.isAutoClose()).isFalse();
