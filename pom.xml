@@ -16,7 +16,7 @@
   <name>scm-redmine-plugin</name>
   <packaging>smp</packaging>
   <url>https://bitbucket.org/velo/scm-redmine-plugin</url>
-  <description>This plugin integrates Redmine to SCM-Manager.</description>
+  <description>Integrates Redmine to SCM-Manager</description>
 
   <scm>
     <connection>scm:hg:https://bitbucket.org/velo/scm-redmine-plugin</connection>
@@ -135,7 +135,7 @@
           <plugin>
             <groupId>sonia.scm.maven</groupId>
             <artifactId>smp-maven-plugin</artifactId>
-            <version>1.0.0-alpha-4</version>
+            <version>1.0.0-alpha-6</version>
             <extensions>true</extensions>
             <configuration>
               <links>

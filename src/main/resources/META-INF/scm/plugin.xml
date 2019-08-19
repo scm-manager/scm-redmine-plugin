@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE plugin SYSTEM "https://download.scm-manager.org/dtd/plugin/2.0.0-01.dtd">
 <!--
 
@@ -35,16 +35,16 @@
 
 <plugin>
 
+  <scm-version>2</scm-version>
+
   <information>
+    <displayName>Redmine</displayName>
     <author>Marvin Froeder</author>
-    <category>Issue-Tracking</category>
-    <wiki>https://bitbucket.org/velo/scm-redmine-plugin</wiki>
+    <category>Issue Tracker</category>
   </information>
 
   <conditions>
     <min-version>${project.parent.version}</min-version>
   </conditions>
-
-  <scm-version>2</scm-version>
 
 </plugin>
