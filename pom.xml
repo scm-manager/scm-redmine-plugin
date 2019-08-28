@@ -15,13 +15,13 @@
   <version>2.0.0-SNAPSHOT</version>
   <name>scm-redmine-plugin</name>
   <packaging>smp</packaging>
-  <url>https://bitbucket.org/velo/scm-redmine-plugin</url>
+  <url>https://github.com/scm-manager/scm-redmine-plugin</url>
   <description>Integrates Redmine to SCM-Manager</description>
 
   <scm>
-    <connection>scm:hg:https://bitbucket.org/velo/scm-redmine-plugin</connection>
-    <developerConnection>scm:hg:https://bitbucket.org/velo/scm-redmine-plugin</developerConnection>
-    <url>https://bitbucket.org/velo/scm-redmine-plugin</url>
+    <connection>scm:git:https://github.com/scm-manager/scm-redmine-plugin</connection>
+    <developerConnection>scm:git:https://github.com/scm-manager/scm-redmine-plugin</developerConnection>
+    <url>https://github.com/scm-manager/scm-redmine-plugin</url>
     <tag>HEAD</tag>
   </scm>
 
