@@ -25,7 +25,6 @@ class RedmineRepositoryConfigurationForm extends React.Component<
   }
 
   configChangeHandler = (value: string, name: string) => {
-
     this.setState(
       {
         [name]: value
@@ -38,10 +37,12 @@ class RedmineRepositoryConfigurationForm extends React.Component<
   render() {
     return (
       <>
-        {this.renderInputField("url")}
-        {this.renderInputField("username")}
-        {this.renderInputField("password", "password")}
-        {this.renderTextFormattingDropDown()}
+        <div className="columns is-multiline">
+          {this.renderInputField("url")}
+          {this.renderInputField("username")}
+          {this.renderInputField("password", "password")}
+          {this.renderTextFormattingDropDown()}
+        </div>
         {this.renderCheckbox("autoClose")}
         {this.renderCheckbox("updateIssues")}
       </>
@@ -51,15 +52,17 @@ class RedmineRepositoryConfigurationForm extends React.Component<
   renderInputField = (name: string, type?: string) => {
     const { readOnly, t } = this.props;
     return (
-      <InputField
-        type={type}
-        label={t("scm-redmine-plugin.config.form." + name)}
-        helpText={t("scm-redmine-plugin.config.form." + name + "-helptext")}
-        onChange={this.configChangeHandler}
-        value={this.state[name]}
-        name={name}
-        disabled={readOnly}
-      />
+      <div className="column is-half">
+        <InputField
+          type={type}
+          label={t("scm-redmine-plugin.config.form." + name)}
+          helpText={t("scm-redmine-plugin.config.form." + name + "-helptext")}
+          onChange={this.configChangeHandler}
+          value={this.state[name]}
+          name={name}
+          disabled={readOnly}
+        />
+      </div>
     );
   };
 
@@ -80,16 +83,18 @@ class RedmineRepositoryConfigurationForm extends React.Component<
   renderTextFormattingDropDown = () => {
     const { t } = this.props;
     return (
-      <div className="field">
-        <label className="label">
-          {t("scm-redmine-plugin.config.form.textFormatting")}
-        </label>
-        <div className="control">
-          <DropDown
-            options={["TEXTILE", "MARKDOWN"]}
-            optionSelected={this.handleDropDownChange}
-            preselectedOption={this.state.textFormatting}
-          />
+      <div className="column is-half">
+        <div className="field">
+          <label className="label">
+            {t("scm-redmine-plugin.config.form.textFormatting")}
+          </label>
+          <div className="control">
+            <DropDown
+              options={["TEXTILE", "MARKDOWN"]}
+              optionSelected={this.handleDropDownChange}
+              preselectedOption={this.state.textFormatting}
+            />
+          </div>
         </div>
       </div>
     );
