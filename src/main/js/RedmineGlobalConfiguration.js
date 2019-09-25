@@ -19,13 +19,13 @@ class RedmineGlobalConfiguration extends React.Component<Props> {
     const { link, t } = this.props;
 
     return (
-      <div>
+      <>
         <Title title={t("scm-redmine-plugin.config.title")} />
         <Configuration
           link={link}
           render={props => <RedmineGlobalConfigurationForm {...props} />}
         />
-      </div>
+      </>
     );
   }
 }
