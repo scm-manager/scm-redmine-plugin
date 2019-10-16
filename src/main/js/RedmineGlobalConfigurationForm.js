@@ -51,7 +51,6 @@ class RedmineGlobalConfigurationForm extends React.Component<
   }
 
   configChange = (config: RedmineRepositoryConfiguration, valid: boolean) => {
-    console.log(config);
     const { disableRepositoryConfiguration } = this.state;
     this.setState({ ...config, disableRepositoryConfiguration }, () => {
       this.props.onConfigurationChange(
