@@ -1,22 +1,15 @@
-// @flow
 import React from "react";
-import type { RedmineConfiguration } from "./types";
-import { translate } from "react-i18next";
+import { RedmineConfiguration } from "./types";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { InputField, DropDown, Checkbox } from "@scm-manager/ui-components";
 
-type Props = {
-  initialConfiguration: RedmineConfiguration,
-  readOnly: boolean,
-  onConfigurationChange: (RedmineConfiguration, boolean) => void,
-
-  // context prop
-  t: string => string
+type Props = WithTranslation & {
+  initialConfiguration: RedmineConfiguration;
+  readOnly: boolean;
+  onConfigurationChange: (p1: RedmineConfiguration, p2: boolean) => void;
 };
 
-class RedmineRepositoryConfigurationForm extends React.Component<
-  Props,
-  RedmineConfiguration
-> {
+class RedmineRepositoryConfigurationForm extends React.Component<Props, RedmineConfiguration> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -30,7 +23,12 @@ class RedmineRepositoryConfigurationForm extends React.Component<
         [name]: value
       },
       () =>
-        this.props.onConfigurationChange({ ...this.state }, this.isStateValid())
+        this.props.onConfigurationChange(
+          {
+            ...this.state
+          },
+          this.isStateValid()
+        )
     );
   };
 
@@ -39,15 +37,9 @@ class RedmineRepositoryConfigurationForm extends React.Component<
       <>
         <div className="columns is-multiline">
           <div className="column is-full">{this.renderInputField("url")}</div>
-          <div className="column is-half">
-            {this.renderInputField("username")}
-          </div>
-          <div className="column is-half">
-            {this.renderInputField("password", "password")}
-          </div>
-          <div className="column is-half">
-            {this.renderTextFormattingDropDown()}
-          </div>
+          <div className="column is-half">{this.renderInputField("username")}</div>
+          <div className="column is-half">{this.renderInputField("password", "password")}</div>
+          <div className="column is-half">{this.renderTextFormattingDropDown()}</div>
         </div>
         {this.renderCheckbox("autoClose")}
         {this.renderCheckbox("updateIssues")}
@@ -88,9 +80,7 @@ class RedmineRepositoryConfigurationForm extends React.Component<
     const { t } = this.props;
     return (
       <div className="field">
-        <label className="label">
-          {t("scm-redmine-plugin.config.form.textFormatting")}
-        </label>
+        <label className="label">{t("scm-redmine-plugin.config.form.textFormatting")}</label>
         <div className="control">
           <DropDown
             options={["TEXTILE", "MARKDOWN"]}
@@ -113,4 +103,4 @@ class RedmineRepositoryConfigurationForm extends React.Component<
   };
 }
 
-export default translate("plugins")(RedmineRepositoryConfigurationForm);
+export default withTranslation("plugins")(RedmineRepositoryConfigurationForm);

@@ -1,24 +1,17 @@
-// @flow
 import React from "react";
-import type { RedmineGlobalConfiguration } from "./types";
-import { translate } from "react-i18next";
+import { RedmineGlobalConfiguration } from "./types";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Checkbox } from "@scm-manager/ui-components";
 import RedmineRepositoryConfigurationForm from "./RedmineRepositoryConfigurationForm";
 import RedmineRepositoryConfiguration from "./RedmineRepositoryConfiguration";
 
-type Props = {
-  initialConfiguration: RedmineGlobalConfiguration,
-  readOnly: boolean,
-  onConfigurationChange: (RedmineGlobalConfiguration, boolean) => void,
-
-  // context prop
-  t: string => string
+type Props = WithTranslation & {
+  initialConfiguration: RedmineGlobalConfiguration;
+  readOnly: boolean;
+  onConfigurationChange: (p1: RedmineGlobalConfiguration, p2: boolean) => void;
 };
 
-class RedmineGlobalConfigurationForm extends React.Component<
-  Props,
-  RedmineGlobalConfiguration
-> {
+class RedmineGlobalConfigurationForm extends React.Component<Props, RedmineGlobalConfiguration> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -32,7 +25,12 @@ class RedmineGlobalConfigurationForm extends React.Component<
         [name]: value
       },
       () =>
-        this.props.onConfigurationChange({ ...this.state }, this.isStateValid())
+        this.props.onConfigurationChange(
+          {
+            ...this.state
+          },
+          this.isStateValid()
+        )
     );
   };
 
@@ -52,12 +50,20 @@ class RedmineGlobalConfigurationForm extends React.Component<
 
   configChange = (config: RedmineRepositoryConfiguration, valid: boolean) => {
     const { disableRepositoryConfiguration } = this.state;
-    this.setState({ ...config, disableRepositoryConfiguration }, () => {
-      this.props.onConfigurationChange(
-        { ...this.state },
-        valid && this.isStateValid()
-      );
-    });
+    this.setState(
+      {
+        ...config,
+        disableRepositoryConfiguration
+      },
+      () => {
+        this.props.onConfigurationChange(
+          {
+            ...this.state
+          },
+          valid && this.isStateValid()
+        );
+      }
+    );
   };
 
   renderCheckbox = (name: string) => {
@@ -79,4 +85,4 @@ class RedmineGlobalConfigurationForm extends React.Component<
   };
 }
 
-export default translate("plugins")(RedmineGlobalConfigurationForm);
+export default withTranslation("plugins")(RedmineGlobalConfigurationForm);
