@@ -7,7 +7,7 @@
   <parent>
     <artifactId>scm-plugins</artifactId>
     <groupId>sonia.scm.plugins</groupId>
-    <version>2.0.0-rc1</version>
+    <version>2.0.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>scm-redmine-plugin</artifactId>
@@ -23,14 +23,28 @@
     <url>https://github.com/scm-manager/scm-redmine-plugin</url>
   </scm>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>io.openapitools.swagger</groupId>
+        <artifactId>swagger-maven-plugin</artifactId>
+        <configuration>
+          <resourcePackages>
+            <resourcePackage>sonia.scm.redmine.config</resourcePackage>
+          </resourcePackages>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
-  
+
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-issuetracker-plugin</artifactId>
       <version>2.0.0-rc1</version>
     </dependency>
-    
+
     <dependency>
       <groupId>com.taskadapter</groupId>
       <artifactId>redmine-java-api</artifactId>
