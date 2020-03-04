@@ -83,7 +83,12 @@ public class RedmineConfigurationResource {
   @PUT
   @Path("/")
   @Consumes({MediaType.APPLICATION_JSON})
-  @Operation(summary = "Update global redmine configuration", description = "Modifies the global redmine configuration.", tags = "Redmine Plugin")
+  @Operation(
+    summary = "Update global redmine configuration",
+    description = "Modifies the global redmine configuration.",
+    tags = "Redmine Plugin",
+    operationId = "redmine_update_global_config"
+  )
   @ApiResponse(responseCode = "200", description = "update success")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized /  the current user does not have the right privilege")
@@ -104,7 +109,12 @@ public class RedmineConfigurationResource {
   @GET
   @Path("/")
   @Produces({MediaType.APPLICATION_JSON})
-  @Operation(summary = "Get global redmine configuration", description = "Returns the global redmine configuration.", tags = "Redmine Plugin")
+  @Operation(
+    summary = "Get global redmine configuration",
+    description = "Returns the global redmine configuration.",
+    tags = "Redmine Plugin",
+    operationId = "redmine_get_global_config"
+  )
   @ApiResponse(
     responseCode = "200",
     description = "success",
@@ -131,7 +141,12 @@ public class RedmineConfigurationResource {
   @PUT
   @Path("/{namespace}/{name}")
   @Consumes({MediaType.APPLICATION_JSON})
-  @Operation(summary = "Update repository-specific redmine configuration", description = "Modifies the repository-specific redmine configuration.", tags = "Redmine Plugin")
+  @Operation(
+    summary = "Update repository-specific redmine configuration",
+    description = "Modifies the repository-specific redmine configuration.",
+    tags = "Redmine Plugin",
+    operationId = "redmine_update_repo_config"
+  )
   @ApiResponse(responseCode = "200", description = "success")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized /  the current user does not have the right privilege")
@@ -153,7 +168,11 @@ public class RedmineConfigurationResource {
   @GET
   @Path("/{namespace}/{name}")
   @Produces({MediaType.APPLICATION_JSON})
-  @Operation(summary = "Get repository-specific redmine configuration", description = "Returns the repository-specific redmine configuration.", tags = "Redmine Plugin")
+  @Operation(
+    summary = "Get repository-specific redmine configuration",
+    description = "Returns the repository-specific redmine configuration.",
+    tags = "Redmine Plugin",
+    operationId = "redmine_get_repo_config")
   @ApiResponse(
     responseCode = "200",
     description = "success",
