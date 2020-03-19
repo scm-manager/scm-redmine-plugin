@@ -9,7 +9,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.redmine.config.RedmineConfigStore;
-import sonia.scm.redmine.config.RedmineGlobalConfiguration;
+import sonia.scm.redmine.config.RedmineConfiguration;
 import sonia.scm.redmine.config.TextFormatting;
 import sonia.scm.update.V1PropertyDaoTestUtil;
 import sonia.scm.update.V1PropertyDaoTestUtil.PropertiesForRepository;
@@ -30,16 +30,15 @@ class RedmineV2ConfigMigrationUpdateStepTest {
 
   @Mock
   RedmineConfigStore configStore;
-
   @Captor
-  ArgumentCaptor<RedmineGlobalConfiguration> globalConfigurationCaptor;
+  ArgumentCaptor<RedmineConfiguration> configurationCaptor;
   @Captor
   ArgumentCaptor<String> repositoryIdCaptor;
   private RedmineV2ConfigMigrationUpdateStep updateStep;
 
   @BeforeEach
   void captureStoreCalls() {
-    lenient().doNothing().when(configStore).storeConfiguration(globalConfigurationCaptor.capture(), repositoryIdCaptor.capture());
+    lenient().doNothing().when(configStore).storeConfiguration(configurationCaptor.capture(), repositoryIdCaptor.capture());
   }
 
   @BeforeEach
@@ -64,7 +63,7 @@ class RedmineV2ConfigMigrationUpdateStepTest {
 
     verify(configStore).storeConfiguration(any(), eq("repo"));
 
-    assertThat(globalConfigurationCaptor.getValue())
+    assertThat(configurationCaptor.getValue())
       .hasFieldOrPropertyWithValue("url", "http://redmine.example.com")
       .hasFieldOrPropertyWithValue("textFormatting", TextFormatting.TEXTILE)
       .hasFieldOrPropertyWithValue("autoClose", true)
