@@ -23,40 +23,28 @@
  */
 package sonia.scm.redmine;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.redmine.config.RedmineConfiguration;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests for {@link RedmineIssueMatcher}.
- * 
+ *
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
 @RunWith(MockitoJUnitRunner.class)
 public class RedmineIssueMatcherTest {
 
-    @Mock
-    private RedmineConfiguration configuration;
-    
     @InjectMocks
     private RedmineIssueMatcher issueMatcher;
-    
-    /**
-     * Setup mocks and test class.
-     */
-    @Before
-    public void setUp(){
-        when(configuration.getUrl()).thenReturn("http://redmine.org");
-    }
-   
+
     /**
      * Tests {@link RedmineIssueMatcher}.
      */
@@ -68,7 +56,7 @@ public class RedmineIssueMatcherTest {
         assertIssueMatches("#4222", "fixed #4222");
         assertIssueMatches("#42", "old style issue id (#42)");
     }
-    
+
     private void assertIssueMatches(String expectedKey, String message){
         Pattern pattern = issueMatcher.getKeyPattern();
         Matcher matcher = pattern.matcher(message);
