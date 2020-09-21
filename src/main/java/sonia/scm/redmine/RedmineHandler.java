@@ -26,6 +26,8 @@ package sonia.scm.redmine;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.taskadapter.redmineapi.RedmineManager;
+import com.taskadapter.redmineapi.RedmineManagerFactory;
+import com.taskadapter.redmineapi.internal.Transport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.issuetracker.IssueRequest;
@@ -77,7 +79,7 @@ public abstract class RedmineHandler extends TemplateBasedHandler
       String username = configuration.getUsername();
       String password = configuration.getPassword();
 
-      manager = new RedmineManager(configuration.getUrl(), username, password);
+      manager = RedmineManagerFactory.createWithUserAuth(configuration.getUrl(), username, password);
     }
 
     return manager;

@@ -68,10 +68,10 @@ public class RedmineCommentHandler extends RedmineHandler
       if (!Strings.isNullOrEmpty(comment)) {
         logger.info("add comment to issue {}", issueId);
 
-        Issue issue = getManager().getIssueById(issueId);
+        Issue issue = getManager().getIssueManager().getIssueById(issueId);
 
         issue.setNotes(comment);
-        getManager().update(issue);
+        getManager().getIssueManager().update(issue);
       } else {
         logger.warn("generate comment is null or empty");
       }

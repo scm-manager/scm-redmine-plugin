@@ -78,7 +78,7 @@ public class RedmineChangeStateHandler extends RedmineHandler
       if (!Strings.isNullOrEmpty(comment)) {
         logger.info("change state of issue {} by keyword {}", issueId, keyword);
 
-        Issue issue = getManager().getIssueById(issueId);
+        Issue issue = getManager().getIssueManager().getIssueById(issueId);
 
         IssueStatus status = getIssueStatusByKeyword(keyword);
         if (status != null) {
@@ -87,7 +87,7 @@ public class RedmineChangeStateHandler extends RedmineHandler
           logger.warn("could not find keyword {} in issue status list", keyword);
         }
         issue.setNotes(comment);
-        getManager().update(issue);
+        getManager().getIssueManager().update(issue);
       } else {
         logger.warn("generated comment for change state attempt is null or empty");
       }
@@ -116,7 +116,7 @@ public class RedmineChangeStateHandler extends RedmineHandler
   private List<IssueStatus> getStatusList() {
     if (statusList == null) {
       try {
-        statusList = getManager().getStatuses();
+        statusList = getManager().getIssueManager().getStatuses();
       } catch (RedmineException ex) {
         logger.warn("failed to fetch issue status list", ex);
         return Collections.emptyList();
