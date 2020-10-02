@@ -131,20 +131,30 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
 
 
   public RedmineConfiguration resolveConfiguration(Repository repository) {
-    RedmineConfiguration cfg = configStore.getConfiguration(repository);
+    final RedmineGlobalConfiguration globalConfiguration = getGlobalConfiguration();
 
-    if (!cfg.isValid()) {
-      logger.debug("repository config for {} is not valid",
-        repository.getName());
-      cfg = getGlobalConfiguration();
+    if (globalConfiguration.isDisableRepositoryConfiguration()) {
+      if (!globalConfiguration.isValid()) {
+        logger.debug("global redmine config is not valid, but disables repository config; no config returned");
+        return null;
+      }
+      return globalConfiguration;
     }
 
-    if (!cfg.isValid()) {
-      logger.debug("no valid configuration for repository {} found",
-        repository.getName());
-      cfg = null;
+    RedmineConfiguration configuration = configStore.getConfiguration(repository);
+
+    if (!configuration.isValid()) {
+      logger.debug("repository config for {}/{} is not valid, falling back to global config",
+        repository.getNamespace(), repository.getName());
+      configuration = globalConfiguration;
     }
-    return cfg;
+
+    if (!configuration.isValid()) {
+      logger.debug("no valid configuration for repository {}/{} found",
+        repository.getNamespace(), repository.getName());
+      configuration = null;
+    }
+    return configuration;
   }
 
   public void setGlobalConfiguration(RedmineGlobalConfiguration updatedConfig) {

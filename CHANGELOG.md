@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Documentation in German ([#5](https://github.com/scm-manager/scm-redmine-plugin/pull/5))
 
+### Fixed
+- Ignore repository-level configuration if it is disabled in the global configuration ([#14](https://github.com/scm-manager/scm-redmine-plugin/pull/14))
+
 ## [2.0.0] - 2020-06-04
 ### Changed
 - Changeover to MIT license ([#4](https://github.com/scm-manager/scm-redmine-plugin/pull/4))
