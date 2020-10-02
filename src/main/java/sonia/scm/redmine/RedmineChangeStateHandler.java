@@ -24,12 +24,9 @@
 package sonia.scm.redmine;
 
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
-
-import com.taskadapter.redmineapi.RedmineException;
-import com.taskadapter.redmineapi.bean.Issue;
-import com.taskadapter.redmineapi.bean.IssueStatus;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +34,9 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.issuetracker.ChangeStateHandler;
 import sonia.scm.issuetracker.IssueRequest;
 import sonia.scm.issuetracker.LinkHandler;
+import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.redmine.config.RedmineConfiguration;
+import sonia.scm.redmine.dto.IssueStatus;
 import sonia.scm.template.TemplateEngineFactory;
 
 import java.util.Collections;
@@ -64,8 +63,8 @@ public class RedmineChangeStateHandler extends RedmineHandler
 
   public RedmineChangeStateHandler(TemplateEngineFactory templateEngineFactory,
                                    LinkHandler linkHandler, RedmineConfiguration configuration,
-                                   IssueRequest request) {
-    super(templateEngineFactory, linkHandler, configuration, request);
+                                   IssueRequest request, AdvancedHttpClient advancedHttpClient) {
+    super(templateEngineFactory, linkHandler, configuration, request, advancedHttpClient);
   }
 
   @Override
@@ -78,21 +77,21 @@ public class RedmineChangeStateHandler extends RedmineHandler
       if (!Strings.isNullOrEmpty(comment)) {
         logger.info("change state of issue {} by keyword {}", issueId, keyword);
 
-        Issue issue = getManager().getIssueById(issueId);
+        ObjectNode issue = getService().getIssueById(issueId);
 
         IssueStatus status = getIssueStatusByKeyword(keyword);
         if (status != null) {
-          issue.setStatusId(status.getId());
+          issue.put("status_id", status.getId());
         } else {
           logger.warn("could not find keyword {} in issue status list", keyword);
         }
-        issue.setNotes(comment);
-        getManager().update(issue);
+        issue.put("notes", comment);
+        getService().updateIssue(issueId, issue);
       } else {
         logger.warn("generated comment for change state attempt is null or empty");
       }
 
-    } catch (RedmineException ex) {
+    } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
   }
@@ -116,8 +115,8 @@ public class RedmineChangeStateHandler extends RedmineHandler
   private List<IssueStatus> getStatusList() {
     if (statusList == null) {
       try {
-        statusList = getManager().getStatuses();
-      } catch (RedmineException ex) {
+        statusList = getService().getStatuses();
+      } catch (Exception ex) {
         logger.warn("failed to fetch issue status list", ex);
         return Collections.emptyList();
       }

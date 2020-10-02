@@ -37,6 +37,7 @@ import sonia.scm.issuetracker.IssueLinkFactory;
 import sonia.scm.issuetracker.IssueMatcher;
 import sonia.scm.issuetracker.IssueRequest;
 import sonia.scm.issuetracker.LinkHandler;
+import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.plugin.Extension;
 import sonia.scm.redmine.config.RedmineConfigStore;
 import sonia.scm.redmine.config.RedmineConfiguration;
@@ -60,6 +61,7 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
     LoggerFactory.getLogger(RedmineIssueTracker.class);
 
   private final RedmineConfigStore configStore;
+  private final AdvancedHttpClient advancedHttpClient;
 
   private final Provider<LinkHandler> linkHandlerProvider;
   private final TemplateEngineFactory templateEngineFactory;
@@ -67,9 +69,10 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
 
   @Inject
   public RedmineIssueTracker(RedmineConfigStore configStore, DataStoreFactory dataStoreFactory,
-                             TemplateEngineFactory templateEngineFactory, Provider<LinkHandler> linkHandlerProvider) {
+                             AdvancedHttpClient advancedHttpClient, TemplateEngineFactory templateEngineFactory, Provider<LinkHandler> linkHandlerProvider) {
     super(NAME, dataStoreFactory);
     this.configStore = configStore;
+    this.advancedHttpClient = advancedHttpClient;
     this.templateEngineFactory = templateEngineFactory;
     this.linkHandlerProvider = linkHandlerProvider;
   }
@@ -82,7 +85,7 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
 
     if ((cfg != null) && cfg.isAutoCloseEnabled()) {
       changeStateHandler = new RedmineChangeStateHandler(templateEngineFactory,
-        linkHandlerProvider.get(), cfg, request);
+        linkHandlerProvider.get(), cfg, request, advancedHttpClient);
     } else {
       logger.debug("configuration is not valid or change state is disabled");
     }
@@ -97,7 +100,7 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
 
     if ((cfg != null) && cfg.isUpdateIssuesEnabled()) {
       commentHandler = new RedmineCommentHandler(templateEngineFactory,
-        linkHandlerProvider.get(), cfg, request);
+        linkHandlerProvider.get(), cfg, request, advancedHttpClient);
     } else {
       logger.debug("configuration is not valid or update is disabled");
     }

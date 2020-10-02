@@ -24,11 +24,8 @@
 package sonia.scm.redmine;
 
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Strings;
-import com.google.common.base.Throwables;
-
-import com.taskadapter.redmineapi.RedmineException;
-import com.taskadapter.redmineapi.bean.Issue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.issuetracker.CommentHandler;
 import sonia.scm.issuetracker.IssueRequest;
 import sonia.scm.issuetracker.LinkHandler;
+import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.redmine.config.RedmineConfiguration;
 import sonia.scm.template.TemplateEngineFactory;
 
@@ -53,8 +51,8 @@ public class RedmineCommentHandler extends RedmineHandler
 
   public RedmineCommentHandler(TemplateEngineFactory templateEngineFactory,
                                LinkHandler linkHandler, RedmineConfiguration configuration,
-                               IssueRequest request) {
-    super(templateEngineFactory, linkHandler, configuration, request);
+                               IssueRequest request, AdvancedHttpClient advancedHttpClient) {
+    super(templateEngineFactory, linkHandler, configuration, request, advancedHttpClient);
   }
 
 
@@ -68,15 +66,15 @@ public class RedmineCommentHandler extends RedmineHandler
       if (!Strings.isNullOrEmpty(comment)) {
         logger.info("add comment to issue {}", issueId);
 
-        Issue issue = getManager().getIssueById(issueId);
+        ObjectNode issue = getService().getIssueById(issueId);
 
-        issue.setNotes(comment);
-        getManager().update(issue);
+        issue.put("notes", comment);
+        getService().updateIssue(issueId, issue);
       } else {
         logger.warn("generate comment is null or empty");
       }
 
-    } catch (RedmineException ex) {
+    } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
   }

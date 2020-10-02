@@ -30,6 +30,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.issuetracker.LinkHandler;
+import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.redmine.config.RedmineConfigStore;
 import sonia.scm.redmine.config.RedmineConfiguration;
 import sonia.scm.redmine.config.RedmineGlobalConfiguration;
@@ -58,6 +59,9 @@ public class RedmineIssueTrackerTest {
   @Mock
   private Provider<LinkHandler> linkHandlerProvider;
 
+  @Mock
+  private AdvancedHttpClient advancedHttpClient;
+
 
   private RedmineIssueTracker redmineIssueTracker;
 
@@ -66,7 +70,7 @@ public class RedmineIssueTrackerTest {
     TemplateEngine templateEngine = mock(TemplateEngine.class);
     when(templateEngine.getType()).thenReturn(new TemplateType("foo", "bar", Collections.EMPTY_LIST));
     TemplateEngineFactory templateEngineFactory = new TemplateEngineFactory(Collections.emptySet(), templateEngine);
-    redmineIssueTracker = new RedmineIssueTracker(configStore, dataStoreFactory, templateEngineFactory, linkHandlerProvider);
+    redmineIssueTracker = new RedmineIssueTracker(configStore, dataStoreFactory, advancedHttpClient, templateEngineFactory, linkHandlerProvider);
   }
 
   public void shouldWriteGlobalConfigToRedmineConfigStore() {
@@ -121,6 +125,7 @@ public class RedmineIssueTrackerTest {
       "user",
       "password");
   }
+
   private RedmineGlobalConfiguration createValidGlobalConfiguration() {
     return new RedmineGlobalConfiguration("http://h2g2.com",
       TextFormatting.MARKDOWN,
