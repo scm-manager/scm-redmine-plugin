@@ -46,5 +46,24 @@
         "description": "Darf die Redmine Konfiguration verändern"
       }
     }
+  },
+  "validation": {
+    "RedmineCommitMessageIssueKeyValidator": {
+      "name": "Redmine Ticket Schlüssel Validator",
+      "branches": "{{ branches }}",
+      "allBranches": "<Alle Branches>",
+      "description": "Validiert auf Redmine Ticket IDs",
+      "defaultErrorMessage": "<Standard-Fehlermeldung>"
+    }
+  },
+  "validator": {
+    "RedmineCommitMessageIssueKeyValidator": {
+      "name": "Redmine Ticket Schlüssel Validator",
+      "description": "Validiert auf gültige Ticket Schlüssel beginnend mit \"#\".",
+      "branches": {
+        "label": "Branches",
+        "helpText": "Komma-separierte Liste der zu validierenden Branches. Leer lassen um alle Branches zu validieren.\nBeispiel: master,feature/*"
+      }
+    }
   }
 }

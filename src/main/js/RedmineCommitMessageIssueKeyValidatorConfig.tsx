@@ -21,19 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import {ConfigurationBinder as cfgBinder} from "@scm-manager/ui-components";
-import RedmineGlobalConfiguration from "./RedmineGlobalConfiguration";
-import RedmineRepositoryConfiguration from "./RedmineRepositoryConfiguration";
-import {binder} from "@scm-manager/ui-extensions";
-import RedmineCommitMessageIssueKeyValidatorConfig from "./RedmineCommitMessageIssueKeyValidatorConfig";
+import React, { FC, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { InputField } from "@scm-manager/ui-components";
 
-cfgBinder.bindGlobal("/redmine", "scm-redmine-plugin.config.link", "redmineConfig", RedmineGlobalConfiguration);
+type Configuration = {
+  branches?: string;
+};
 
-cfgBinder.bindRepositorySetting(
-  "/redmine",
-  "scm-redmine-plugin.config.link",
-  "redmineConfig",
-  RedmineRepositoryConfiguration
-);
+type ConfigProps = {
+  configurationChanged: (newRuleConfiguration: Configuration, valid: boolean) => void;
+};
 
-binder.bind("commitMessageChecker.validator.RedmineCommitMessageIssueKeyValidator", RedmineCommitMessageIssueKeyValidatorConfig);
+const RedmineCommitMessageIssueKeyValidatorConfig: FC<ConfigProps> = ({ configurationChanged }) => {
+  const [t] = useTranslation("plugins");
+  const [branches, setBranches] = useState<string | undefined>();
+
+  useEffect(() => configurationChanged({ branches }, true), []);
+
+  const onBranchesChange = (value: string) => {
+    setBranches(value);
+    configurationChanged({ branches: value }, true);
+  };
+
+  return (
+    <InputField
+      value={branches}
+      label={t("validator.RedmineCommitMessageIssueKeyValidator.branches.label")}
+      helpText={t("validator.RedmineCommitMessageIssueKeyValidator.branches.helpText")}
+      onChange={onBranchesChange}
+    />
+  );
+};
+
+export default RedmineCommitMessageIssueKeyValidatorConfig;

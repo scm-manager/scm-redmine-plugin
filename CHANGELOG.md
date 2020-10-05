@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Documentation in German ([#5](https://github.com/scm-manager/scm-redmine-plugin/pull/5))
+- Commit Message Issue Key Validator ([#16](https://github.com/scm-manager/scm-redmine-plugin/pull/16))
 
 ### Changed
 - Replace external redmine-java-api with internal implementation ([#15](https://github.com/scm-manager/scm-redmine-plugin/pull/15))
