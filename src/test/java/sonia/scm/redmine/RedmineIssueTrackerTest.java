@@ -45,6 +45,7 @@ import sonia.scm.template.TemplateType;
 import java.util.Collections;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -73,6 +74,7 @@ public class RedmineIssueTrackerTest {
     redmineIssueTracker = new RedmineIssueTracker(configStore, dataStoreFactory, advancedHttpClient, templateEngineFactory, linkHandlerProvider);
   }
 
+  @Test
   public void shouldWriteGlobalConfigToRedmineConfigStore() {
     RedmineGlobalConfiguration config = new RedmineGlobalConfiguration();
     redmineIssueTracker.setGlobalConfiguration(config);
@@ -88,6 +90,7 @@ public class RedmineIssueTrackerTest {
   @Test
   public void shouldGetRepoConfigurationFromStore() {
     Repository repository = createRepository();
+    when(configStore.getConfiguration()).thenReturn(createValidGlobalConfiguration());
     when(configStore.getConfiguration(repository)).thenReturn(createValidConfiguration());
     redmineIssueTracker.resolveConfiguration(repository);
     verify(configStore).getConfiguration(repository);
@@ -101,6 +104,15 @@ public class RedmineIssueTrackerTest {
     when(configStore.getConfiguration()).thenReturn(createValidGlobalConfiguration());
     redmineIssueTracker.resolveConfiguration(repository);
     verify(configStore).getConfiguration(repository);
+    verify(configStore).getConfiguration();
+  }
+
+  @Test
+  public void shouldReturnGlobalConfigIfRepoConfigIsDisabled() {
+    Repository repository = createRepository();
+    when(configStore.getConfiguration()).thenReturn(createValidGlobalConfigurationWithDisabledRepoConfiguration());
+    redmineIssueTracker.resolveConfiguration(repository);
+    verify(configStore, never()).getConfiguration(repository);
     verify(configStore).getConfiguration();
   }
 
@@ -132,6 +144,16 @@ public class RedmineIssueTrackerTest {
       false,
       false,
       false,
+      "user",
+      "password");
+  }
+
+  private RedmineGlobalConfiguration createValidGlobalConfigurationWithDisabledRepoConfiguration() {
+    return new RedmineGlobalConfiguration("http://h2g2.com",
+      TextFormatting.MARKDOWN,
+      false,
+      false,
+      true,
       "user",
       "password");
   }
