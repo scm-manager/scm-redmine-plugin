@@ -45,6 +45,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -138,6 +139,29 @@ public class RedmineRestApiServiceTest {
     apiService.updateIssue(redmineIssue);
 
     assertThat(content.get()).isEqualTo("{\"issue\":{\"id\":1,\"project\":{\"id\":1,\"name\":\"default project\"},\"tracker\":{\"id\":1,\"name\":\"default tracker\"},\"status\":{\"id\":1,\"name\":\"ready\"},\"priority\":{\"id\":1,\"name\":\"normal\"},\"author\":{\"id\":1,\"name\":\"Redmine Admin\"},\"subject\":\"test issue\",\"description\":\"\",\"start_date\":\"2020-09-30\",\"due_date\":null,\"done_ratio\":0,\"is_private\":false,\"estimated_hours\":null,\"total_estimated_hours\":null,\"created_on\":\"2020-09-30T15:18:57Z\",\"updated_on\":\"2020-10-02T10:24:59Z\",\"notes\":\"a new note\",\"status_id\":2}}");
+  }
+
+  @Test(expected = RedmineException.class)
+  public void shouldThrowRedmineExceptionOnGetIssueFailure() throws IOException {
+    when(advancedHttpClient.get(anyString())).thenReturn(advancedHttpRequest);
+    when(advancedHttpResponse.isSuccessful()).thenReturn(false);
+    apiService.getIssueById(1);
+  }
+
+  @Test(expected = RedmineException.class)
+  public void shouldThrowRedmineExceptionOnUpdateIssueFailure() throws IOException {
+    when(advancedHttpClient.put(anyString())).thenReturn(advancedHttpRequestWithBody);
+    when(advancedHttpResponse.isSuccessful()).thenReturn(false);
+    final ObjectNode objectNode = new ObjectMapper().createObjectNode();
+    objectNode.put("id", 1);
+    apiService.updateIssue(new RedmineIssue(objectNode));
+  }
+
+  @Test(expected = RedmineException.class)
+  public void shouldThrowRedmineExceptionOnGetIssueStatusesFailure() throws IOException {
+    when(advancedHttpClient.get(anyString())).thenReturn(advancedHttpRequest);
+    when(advancedHttpResponse.isSuccessful()).thenReturn(false);
+    apiService.getStatuses();
   }
 
 }
