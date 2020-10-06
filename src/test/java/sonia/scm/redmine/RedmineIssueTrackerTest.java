@@ -24,17 +24,21 @@
 package sonia.scm.redmine;
 
 import com.google.inject.Provider;
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.issuetracker.CommentHandler;
+import sonia.scm.issuetracker.IssueRequest;
 import sonia.scm.issuetracker.LinkHandler;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.redmine.config.RedmineConfigStore;
 import sonia.scm.redmine.config.RedmineConfiguration;
 import sonia.scm.redmine.config.RedmineGlobalConfiguration;
 import sonia.scm.redmine.config.TextFormatting;
+import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.store.InMemoryDataStoreFactory;
@@ -42,8 +46,11 @@ import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
 import sonia.scm.template.TemplateType;
 
-import java.util.Collections;
+import java.util.Optional;
 
+import static java.util.Collections.EMPTY_LIST;
+import static java.util.Collections.emptySet;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -52,7 +59,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class RedmineIssueTrackerTest {
 
-  private DataStoreFactory dataStoreFactory = new InMemoryDataStoreFactory();
+  private final DataStoreFactory dataStoreFactory = new InMemoryDataStoreFactory();
 
   @Mock
   private RedmineConfigStore configStore;
@@ -63,14 +70,13 @@ public class RedmineIssueTrackerTest {
   @Mock
   private AdvancedHttpClient advancedHttpClient;
 
-
   private RedmineIssueTracker redmineIssueTracker;
 
   @Before
   public void setUp() {
     TemplateEngine templateEngine = mock(TemplateEngine.class);
-    when(templateEngine.getType()).thenReturn(new TemplateType("foo", "bar", Collections.EMPTY_LIST));
-    TemplateEngineFactory templateEngineFactory = new TemplateEngineFactory(Collections.emptySet(), templateEngine);
+    when(templateEngine.getType()).thenReturn(new TemplateType("foo", "bar", EMPTY_LIST));
+    TemplateEngineFactory templateEngineFactory = new TemplateEngineFactory(emptySet(), templateEngine);
     redmineIssueTracker = new RedmineIssueTracker(configStore, dataStoreFactory, advancedHttpClient, templateEngineFactory, linkHandlerProvider);
   }
 
@@ -116,6 +122,17 @@ public class RedmineIssueTrackerTest {
     verify(configStore).getConfiguration();
   }
 
+  @Test
+  public void shouldCreateCommentHandler() {
+    Repository repository = createRepository();
+    final Changeset changeset = new Changeset();
+    IssueRequest issueRequest = new IssueRequest(repository, changeset, Lists.emptyList(), Optional.empty());
+    when(configStore.getConfiguration()).thenReturn(createValidGlobalConfiguration());
+    when(configStore.getConfiguration(repository)).thenReturn(createValidGlobalConfigurationWithDisabledRepoConfigurationAndAutoCloseAndUpdateIssue());
+    final CommentHandler commentHandler = redmineIssueTracker.getCommentHandler(issueRequest);
+    assertThat(commentHandler).isNotNull();
+  }
+
   private Repository createRepository() {
     return new Repository("42", "GIT", "foo", "bar");
   }
@@ -157,4 +174,15 @@ public class RedmineIssueTrackerTest {
       "user",
       "password");
   }
+
+  private RedmineGlobalConfiguration createValidGlobalConfigurationWithDisabledRepoConfigurationAndAutoCloseAndUpdateIssue() {
+    return new RedmineGlobalConfiguration("http://h2g2.com",
+      TextFormatting.MARKDOWN,
+      true,
+      true,
+      true,
+      "user",
+      "password");
+  }
+
 }
