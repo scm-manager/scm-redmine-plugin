@@ -24,17 +24,15 @@
 package sonia.scm.redmine;
 
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Strings;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.issuetracker.CommentHandler;
 import sonia.scm.issuetracker.IssueRequest;
 import sonia.scm.issuetracker.LinkHandler;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.redmine.config.RedmineConfiguration;
+import sonia.scm.redmine.dto.RedmineIssue;
 import sonia.scm.template.TemplateEngineFactory;
 
 
@@ -66,10 +64,10 @@ public class RedmineCommentHandler extends RedmineHandler
       if (!Strings.isNullOrEmpty(comment)) {
         logger.info("add comment to issue {}", issueId);
 
-        ObjectNode issue = getService().getIssueById(issueId);
+        RedmineIssue issue = getService().getIssueById(issueId);
 
-        issue.put("notes", comment);
-        getService().updateIssue(issueId, issue);
+        issue.setNote(comment);
+        getService().updateIssue(issue);
       } else {
         logger.warn("generate comment is null or empty");
       }

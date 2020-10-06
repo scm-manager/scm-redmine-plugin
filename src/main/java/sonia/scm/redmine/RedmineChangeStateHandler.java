@@ -24,19 +24,17 @@
 package sonia.scm.redmine;
 
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.issuetracker.ChangeStateHandler;
 import sonia.scm.issuetracker.IssueRequest;
 import sonia.scm.issuetracker.LinkHandler;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.redmine.config.RedmineConfiguration;
 import sonia.scm.redmine.dto.IssueStatus;
+import sonia.scm.redmine.dto.RedmineIssue;
 import sonia.scm.template.TemplateEngineFactory;
 
 import java.util.Collections;
@@ -77,16 +75,16 @@ public class RedmineChangeStateHandler extends RedmineHandler
       if (!Strings.isNullOrEmpty(comment)) {
         logger.info("change state of issue {} by keyword {}", issueId, keyword);
 
-        ObjectNode issue = getService().getIssueById(issueId);
+        RedmineIssue issue = getService().getIssueById(issueId);
 
         IssueStatus status = getIssueStatusByKeyword(keyword);
         if (status != null) {
-          issue.put("status_id", status.getId());
+          issue.setStatus(status);
         } else {
           logger.warn("could not find keyword {} in issue status list", keyword);
         }
-        issue.put("notes", comment);
-        getService().updateIssue(issueId, issue);
+        issue.setNote(comment);
+        getService().updateIssue(issue);
       } else {
         logger.warn("generated comment for change state attempt is null or empty");
       }

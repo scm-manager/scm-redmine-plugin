@@ -34,6 +34,7 @@ import sonia.scm.net.ahc.AdvancedHttpResponse;
 import sonia.scm.net.ahc.BaseHttpRequest;
 import sonia.scm.redmine.dto.IssueStatus;
 import sonia.scm.redmine.dto.IssueStatusesResponse;
+import sonia.scm.redmine.dto.RedmineIssue;
 import sonia.scm.util.HttpUtil;
 
 import java.io.IOException;
@@ -57,31 +58,31 @@ public class RedmineRestApiService {
     this.password = password;
   }
 
-  public ObjectNode getIssueById(Integer issueId) throws IOException {
+  public RedmineIssue getIssueById(Integer issueId) throws IOException {
     // Construct Request
     final AdvancedHttpRequest getIssueRequest = createGetRequest(HttpUtil.concatenate(ISSUES_PATH, issueId.toString()));
     setRequestAuth(getIssueRequest);
     // Send request and handle response
     final AdvancedHttpResponse getIssueResponse = getIssueRequest.request();
     if (!getIssueResponse.isSuccessful()) {
-      throw new RuntimeException("Failed to retrieve issue");
+      throw new RedmineException("Failed to retrieve issue");
     }
     // Map response object
     final ObjectMapper objectMapper = new ObjectMapper();
     return unwrapIssue(objectMapper.readTree(getIssueResponse.content()));
   }
 
-  public void updateIssue(Integer issueId, JsonNode issue) throws IOException {
+  public void updateIssue(RedmineIssue issue) throws IOException {
     // Construct Request
     final AdvancedHttpRequestWithBody putRequest = createPutRequest(
-      HttpUtil.concatenate(ISSUES_PATH, issueId.toString()),
+      HttpUtil.concatenate(ISSUES_PATH, issue.getId().toString()),
       wrapIssue(issue)
     );
 
     // Send request and handle response
     final AdvancedHttpResponse putIssueResponse = putRequest.request();
     if (!putIssueResponse.isSuccessful()) {
-      throw new RuntimeException("Failed to update issue");
+      throw new RedmineException("Failed to update issue");
     }
   }
 
@@ -91,7 +92,7 @@ public class RedmineRestApiService {
     // Send request and handle response
     final AdvancedHttpResponse getIssueStatusesResponse = getIssueStatusesRequest.request();
     if (!getIssueStatusesResponse.isSuccessful()) {
-      throw new RuntimeException("Failed to retrieve statuses");
+      throw new RedmineException("Failed to retrieve statuses");
     }
     // Map response object
     final ObjectMapper objectMapper = new ObjectMapper();
@@ -119,14 +120,14 @@ public class RedmineRestApiService {
     advancedHttpRequest.basicAuth(username, password);
   }
 
-  private ObjectNode unwrapIssue(JsonNode obj) {
-    return (ObjectNode) obj.get(RedmineRestApiService.ISSUE_WRAPPER_FIELD_NAME);
+  private RedmineIssue unwrapIssue(JsonNode obj) {
+    return new RedmineIssue((ObjectNode) obj.get(RedmineRestApiService.ISSUE_WRAPPER_FIELD_NAME));
   }
 
-  private ObjectNode wrapIssue(JsonNode value) {
+  private ObjectNode wrapIssue(RedmineIssue value) {
     final ObjectMapper objectMapper = new ObjectMapper();
     final ObjectNode wrapper = objectMapper.createObjectNode();
-    wrapper.set(RedmineRestApiService.ISSUE_WRAPPER_FIELD_NAME, value);
+    wrapper.set(RedmineRestApiService.ISSUE_WRAPPER_FIELD_NAME, value.toJsonNode());
     return wrapper;
   }
 }

@@ -24,11 +24,8 @@
 
 package sonia.scm.redmine;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,6 +36,7 @@ import sonia.scm.net.ahc.AdvancedHttpRequest;
 import sonia.scm.net.ahc.AdvancedHttpRequestWithBody;
 import sonia.scm.net.ahc.AdvancedHttpResponse;
 import sonia.scm.redmine.dto.IssueStatus;
+import sonia.scm.redmine.dto.RedmineIssue;
 import sonia.scm.util.HttpUtil;
 
 import java.io.IOException;
@@ -81,10 +79,10 @@ public class RedmineRestApiServiceTest {
     when(advancedHttpClient.get(HttpUtil.concatenate(URL, RedmineRestApiService.ISSUES_PATH, "1.json"))).thenReturn(advancedHttpRequest);
     when(advancedHttpResponse.content()).thenReturn("{\"issue\":{\"id\":1,\"project\":{\"id\":1,\"name\":\"default project\"},\"tracker\":{\"id\":1,\"name\":\"default tracker\"},\"status\":{\"id\":2,\"name\":\"done\"},\"priority\":{\"id\":1,\"name\":\"normal\"},\"author\":{\"id\":1,\"name\":\"Redmine Admin\"},\"subject\":\"test issue\",\"description\":\"\",\"start_date\":\"2020-09-30\",\"due_date\":null,\"done_ratio\":0,\"is_private\":false,\"estimated_hours\":null,\"total_estimated_hours\":null,\"created_on\":\"2020-09-30T15:18:57Z\",\"updated_on\":\"2020-10-02T10:24:59Z\",\"closed_on\":\"2020-10-02T10:24:59Z\"}}".getBytes());
     when(advancedHttpResponse.isSuccessful()).thenReturn(true);
-    final ObjectNode issue = apiService.getIssueById(1);
-    final JsonNode subjectNode = issue.get("subject");
-    final String subject = subjectNode.textValue();
-    assertThat(subject).isEqualTo("test issue");
+    final RedmineIssue issue = apiService.getIssueById(1);
+    final IssueStatus issueStatus = issue.getStatus();
+    assertThat(issueStatus.getName()).isEqualTo("done");
+    assertThat(issueStatus.getId()).isEqualTo(2);
   }
 
   @Test
@@ -108,11 +106,11 @@ public class RedmineRestApiServiceTest {
     when(advancedHttpResponse.isSuccessful()).thenReturn(true);
 
     final ObjectMapper objectMapper = new ObjectMapper();
-    final ObjectNode issueNode = (ObjectNode) objectMapper.readTree("{\"id\":1,\"project\":{\"id\":1,\"name\":\"default project\"},\"tracker\":{\"id\":1,\"name\":\"default tracker\"},\"status\":{\"id\":2,\"name\":\"done\"},\"priority\":{\"id\":1,\"name\":\"normal\"},\"author\":{\"id\":1,\"name\":\"Redmine Admin\"},\"subject\":\"test issue\",\"description\":\"\",\"start_date\":\"2020-09-30\",\"due_date\":null,\"done_ratio\":0,\"is_private\":false,\"estimated_hours\":null,\"total_estimated_hours\":null,\"created_on\":\"2020-09-30T15:18:57Z\",\"updated_on\":\"2020-10-02T10:24:59Z\",\"closed_on\":\"2020-10-02T10:24:59Z\"}");
+    final RedmineIssue redmineIssue = new RedmineIssue((ObjectNode) objectMapper.readTree("{\"id\":1,\"project\":{\"id\":1,\"name\":\"default project\"},\"tracker\":{\"id\":1,\"name\":\"default tracker\"},\"status\":{\"id\":2,\"name\":\"done\"},\"priority\":{\"id\":1,\"name\":\"normal\"},\"author\":{\"id\":1,\"name\":\"Redmine Admin\"},\"subject\":\"test issue\",\"description\":\"\",\"start_date\":\"2020-09-30\",\"due_date\":null,\"done_ratio\":0,\"is_private\":false,\"estimated_hours\":null,\"total_estimated_hours\":null,\"created_on\":\"2020-09-30T15:18:57Z\",\"updated_on\":\"2020-10-02T10:24:59Z\",\"closed_on\":\"2020-10-02T10:24:59Z\"}"));
     final ObjectNode wrappedIssueNode = objectMapper.createObjectNode();
-    wrappedIssueNode.set(RedmineRestApiService.ISSUE_WRAPPER_FIELD_NAME, issueNode);
+    wrappedIssueNode.set(RedmineRestApiService.ISSUE_WRAPPER_FIELD_NAME, redmineIssue.toJsonNode());
 
-    apiService.updateIssue(1, issueNode);
+    apiService.updateIssue(redmineIssue);
 
     verify(advancedHttpRequestWithBody).jsonContent(wrappedIssueNode);
   }
