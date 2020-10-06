@@ -41,8 +41,10 @@ import sonia.scm.util.HttpUtil;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -113,6 +115,29 @@ public class RedmineRestApiServiceTest {
     apiService.updateIssue(redmineIssue);
 
     verify(advancedHttpRequestWithBody).jsonContent(wrappedIssueNode);
+  }
+
+  @Test
+  public void shouldOnlyUpdateChangedValues() throws IOException {
+    final ObjectMapper objectMapper = new ObjectMapper();
+    AtomicReference<String> content = new AtomicReference<>();
+
+    when(advancedHttpClient.put(HttpUtil.concatenate(URL, RedmineRestApiService.ISSUES_PATH, "1.json"))).thenReturn(advancedHttpRequestWithBody);
+    when(advancedHttpResponse.isSuccessful()).thenReturn(true);
+    when(advancedHttpRequestWithBody.jsonContent(any())).thenAnswer((call) -> {
+      content.set(objectMapper.writeValueAsString(call.getArgument(0)));
+      return advancedHttpRequestWithBody;
+    });
+
+    final RedmineIssue redmineIssue = new RedmineIssue((ObjectNode) objectMapper.readTree("{\"id\":1,\"project\":{\"id\":1,\"name\":\"default project\"},\"tracker\":{\"id\":1,\"name\":\"default tracker\"},\"status\":{\"id\":1,\"name\":\"ready\"},\"priority\":{\"id\":1,\"name\":\"normal\"},\"author\":{\"id\":1,\"name\":\"Redmine Admin\"},\"subject\":\"test issue\",\"description\":\"\",\"start_date\":\"2020-09-30\",\"due_date\":null,\"done_ratio\":0,\"is_private\":false,\"estimated_hours\":null,\"total_estimated_hours\":null,\"created_on\":\"2020-09-30T15:18:57Z\",\"updated_on\":\"2020-10-02T10:24:59Z\"}"));
+    redmineIssue.setNote("a new note");
+    redmineIssue.setStatus(new IssueStatus(2, "done"));
+    final ObjectNode wrappedIssueNode = objectMapper.createObjectNode();
+    wrappedIssueNode.set(RedmineRestApiService.ISSUE_WRAPPER_FIELD_NAME, redmineIssue.toJsonNode());
+
+    apiService.updateIssue(redmineIssue);
+
+    assertThat(content.get()).isEqualTo("{\"issue\":{\"id\":1,\"project\":{\"id\":1,\"name\":\"default project\"},\"tracker\":{\"id\":1,\"name\":\"default tracker\"},\"status\":{\"id\":1,\"name\":\"ready\"},\"priority\":{\"id\":1,\"name\":\"normal\"},\"author\":{\"id\":1,\"name\":\"Redmine Admin\"},\"subject\":\"test issue\",\"description\":\"\",\"start_date\":\"2020-09-30\",\"due_date\":null,\"done_ratio\":0,\"is_private\":false,\"estimated_hours\":null,\"total_estimated_hours\":null,\"created_on\":\"2020-09-30T15:18:57Z\",\"updated_on\":\"2020-10-02T10:24:59Z\",\"notes\":\"a new note\",\"status_id\":2}}");
   }
 
 }
