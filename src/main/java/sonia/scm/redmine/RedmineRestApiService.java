@@ -65,7 +65,7 @@ public class RedmineRestApiService {
     // Send request and handle response
     final AdvancedHttpResponse getIssueResponse = getIssueRequest.request();
     if (!getIssueResponse.isSuccessful()) {
-      throw new RedmineException("Failed to retrieve issue");
+      throw new RedmineException("Failed to retrieve issue", getIssueResponse.getStatus());
     }
     // Map response object
     final ObjectMapper objectMapper = new ObjectMapper();
@@ -82,7 +82,7 @@ public class RedmineRestApiService {
     // Send request and handle response
     final AdvancedHttpResponse putIssueResponse = putRequest.request();
     if (!putIssueResponse.isSuccessful()) {
-      throw new RedmineException("Failed to update issue");
+      throw new RedmineException("Failed to update issue", putIssueResponse.getStatus());
     }
   }
 
@@ -92,7 +92,7 @@ public class RedmineRestApiService {
     // Send request and handle response
     final AdvancedHttpResponse getIssueStatusesResponse = getIssueStatusesRequest.request();
     if (!getIssueStatusesResponse.isSuccessful()) {
-      throw new RedmineException("Failed to retrieve statuses");
+      throw new RedmineException("Failed to retrieve statuses", getIssueStatusesResponse.getStatus());
     }
     // Map response object
     final ObjectMapper objectMapper = new ObjectMapper();

@@ -25,7 +25,7 @@
 package sonia.scm.redmine;
 
 public class RedmineException extends RuntimeException {
-  RedmineException(String message) {
-    super(message);
+  RedmineException(String message, int status) {
+    super(message + "; return status: " + status);
   }
 }
