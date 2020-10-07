@@ -34,6 +34,7 @@ import lombok.Setter;
 import org.apache.shiro.util.RegExPatternMatcher;
 import sonia.scm.ContextEntry;
 import sonia.scm.plugin.Extension;
+import sonia.scm.plugin.Requires;
 import sonia.scm.redmine.RedmineIssueMatcher;
 import sonia.scm.util.GlobUtil;
 
@@ -43,6 +44,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 @Extension
+@Requires("scm-commit-message-checker-plugin")
 public class RedmineCommitMessageIssueKeyValidator implements Validator {
 
   private static final String DEFAULT_ERROR_MESSAGE = "The commit message doesn't contain a valid Redmine issue key.";
