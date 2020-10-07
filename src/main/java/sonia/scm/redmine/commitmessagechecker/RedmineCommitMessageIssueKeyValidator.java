@@ -31,7 +31,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.shiro.util.RegExPatternMatcher;
 import sonia.scm.ContextEntry;
 import sonia.scm.plugin.Extension;
 import sonia.scm.plugin.Requires;
@@ -42,14 +41,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Extension
 @Requires("scm-commit-message-checker-plugin")
 public class RedmineCommitMessageIssueKeyValidator implements Validator {
 
   private static final String DEFAULT_ERROR_MESSAGE = "The commit message doesn't contain a valid Redmine issue key.";
-  private static final String ISSUE_KEY_PATTERN = new RedmineIssueMatcher().getKeyPattern().pattern();
-  private static final RegExPatternMatcher matcher = new RegExPatternMatcher();
+  private static final String ISSUE_KEY_PATTERN = MessageFormat.format(".*{0}.*", new RedmineIssueMatcher().getKeyPattern().pattern());
 
   @Override
   public boolean isApplicableMultipleTimes() {
@@ -84,8 +83,7 @@ public class RedmineCommitMessageIssueKeyValidator implements Validator {
   }
 
   private boolean isInvalidCommitMessage(String commitMessage) {
-    String keyPattern = MessageFormat.format(".*{0}.*", ISSUE_KEY_PATTERN);
-    return !matcher.matches(keyPattern, commitMessage);
+    return !Pattern.matches(ISSUE_KEY_PATTERN, commitMessage);
   }
 
   @AllArgsConstructor
