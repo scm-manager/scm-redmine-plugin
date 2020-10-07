@@ -25,12 +25,12 @@ package sonia.scm.redmine;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.taskadapter.redmineapi.RedmineManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.issuetracker.IssueRequest;
 import sonia.scm.issuetracker.LinkHandler;
 import sonia.scm.issuetracker.TemplateBasedHandler;
+import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.redmine.config.RedmineConfiguration;
 import sonia.scm.template.Template;
 import sonia.scm.template.TemplateEngine;
@@ -55,14 +55,16 @@ public abstract class RedmineHandler extends TemplateBasedHandler
 
   protected final RedmineConfiguration configuration;
   protected final IssueRequest request;
-  private RedmineManager manager;
+  protected final AdvancedHttpClient advancedHttpClient;
+  private RedmineRestApiService apiService;
 
   public RedmineHandler(TemplateEngineFactory templateEngineFactory,
                         LinkHandler linkHandler, RedmineConfiguration configuration,
-                        IssueRequest request) {
+                        IssueRequest request, AdvancedHttpClient advancedHttpClient) {
     super(templateEngineFactory, linkHandler);
     this.configuration = configuration;
     this.request = request;
+    this.advancedHttpClient = advancedHttpClient;
   }
 
 
@@ -72,15 +74,15 @@ public abstract class RedmineHandler extends TemplateBasedHandler
   }
 
 
-  public RedmineManager getManager() {
-    if (manager == null) {
+  public RedmineRestApiService getService() {
+    if (apiService == null) {
       String username = configuration.getUsername();
       String password = configuration.getPassword();
 
-      manager = new RedmineManager(configuration.getUrl(), username, password);
+      apiService = new RedmineRestApiService(advancedHttpClient, configuration.getUrl(), username, password);
     }
 
-    return manager;
+    return apiService;
   }
 
   @Override
