@@ -46,5 +46,24 @@
         "description": "May modify the repository specific Redmine configuration"
       }
     }
+  },
+  "validation": {
+    "RedmineCommitMessageIssueKeyValidator": {
+      "name": "Redmine Issue Key Validator",
+      "branches": "{{ branches }}",
+      "allBranches": "<all branches>",
+      "description": "Validates for Redmine issue ids starting with \"#\"",
+      "defaultErrorMessage": "<default error message>"
+    }
+  },
+  "validator": {
+    "RedmineCommitMessageIssueKeyValidator": {
+      "name": "Redmine Issue Key Validator",
+      "description": "Use this to validate each commit message for Redmine issue ids.",
+      "branches": {
+        "label": "Branches",
+        "helpText": "List of the branches which should be validated separated by comma. Leave blank to validate all branches.\nExample: master,feature/*"
+      }
+    }
   }
 }
