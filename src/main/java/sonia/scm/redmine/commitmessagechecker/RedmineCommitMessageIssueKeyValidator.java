@@ -48,7 +48,7 @@ import java.util.regex.Pattern;
 public class RedmineCommitMessageIssueKeyValidator implements Validator {
 
   private static final String DEFAULT_ERROR_MESSAGE = "The commit message doesn't contain a valid Redmine issue key.";
-  private static final String ISSUE_KEY_PATTERN = MessageFormat.format(".*{0}.*", new RedmineIssueMatcher().getKeyPattern().pattern());
+  private static final Pattern ISSUE_KEY_PATTERN = Pattern.compile(MessageFormat.format(".*{0}.*", new RedmineIssueMatcher().getKeyPattern().pattern()));
 
   @Override
   public boolean isApplicableMultipleTimes() {
@@ -83,7 +83,7 @@ public class RedmineCommitMessageIssueKeyValidator implements Validator {
   }
 
   private boolean isInvalidCommitMessage(String commitMessage) {
-    return !Pattern.matches(ISSUE_KEY_PATTERN, commitMessage);
+    return !ISSUE_KEY_PATTERN.matcher(commitMessage).matches();
   }
 
   @AllArgsConstructor
