@@ -100,13 +100,13 @@ public class RedmineRestApiService {
   }
 
   private AdvancedHttpRequest createGetRequest(String relativePath) {
-    final AdvancedHttpRequest request = this.httpClient.get(createRequestUrl(relativePath));
+    final AdvancedHttpRequest request = this.httpClient.get(createRequestUrl(relativePath)).spanKind("Redmine");
     setRequestAuth(request);
     return request;
   }
 
   private AdvancedHttpRequestWithBody createPutRequest(String relativePath, JsonNode payload) {
-    final AdvancedHttpRequestWithBody request = this.httpClient.put(createRequestUrl(relativePath));
+    final AdvancedHttpRequestWithBody request = this.httpClient.put(createRequestUrl(relativePath)).spanKind("Redmine");
     request.jsonContent(payload);
     setRequestAuth(request);
     return request;

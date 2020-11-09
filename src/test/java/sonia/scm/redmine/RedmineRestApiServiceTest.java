@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.net.ahc.AdvancedHttpClient;
@@ -65,7 +66,7 @@ public class RedmineRestApiServiceTest {
   @Mock
   private AdvancedHttpResponse advancedHttpResponse;
 
-  @Mock
+  @Mock(answer = Answers.RETURNS_SELF)
   private AdvancedHttpClient advancedHttpClient;
 
   private RedmineRestApiService apiService;
@@ -75,6 +76,8 @@ public class RedmineRestApiServiceTest {
     apiService = new RedmineRestApiService(advancedHttpClient, URL, USERNAME, PASSWORD);
     when(advancedHttpRequest.request()).thenReturn(advancedHttpResponse);
     when(advancedHttpRequestWithBody.request()).thenReturn(advancedHttpResponse);
+    when(advancedHttpRequest.spanKind("Redmine")).thenReturn(advancedHttpRequest);
+    when(advancedHttpRequestWithBody.spanKind("Redmine")).thenReturn(advancedHttpRequestWithBody);
   }
 
   @Test
