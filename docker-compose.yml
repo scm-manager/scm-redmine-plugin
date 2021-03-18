@@ -28,4 +28,4 @@ services:
   redmine:
     image: redmine:4.1
     ports:
-     - "3000:3000"
+     - "3001:3000"
