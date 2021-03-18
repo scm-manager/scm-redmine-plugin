@@ -58,11 +58,13 @@ public class RedmineChangeStateHandler extends RedmineHandler
   private static final Logger logger =
     LoggerFactory.getLogger(RedmineChangeStateHandler.class);
 
+  private final IssueRequest request;
 
   public RedmineChangeStateHandler(TemplateEngineFactory templateEngineFactory,
                                    LinkHandler linkHandler, RedmineConfiguration configuration,
                                    IssueRequest request, AdvancedHttpClient advancedHttpClient) {
-    super(templateEngineFactory, linkHandler, configuration, request, advancedHttpClient);
+    super(templateEngineFactory, linkHandler, configuration, advancedHttpClient);
+    this.request = request;
   }
 
   @Override

@@ -39,9 +39,7 @@ import sonia.scm.issuetracker.IssueRequest;
 import sonia.scm.issuetracker.LinkHandler;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.plugin.Extension;
-import sonia.scm.redmine.config.RedmineConfigStore;
 import sonia.scm.redmine.config.RedmineConfiguration;
-import sonia.scm.redmine.config.RedmineGlobalConfiguration;
 import sonia.scm.repository.Repository;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.template.TemplateEngineFactory;
@@ -60,28 +58,29 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
   private static final Logger logger =
     LoggerFactory.getLogger(RedmineIssueTracker.class);
 
-  private final RedmineConfigStore configStore;
   private final AdvancedHttpClient advancedHttpClient;
-
   private final Provider<LinkHandler> linkHandlerProvider;
   private final TemplateEngineFactory templateEngineFactory;
-
+  private final ConfigurationProvider configurationProvider;
 
   @Inject
-  public RedmineIssueTracker(RedmineConfigStore configStore, DataStoreFactory dataStoreFactory,
-                             AdvancedHttpClient advancedHttpClient, TemplateEngineFactory templateEngineFactory, Provider<LinkHandler> linkHandlerProvider) {
+  public RedmineIssueTracker(DataStoreFactory dataStoreFactory,
+                             AdvancedHttpClient advancedHttpClient,
+                             TemplateEngineFactory templateEngineFactory,
+                             Provider<LinkHandler> linkHandlerProvider,
+                             ConfigurationProvider configurationProvider) {
     super(NAME, dataStoreFactory);
-    this.configStore = configStore;
     this.advancedHttpClient = advancedHttpClient;
     this.templateEngineFactory = templateEngineFactory;
     this.linkHandlerProvider = linkHandlerProvider;
+    this.configurationProvider = configurationProvider;
   }
 
 
   @Override
   protected ChangeStateHandler getChangeStateHandler(IssueRequest request) {
     ChangeStateHandler changeStateHandler = null;
-    RedmineConfiguration cfg = resolveConfiguration(request.getRepository());
+    RedmineConfiguration cfg = configurationProvider.resolveConfiguration(request.getRepository());
 
     if ((cfg != null) && cfg.isAutoCloseEnabled()) {
       changeStateHandler = new RedmineChangeStateHandler(templateEngineFactory,
@@ -96,7 +95,7 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
   @Override
   protected CommentHandler getCommentHandler(IssueRequest request) {
     CommentHandler commentHandler = null;
-    RedmineConfiguration cfg = resolveConfiguration(request.getRepository());
+    RedmineConfiguration cfg = configurationProvider.resolveConfiguration(request.getRepository());
 
     if ((cfg != null) && cfg.isUpdateIssuesEnabled()) {
       commentHandler = new RedmineCommentHandler(templateEngineFactory,
@@ -112,7 +111,7 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
   @Override
   public Optional<IssueMatcher> createMatcher(Repository repository) {
     IssueMatcher matcher = null;
-    RedmineConfiguration config = resolveConfiguration(repository);
+    RedmineConfiguration config = configurationProvider.resolveConfiguration(repository);
 
     if (config != null) {
       matcher = new RedmineIssueMatcher();
@@ -123,7 +122,7 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
 
   @Override
   public Optional<IssueLinkFactory> createLinkFactory(Repository repository) {
-    RedmineConfiguration configuration = resolveConfiguration(repository);
+    RedmineConfiguration configuration = configurationProvider.resolveConfiguration(repository);
     String redmineUrl = configuration.getUrl();
     if (redmineUrl == null) {
       return Optional.empty();
@@ -131,58 +130,4 @@ public class RedmineIssueTracker extends DataStoreBasedIssueTracker {
       return Optional.of(new RedmineIssueLinkFactory(redmineUrl));
     }
   }
-
-
-  public RedmineConfiguration resolveConfiguration(Repository repository) {
-    final RedmineGlobalConfiguration globalConfiguration = getGlobalConfiguration();
-
-    if (globalConfiguration.isDisableRepositoryConfiguration()) {
-      if (!globalConfiguration.isValid()) {
-        logger.debug("global redmine config is not valid, but disables repository config; no config returned");
-        return null;
-      }
-      return globalConfiguration;
-    }
-
-    RedmineConfiguration configuration = configStore.getConfiguration(repository);
-
-    if (!configuration.isValid()) {
-      logger.debug("repository config for {}/{} is not valid, falling back to global config",
-        repository.getNamespace(), repository.getName());
-      configuration = globalConfiguration;
-    }
-
-    if (!configuration.isValid()) {
-      logger.debug("no valid configuration for repository {}/{} found",
-        repository.getNamespace(), repository.getName());
-      configuration = null;
-    }
-    return configuration;
-  }
-
-  public void setGlobalConfiguration(RedmineGlobalConfiguration updatedConfig) {
-    configStore.storeConfiguration(updatedConfig);
-  }
-
-  public void setRepositoryConfiguration(RedmineConfiguration updatedConfig, Repository repository) {
-    configStore.storeConfiguration(updatedConfig, repository);
-  }
-
-  public RedmineConfiguration getRepositoryConfiguration(Repository repository) {
-    return configStore.getConfiguration(repository);
-  }
-
-  public RedmineConfiguration getRepositoryConfigurationOrEmpty(Repository repository) {
-    RedmineConfiguration configuration = configStore.getConfiguration(repository);
-    if (configuration == null) {
-      return new RedmineConfiguration();
-    }
-    return configuration;
-  }
-
-  public RedmineGlobalConfiguration getGlobalConfiguration() {
-    return configStore.getConfiguration();
-  }
-
-
 }

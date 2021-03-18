@@ -45,12 +45,14 @@ public class RedmineCommentHandler extends RedmineHandler
   private static final String TEMPLATE_NAME = "update.mustache";
   private static final Logger logger =
     LoggerFactory.getLogger(RedmineCommentHandler.class);
+  private final IssueRequest request;
 
 
   public RedmineCommentHandler(TemplateEngineFactory templateEngineFactory,
                                LinkHandler linkHandler, RedmineConfiguration configuration,
                                IssueRequest request, AdvancedHttpClient advancedHttpClient) {
-    super(templateEngineFactory, linkHandler, configuration, request, advancedHttpClient);
+    super(templateEngineFactory, linkHandler, configuration, advancedHttpClient);
+    this.request = request;
   }
 
 

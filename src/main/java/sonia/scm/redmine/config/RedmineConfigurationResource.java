@@ -32,8 +32,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import sonia.scm.api.v2.resources.ErrorDto;
 import sonia.scm.config.ConfigurationPermissions;
+import sonia.scm.redmine.ConfigurationProvider;
 import sonia.scm.redmine.Constants;
-import sonia.scm.redmine.RedmineIssueTracker;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
@@ -61,13 +61,13 @@ import static sonia.scm.NotFoundException.notFound;
 @Path("v2/redmine/configuration")
 public class RedmineConfigurationResource {
 
-  private RedmineIssueTracker tracker;
+  private ConfigurationProvider configurationProvider;
   private RedmineConfigurationMapper mapper;
   private RepositoryManager repositoryManager;
 
   @Inject
-  public RedmineConfigurationResource(RedmineIssueTracker tracker, RedmineConfigurationMapper mapper, RepositoryManager repositoryManager) {
-    this.tracker = tracker;
+  public RedmineConfigurationResource(ConfigurationProvider configurationProvider, RedmineConfigurationMapper mapper, RepositoryManager repositoryManager) {
+    this.configurationProvider = configurationProvider;
     this.mapper = mapper;
     this.repositoryManager = repositoryManager;
   }
@@ -94,7 +94,7 @@ public class RedmineConfigurationResource {
   )
   public Response updateGlobalConfiguration(RedmineGlobalConfigurationDto updatedConfig) {
     ConfigurationPermissions.write(Constants.NAME).check();
-    tracker.setGlobalConfiguration(mapper.map(updatedConfig, tracker.getGlobalConfiguration()));
+    configurationProvider.setGlobalConfiguration(mapper.map(updatedConfig, configurationProvider.getGlobalConfiguration()));
     return Response.ok().build();
   }
 
@@ -127,7 +127,7 @@ public class RedmineConfigurationResource {
   )
   public Response getGlobalConfiguration() {
     ConfigurationPermissions.read(Constants.NAME).check();
-    return Response.ok(mapper.map(tracker.getGlobalConfiguration())).build();
+    return Response.ok(mapper.map(configurationProvider.getGlobalConfiguration())).build();
   }
 
   @PUT
@@ -153,7 +153,7 @@ public class RedmineConfigurationResource {
   public Response updateConfiguration(@PathParam("namespace") String namespace, @PathParam("name") String name, RedmineConfigurationDto updatedConfig) {
     Repository repository = loadRepository(namespace, name);
     RepositoryPermissions.custom(Constants.NAME, repository).check();
-    tracker.setRepositoryConfiguration(mapper.map(updatedConfig, tracker.getRepositoryConfiguration(repository)), repository);
+    configurationProvider.setRepositoryConfiguration(mapper.map(updatedConfig, configurationProvider.getRepositoryConfiguration(repository)), repository);
     return Response.ok().build();
   }
 
@@ -194,7 +194,7 @@ public class RedmineConfigurationResource {
   public Response getConfiguration(@PathParam("namespace") String namespace, @PathParam("name") String name) {
     Repository repository = loadRepository(namespace, name);
     RepositoryPermissions.custom(Constants.NAME, repository).check();
-    RedmineConfiguration configuration = tracker.getRepositoryConfigurationOrEmpty(repository);
+    RedmineConfiguration configuration = configurationProvider.getRepositoryConfigurationOrEmpty(repository);
     return Response.ok(mapper.map(configuration, repository)).build();
   }
 

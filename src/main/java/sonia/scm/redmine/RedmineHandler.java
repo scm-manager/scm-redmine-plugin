@@ -27,7 +27,6 @@ package sonia.scm.redmine;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.issuetracker.IssueRequest;
 import sonia.scm.issuetracker.LinkHandler;
 import sonia.scm.issuetracker.TemplateBasedHandler;
 import sonia.scm.net.ahc.AdvancedHttpClient;
@@ -53,17 +52,16 @@ public abstract class RedmineHandler extends TemplateBasedHandler
 
   private static final String TEMPLATE_BASE_PATH = "scm/template/";
 
-  protected final RedmineConfiguration configuration;
-  protected final IssueRequest request;
-  protected final AdvancedHttpClient advancedHttpClient;
+  private final RedmineConfiguration configuration;
+  private final AdvancedHttpClient advancedHttpClient;
   private RedmineRestApiService apiService;
 
   public RedmineHandler(TemplateEngineFactory templateEngineFactory,
-                        LinkHandler linkHandler, RedmineConfiguration configuration,
-                        IssueRequest request, AdvancedHttpClient advancedHttpClient) {
+                        LinkHandler linkHandler,
+                        RedmineConfiguration configuration,
+                        AdvancedHttpClient advancedHttpClient) {
     super(templateEngineFactory, linkHandler);
     this.configuration = configuration;
-    this.request = request;
     this.advancedHttpClient = advancedHttpClient;
   }
 

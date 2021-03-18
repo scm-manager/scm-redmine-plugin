@@ -62,7 +62,7 @@ public class RedmineIssueTrackerTest {
   private final DataStoreFactory dataStoreFactory = new InMemoryDataStoreFactory();
 
   @Mock
-  private RedmineConfigStore configStore;
+  private ConfigurationProvider configurationProvider;
 
   @Mock
   private Provider<LinkHandler> linkHandlerProvider;
@@ -75,51 +75,9 @@ public class RedmineIssueTrackerTest {
   @Before
   public void setUp() {
     TemplateEngine templateEngine = mock(TemplateEngine.class);
-    when(templateEngine.getType()).thenReturn(new TemplateType("foo", "bar", EMPTY_LIST));
+    when(templateEngine.getType()).thenReturn(new TemplateType("foo", "bar", emptySet()));
     TemplateEngineFactory templateEngineFactory = new TemplateEngineFactory(emptySet(), templateEngine);
-    redmineIssueTracker = new RedmineIssueTracker(configStore, dataStoreFactory, advancedHttpClient, templateEngineFactory, linkHandlerProvider);
-  }
-
-  @Test
-  public void shouldWriteGlobalConfigToRedmineConfigStore() {
-    RedmineGlobalConfiguration config = new RedmineGlobalConfiguration();
-    redmineIssueTracker.setGlobalConfiguration(config);
-    verify(configStore).storeConfiguration(config);
-  }
-
-  @Test
-  public void shouldGetGlobalConfigFromConfigStore() {
-    redmineIssueTracker.getGlobalConfiguration();
-    verify(configStore).getConfiguration();
-  }
-
-  @Test
-  public void shouldGetRepoConfigurationFromStore() {
-    Repository repository = createRepository();
-    when(configStore.getConfiguration()).thenReturn(createValidGlobalConfiguration());
-    when(configStore.getConfiguration(repository)).thenReturn(createValidConfiguration());
-    redmineIssueTracker.resolveConfiguration(repository);
-    verify(configStore).getConfiguration(repository);
-  }
-
-  @Test
-  public void shouldFallBackToGlobalConfigIfRepoConfigInvalid() {
-    Repository repository = createRepository();
-    when(configStore.getConfiguration(repository))
-      .thenReturn(createInvalidConfiguration());
-    when(configStore.getConfiguration()).thenReturn(createValidGlobalConfiguration());
-    redmineIssueTracker.resolveConfiguration(repository);
-    verify(configStore).getConfiguration(repository);
-    verify(configStore).getConfiguration();
-  }
-
-  @Test
-  public void shouldReturnGlobalConfigIfRepoConfigIsDisabled() {
-    Repository repository = createRepository();
-    when(configStore.getConfiguration()).thenReturn(createValidGlobalConfigurationWithDisabledRepoConfiguration());
-    redmineIssueTracker.resolveConfiguration(repository);
-    verify(configStore, never()).getConfiguration(repository);
-    verify(configStore).getConfiguration();
+    redmineIssueTracker = new RedmineIssueTracker(dataStoreFactory, advancedHttpClient, templateEngineFactory, linkHandlerProvider, configurationProvider);
   }
 
   @Test
@@ -127,52 +85,13 @@ public class RedmineIssueTrackerTest {
     Repository repository = createRepository();
     final Changeset changeset = new Changeset();
     IssueRequest issueRequest = new IssueRequest(repository, changeset, Lists.emptyList(), Optional.empty());
-    when(configStore.getConfiguration()).thenReturn(createValidGlobalConfiguration());
-    when(configStore.getConfiguration(repository)).thenReturn(createValidGlobalConfigurationWithDisabledRepoConfigurationAndAutoCloseAndUpdateIssue());
+    when(configurationProvider.resolveConfiguration(repository)).thenReturn(createValidGlobalConfigurationWithDisabledRepoConfigurationAndAutoCloseAndUpdateIssue());
     final CommentHandler commentHandler = redmineIssueTracker.getCommentHandler(issueRequest);
     assertThat(commentHandler).isNotNull();
   }
 
   private Repository createRepository() {
     return new Repository("42", "GIT", "foo", "bar");
-  }
-
-  private RedmineConfiguration createInvalidConfiguration() {
-    return new RedmineConfiguration("",
-      TextFormatting.MARKDOWN,
-      false,
-      false,
-      "user",
-      "password");
-  }
-
-  private RedmineConfiguration createValidConfiguration() {
-    return new RedmineConfiguration("http://h2g2.com",
-      TextFormatting.MARKDOWN,
-      false,
-      false,
-      "user",
-      "password");
-  }
-
-  private RedmineGlobalConfiguration createValidGlobalConfiguration() {
-    return new RedmineGlobalConfiguration("http://h2g2.com",
-      TextFormatting.MARKDOWN,
-      false,
-      false,
-      false,
-      "user",
-      "password");
-  }
-
-  private RedmineGlobalConfiguration createValidGlobalConfigurationWithDisabledRepoConfiguration() {
-    return new RedmineGlobalConfiguration("http://h2g2.com",
-      TextFormatting.MARKDOWN,
-      false,
-      false,
-      true,
-      "user",
-      "password");
   }
 
   private RedmineGlobalConfiguration createValidGlobalConfigurationWithDisabledRepoConfigurationAndAutoCloseAndUpdateIssue() {
@@ -184,5 +103,4 @@ public class RedmineIssueTrackerTest {
       "user",
       "password");
   }
-
 }
