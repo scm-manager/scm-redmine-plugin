@@ -54,6 +54,15 @@ public class RedminePullRequestCommentHandler extends RedmineHandler implements 
 
   @Override
   public void mentionedInTitleOrDescription(String issueIdString) {
+    processIssueIdFromMention(issueIdString);
+  }
+
+  @Override
+  public void mentionedInComment(String issueIdString) {
+    processIssueIdFromMention(issueIdString);
+  }
+
+  private void processIssueIdFromMention(String issueIdString) {
     int issueId = Ids.parseAsInt(issueIdString);
 
     try {
@@ -67,7 +76,7 @@ public class RedminePullRequestCommentHandler extends RedmineHandler implements 
         issue.setNote(comment);
         getService().updateIssue(issue);
       } else {
-        LOG.warn("generate comment is null or empty");
+        LOG.warn("generated comment is null or empty");
       }
 
     } catch (Exception ex) {
