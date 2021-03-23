@@ -25,7 +25,7 @@ package sonia.scm.redmine;
 
 import sonia.scm.issuetracker.LinkHandler;
 import sonia.scm.issuetracker.PullRequestCommentHandlerProvider;
-import sonia.scm.issuetracker.PullRequestIssueRequestData;
+import sonia.scm.issuetracker.RequestData;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.redmine.config.RedmineConfiguration;
 import sonia.scm.template.TemplateEngineFactory;
@@ -49,7 +49,7 @@ public class RedminePullRequestCommentHandlerProvider implements PullRequestComm
   }
 
   @Override
-  public RedminePullRequestCommentHandler getCommentHandler(PullRequestIssueRequestData data) {
+  public RedminePullRequestCommentHandler getCommentHandler(RequestData data) {
     RedmineConfiguration cfg = configurationProvider.resolveConfiguration(data.getRepository());
 
     return new RedminePullRequestCommentHandler(templateEngineFactory, linkHandlerProvider.get(), cfg, data, advancedHttpClient);

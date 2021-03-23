@@ -28,7 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.issuetracker.LinkHandler;
 import sonia.scm.issuetracker.PullRequestCommentHandler;
-import sonia.scm.issuetracker.PullRequestIssueRequestData;
+import sonia.scm.issuetracker.RequestData;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.redmine.config.RedmineConfiguration;
 import sonia.scm.redmine.dto.RedmineIssue;
@@ -40,29 +40,35 @@ public class RedminePullRequestCommentHandler extends RedmineHandler implements 
 
   private static final Logger LOG = LoggerFactory.getLogger(RedminePullRequestCommentHandler.class);
 
-  private final PullRequestIssueRequestData data;
+  private final RequestData data;
+  private final String templateName;
 
   @Inject
   public RedminePullRequestCommentHandler(TemplateEngineFactory templateEngineFactory,
                                           LinkHandler linkHandler,
                                           RedmineConfiguration configuration,
-                                          PullRequestIssueRequestData data,
+                                          RequestData data,
                                           AdvancedHttpClient advancedHttpClient) {
     super(templateEngineFactory, linkHandler, configuration, advancedHttpClient);
     this.data = data;
+    this.templateName = determineTemplate(data);
+  }
+
+  private static String determineTemplate(RequestData data) {
+    switch (data.getRequestType()) {
+      case PR_MODIFIED:
+      case PR_CREATED:
+        return "pullRequest.mustache";
+      case PR_COMMENT_MODIFIED:
+      case PR_COMMENT_CREATED:
+        return "pullRequestComment.mustache";
+      default:
+        return null;
+    }
   }
 
   @Override
-  public void mentionedInTitleOrDescription(String issueIdString) {
-    processIssueIdFromMention(issueIdString);
-  }
-
-  @Override
-  public void mentionedInComment(String issueIdString) {
-    processIssueIdFromMention(issueIdString);
-  }
-
-  private void processIssueIdFromMention(String issueIdString) {
+  public void forIssue(String issueIdString) {
     int issueId = Ids.parseAsInt(issueIdString);
 
     try {
@@ -86,6 +92,6 @@ public class RedminePullRequestCommentHandler extends RedmineHandler implements 
 
   @Override
   protected String getTemplateName() {
-    return "pullRequest.mustache";
+    return templateName;
   }
 }
