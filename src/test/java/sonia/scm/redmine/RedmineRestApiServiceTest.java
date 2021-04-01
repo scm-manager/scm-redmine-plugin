@@ -85,7 +85,7 @@ public class RedmineRestApiServiceTest {
     when(advancedHttpClient.get(HttpUtil.concatenate(URL, RedmineRestApiService.ISSUES_PATH, "1.json"))).thenReturn(advancedHttpRequest);
     when(advancedHttpResponse.content()).thenReturn("{\"issue\":{\"id\":1,\"project\":{\"id\":1,\"name\":\"default project\"},\"tracker\":{\"id\":1,\"name\":\"default tracker\"},\"status\":{\"id\":2,\"name\":\"done\"},\"priority\":{\"id\":1,\"name\":\"normal\"},\"author\":{\"id\":1,\"name\":\"Redmine Admin\"},\"subject\":\"test issue\",\"description\":\"\",\"start_date\":\"2020-09-30\",\"due_date\":null,\"done_ratio\":0,\"is_private\":false,\"estimated_hours\":null,\"total_estimated_hours\":null,\"created_on\":\"2020-09-30T15:18:57Z\",\"updated_on\":\"2020-10-02T10:24:59Z\",\"closed_on\":\"2020-10-02T10:24:59Z\"}}".getBytes());
     when(advancedHttpResponse.isSuccessful()).thenReturn(true);
-    final RedmineIssue issue = apiService.getIssueById(1);
+    final RedmineIssue issue = apiService.getIssueById("#1");
     final IssueStatus issueStatus = issue.getStatus();
     assertThat(issueStatus.getName()).isEqualTo("done");
     assertThat(issueStatus.getId()).isEqualTo(2);
@@ -148,7 +148,7 @@ public class RedmineRestApiServiceTest {
   public void shouldThrowRedmineExceptionOnGetIssueFailure() throws IOException {
     when(advancedHttpClient.get(anyString())).thenReturn(advancedHttpRequest);
     when(advancedHttpResponse.isSuccessful()).thenReturn(false);
-    apiService.getIssueById(1);
+    apiService.getIssueById("#1");
   }
 
   @Test(expected = RedmineException.class)

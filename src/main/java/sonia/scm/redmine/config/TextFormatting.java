@@ -28,6 +28,6 @@ package sonia.scm.redmine.config;
  */
 public enum TextFormatting {
 
-    TEXTILE, MARKDOWN;
+  TEXTILE, MARKDOWN;
 
 }

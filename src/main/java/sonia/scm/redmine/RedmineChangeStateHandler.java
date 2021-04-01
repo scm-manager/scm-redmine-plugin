@@ -53,7 +53,7 @@ public class RedmineChangeStateHandler extends RedmineHandler
 
   private List<IssueStatus> statusList;
 
-  private static final String TEMPLATE_NAME = "changeState.mustache";
+  private static final String TEMPLATE_NAME = "changeset_statechange.mustache";
 
   private static final Logger logger =
     LoggerFactory.getLogger(RedmineChangeStateHandler.class);
@@ -66,9 +66,7 @@ public class RedmineChangeStateHandler extends RedmineHandler
   }
 
   @Override
-  public void changeState(String issueIdString, String keyword) {
-    int issueId = Ids.parseAsInt(issueIdString);
-
+  public void changeState(String issueId, String keyword) {
     try {
       String comment = createComment(request, keyword);
 
