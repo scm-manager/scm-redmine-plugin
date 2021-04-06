@@ -26,6 +26,7 @@
         "statusHelp": "Name of Redmine status which should be mapped e.g.: Closed",
         "keywords": "Keywords",
         "keywordsHelp": "Comma separated list of keywords which are mapped to the Redmine status e.g.: closes, closing",
+        "no-mapping": "No mappings defined",
         "add": "Add mapping",
         "remove": "Remove mapping"
       }

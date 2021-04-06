@@ -27,6 +27,7 @@
       "statusHelp": "Name des Redmine-Status z.B.: Closed",
       "keywords": "Schlüsselwörter",
       "keywordsHelp": "Kommagetrennte Liste von Schlüsselwörtern, die dem Redmine-Status zugeordnet werden sollen, z. B.: closes, closing",
+      "no-mapping": "Keine Mappings definiert",
       "add": "Mapping hinzufügen",
       "remove": "Mapping entfernen"
     }

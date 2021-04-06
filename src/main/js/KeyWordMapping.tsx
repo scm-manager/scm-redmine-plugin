@@ -23,7 +23,7 @@
  */
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { InputField, AddButton, Icon, Help } from "@scm-manager/ui-components";
+import { InputField, AddButton, Icon, Help, Notification } from "@scm-manager/ui-components";
 import styled from "styled-components";
 
 type Props = {
@@ -141,26 +141,32 @@ const KeyWordMapping: FC<Props> = props => {
         {t("scm-redmine-plugin.config.mapping.title")}
         <Help message={t("scm-redmine-plugin.config.mapping.help")} />
       </h3>
-      <table className="card-table table is-hoverable is-fullwidth">
-        <thead>
-          <tr>
-            <th>
-              {t("scm-redmine-plugin.config.mapping.status")}
-              <Help message={t("scm-redmine-plugin.config.mapping.statusHelp")} />
-            </th>
-            <th>
-              {t("scm-redmine-plugin.config.mapping.keywords")}
-              <Help message={t("scm-redmine-plugin.config.mapping.keywordsHelp")} />
-            </th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {mappings.map((mapping, idx) => (
-            <MappingForm key={idx} mapping={mapping} remove={removeMapping(idx)} update={updateMapping(idx)} />
-          ))}
-        </tbody>
-      </table>
+      {!mappings || mappings.length === 0 ? (
+        <Notification type="info">
+          {t("scm-redmine-plugin.config.mapping.no-mapping")}
+        </Notification>
+        ) : (
+        <table className="card-table table is-hoverable is-fullwidth">
+          <thead>
+            <tr>
+              <th>
+                {t("scm-redmine-plugin.config.mapping.status")}
+                <Help message={t("scm-redmine-plugin.config.mapping.statusHelp")} />
+              </th>
+              <th>
+                {t("scm-redmine-plugin.config.mapping.keywords")}
+                <Help message={t("scm-redmine-plugin.config.mapping.keywordsHelp")} />
+              </th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {mappings.map((mapping, idx) => (
+              <MappingForm key={idx} mapping={mapping} remove={removeMapping(idx)} update={updateMapping(idx)} />
+            ))}
+          </tbody>
+        </table>
+      )}
       <AddMappingButton label={t("scm-redmine-plugin.config.mapping.add")} action={addMapping} />
     </>
   );
