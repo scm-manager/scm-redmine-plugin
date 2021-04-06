@@ -37,21 +37,17 @@ import java.util.regex.Pattern;
  *
  * @author Sebastian Sdorra
  */
-public class RedmineIssueMatcher implements IssueMatcher
-{
+public class RedmineIssueMatcher implements IssueMatcher {
 
-  /** Field description */
   private static final Pattern KEY_PATTERN = Pattern.compile("(#\\d+)");
 
   @Override
-  public String getKey(Matcher matcher)
-  {
+  public String getKey(Matcher matcher) {
     return matcher.group(1);
   }
 
   @Override
-  public Pattern getKeyPattern()
-  {
+  public Pattern getKeyPattern() {
     return KEY_PATTERN;
   }
 }
