@@ -38,6 +38,7 @@ import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import sonia.scm.repository.Repository;
 
 import java.net.URI;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -183,7 +184,9 @@ public class RedmineConfigurationMapperTest {
       true,
       false,
       "trillian",
-      "secret");
+      "secret",
+      Collections.emptyMap()
+    );
   }
 
   private RedmineConfigurationDto createDto() {
@@ -192,7 +195,10 @@ public class RedmineConfigurationMapperTest {
       true,
       false,
       "trillian",
-      "secret");
+      "secret"
+      ,
+      Collections.emptyMap()
+    );
   }
 
   private RedmineGlobalConfiguration createGlobalConfiguration() {

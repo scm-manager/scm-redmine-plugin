@@ -66,7 +66,7 @@ public class RedmineIssueTrackerProvider implements IssueTrackerProvider {
         .template(referenceTemplate(configuration));
 
       if (configuration.isAutoCloseEnabled()) {
-        return changeStateStage.stateChanging(new RedmineStateChanger(apiService))
+        return changeStateStage.stateChanging(new RedmineStateChanger(configuration, apiService))
           .template(stateChangeTemplate(configuration))
           .build();
       }

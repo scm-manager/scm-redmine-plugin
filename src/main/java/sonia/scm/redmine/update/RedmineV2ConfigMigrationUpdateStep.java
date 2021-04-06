@@ -36,6 +36,8 @@ import sonia.scm.version.Version;
 
 import javax.inject.Inject;
 
+import java.util.Collections;
+
 import static sonia.scm.update.V1PropertyReader.REPOSITORY_PROPERTY_READER;
 import static sonia.scm.version.Version.parse;
 
@@ -69,7 +71,8 @@ public class RedmineV2ConfigMigrationUpdateStep implements UpdateStep {
       properties.getBoolean("redmine.auto-close").orElse(false),
       properties.getBoolean("redmine.update-issues").orElse(false),
       "",
-      ""
+      "",
+      Collections.emptyMap()
     );
   }
 

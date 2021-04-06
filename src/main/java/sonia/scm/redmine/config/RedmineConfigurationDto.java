@@ -30,10 +30,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Map;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@SuppressWarnings("java:S2160") // we don't need equals for a dto
 public class RedmineConfigurationDto extends HalRepresentation {
 
   private String url;
@@ -42,7 +45,7 @@ public class RedmineConfigurationDto extends HalRepresentation {
   private boolean updateIssues;
   private String username;
   private String password;
-
+  private Map<String,String> keywordMapping;
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package

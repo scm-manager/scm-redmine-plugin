@@ -24,37 +24,69 @@
 
 package sonia.scm.redmine;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Streams;
 import sonia.scm.issuetracker.spi.StateChanger;
+import sonia.scm.redmine.config.RedmineConfiguration;
 import sonia.scm.redmine.dto.IssueStatus;
 import sonia.scm.redmine.dto.RedmineIssue;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class RedmineStateChanger implements StateChanger {
 
+  private final RedmineConfiguration configuration;
   private final RedmineRestApiService apiService;
   private List<IssueStatus> statusList;
 
-  RedmineStateChanger(RedmineRestApiService apiService) {
+  RedmineStateChanger(RedmineConfiguration configuration, RedmineRestApiService apiService) {
+    this.configuration = configuration;
     this.apiService = apiService;
   }
 
   @Override
   public void changeState(String issueKey, String keyWord) throws IOException {
     RedmineIssue issue = apiService.getIssueById(issueKey);
-    IssueStatus status = getIssueStatusByKeyword(keyWord);
+    IssueStatus status = getIssueStatusByKeyword(resolveMapping(keyWord));
     issue.setStatus(status);
     apiService.updateIssue(issue);
   }
 
   @Override
   public Iterable<String> getKeyWords(String issueKey) throws IOException {
+    return Streams.concat(getStatusKeyWords(), getMappingKeyWords())
+      .collect(Collectors.toList());
+  }
+
+  private String resolveMapping(String keyWord) {
+    for (Map.Entry<String, String> entry : configuration.getKeywordMapping().entrySet()) {
+      List<String> values = split().splitToList(entry.getValue());
+      if (values.contains(keyWord)) {
+        return entry.getKey();
+      }
+    }
+    return keyWord;
+  }
+
+  @SuppressWarnings("UnstableApiUsage")
+  private Stream<String> getMappingKeyWords() {
+    return configuration.getKeywordMapping().values()
+      .stream()
+      .flatMap(v -> split().splitToStream(v));
+  }
+
+  private Splitter split() {
+    return Splitter.on(',').omitEmptyStrings().trimResults();
+  }
+
+  private Stream<String> getStatusKeyWords() throws IOException {
     return getStatusList()
       .stream()
-      .map(IssueStatus::getName)
-      .collect(Collectors.toList());
+      .map(IssueStatus::getName);
   }
 
   private IssueStatus getIssueStatusByKeyword(String keyword) throws IOException {
@@ -62,7 +94,7 @@ public class RedmineStateChanger implements StateChanger {
       .stream()
       .filter(status -> keyword.equalsIgnoreCase(status.getName()))
       .findAny()
-      .orElseThrow(() -> new IOException("Could not find status for key word" + keyword));
+      .orElseThrow(() -> new IOException("Could not find status for key word " + keyword));
   }
 
   private List<IssueStatus> getStatusList() throws IOException {
