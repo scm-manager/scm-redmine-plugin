@@ -29,6 +29,7 @@ export type RedmineConfiguration = {
   updateIssues: boolean;
   usernameTransformPattern: string;
   textFormatting: string;
+  keywordMapping: Record<string, string>;
   _links: Links;
 };
 

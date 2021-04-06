@@ -18,6 +18,16 @@
         "updateIssues-helptext": "Enable the automatic update function. SCM-Manager searches for issue keys in commit messages. If a issue id is found SCM-Manager  updates the issue with a comment.",
         "disableRepositoryConfiguration": "Disable repository specific configuration",
         "disableRepositoryConfiguration-helptext": "Do not allow repository owners to configure Redmine instances."
+      },
+      "mapping": {
+        "title": "Redmine status mapping",
+        "help": "Map keywords to Redmine status in order to trigger state changes with those keywords.",
+        "status": "Redmine status",
+        "statusHelp": "Name of Redmine status which should be mapped e.g.: Closed",
+        "keywords": "Keywords",
+        "keywordsHelp": "Comma separated list of keywords which are mapped to the Redmine status e.g.: closes, closing",
+        "add": "Add mapping",
+        "remove": "Remove mapping"
       }
     }
   },

@@ -29,6 +29,7 @@ import de.otto.edison.hal.Links;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import sonia.scm.api.v2.resources.BaseMapper;
 import sonia.scm.api.v2.resources.LinkBuilder;
@@ -52,11 +53,12 @@ public abstract class RedmineConfigurationMapper extends BaseMapper {
   @Inject
   private ScmPathInfoStore scmPathInfoStore;
 
-
+  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   public abstract RedmineConfigurationDto map(RedmineConfiguration configuration, @Context Repository repository);
 
   public abstract RedmineConfiguration map(RedmineConfigurationDto configurationDto, @Context RedmineConfiguration oldConfiguration);
 
+  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   public abstract RedmineGlobalConfigurationDto map(RedmineGlobalConfiguration configuration);
 
   public abstract RedmineGlobalConfiguration map(RedmineGlobalConfigurationDto configurationDto, @Context RedmineGlobalConfiguration oldConfiguration);
