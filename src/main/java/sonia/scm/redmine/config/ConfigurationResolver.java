@@ -22,13 +22,10 @@
  * SOFTWARE.
  */
 
-package sonia.scm.redmine;
+package sonia.scm.redmine.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.redmine.config.RedmineConfigStore;
-import sonia.scm.redmine.config.RedmineConfiguration;
-import sonia.scm.redmine.config.RedmineGlobalConfiguration;
 import sonia.scm.repository.Repository;
 
 import javax.inject.Inject;
@@ -38,10 +35,10 @@ public final class ConfigurationResolver {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConfigurationResolver.class);
 
-  private final RedmineConfigStore configurationStore;
+  private final RedmineConfigurationStore configurationStore;
 
   @Inject
-  public ConfigurationResolver(RedmineConfigStore configurationStore) {
+  public ConfigurationResolver(RedmineConfigurationStore configurationStore) {
     this.configurationStore = configurationStore;
   }
 

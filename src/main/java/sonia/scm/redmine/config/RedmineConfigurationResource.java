@@ -60,12 +60,12 @@ import static sonia.scm.NotFoundException.notFound;
 @Path("v2/redmine/configuration")
 public class RedmineConfigurationResource {
 
-  private RedmineConfigStore configStore;
+  private RedmineConfigurationStore configStore;
   private RedmineConfigurationMapper mapper;
   private RepositoryManager repositoryManager;
 
   @Inject
-  public RedmineConfigurationResource(RedmineConfigStore configStore, RedmineConfigurationMapper mapper, RepositoryManager repositoryManager) {
+  public RedmineConfigurationResource(RedmineConfigurationStore configStore, RedmineConfigurationMapper mapper, RepositoryManager repositoryManager) {
     this.configStore = configStore;
     this.mapper = mapper;
     this.repositoryManager = repositoryManager;

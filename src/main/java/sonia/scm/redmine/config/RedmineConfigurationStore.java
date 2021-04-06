@@ -30,14 +30,14 @@ import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 
 @Singleton
-public class RedmineConfigStore {
+public class RedmineConfigurationStore {
 
   public static final String NAME = "redmine";
 
   private final ConfigurationStoreFactory storeFactory;
 
   @Inject
-  public RedmineConfigStore(ConfigurationStoreFactory storeFactory) {
+  public RedmineConfigurationStore(ConfigurationStoreFactory storeFactory) {
     this.storeFactory = storeFactory;
   }
 

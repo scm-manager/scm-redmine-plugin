@@ -39,22 +39,22 @@ import javax.inject.Provider;
 
 @Extension
 @Enrich(Repository.class)
-public class RedmineRepositoryConfigHalEnricher implements HalEnricher {
+public class RedmineRepositoryConfigurationHalEnricher implements HalEnricher {
 
-  private Provider<ScmPathInfoStore> scmPathInfoStoreProvider;
-  private final RedmineConfigStore redmineConfigStore;
+  private final Provider<ScmPathInfoStore> scmPathInfoStoreProvider;
+  private final RedmineConfigurationStore redmineConfigurationStore;
 
   @Inject
-  public RedmineRepositoryConfigHalEnricher(Provider<ScmPathInfoStore> scmPathInfoStoreProvider,
-                                             RedmineConfigStore redmineConfigStore) {
+  public RedmineRepositoryConfigurationHalEnricher(Provider<ScmPathInfoStore> scmPathInfoStoreProvider,
+                                                   RedmineConfigurationStore redmineConfigurationStore) {
     this.scmPathInfoStoreProvider = scmPathInfoStoreProvider;
-    this.redmineConfigStore = redmineConfigStore;
+    this.redmineConfigurationStore = redmineConfigurationStore;
   }
 
   @Override
   public void enrich(HalEnricherContext context, HalAppender appender) {
     Repository repository = context.oneRequireByType(Repository.class);
-    if (!redmineConfigStore.getConfiguration().isDisableRepositoryConfiguration() && RepositoryPermissions.custom(Constants.NAME, repository).isPermitted()) {
+    if (!redmineConfigurationStore.getConfiguration().isDisableRepositoryConfiguration() && RepositoryPermissions.custom(Constants.NAME, repository).isPermitted()) {
       String linkBuilder = new LinkBuilder(scmPathInfoStoreProvider.get().get(), RedmineConfigurationResource.class)
         .method("getConfiguration")
         .parameters(repository.getNamespace(), repository.getName())
