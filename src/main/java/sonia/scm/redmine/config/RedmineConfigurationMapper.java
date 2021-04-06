@@ -31,7 +31,7 @@ import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import sonia.scm.api.v2.resources.BaseMapper;
+import sonia.scm.api.v2.resources.HalAppenderMapper;
 import sonia.scm.api.v2.resources.LinkBuilder;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import sonia.scm.config.ConfigurationPermissions;
@@ -44,7 +44,7 @@ import javax.inject.Inject;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
-public abstract class RedmineConfigurationMapper extends BaseMapper {
+public abstract class RedmineConfigurationMapper extends HalAppenderMapper {
 
   @VisibleForTesting
   @SuppressWarnings("squid:S2068")
