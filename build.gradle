@@ -28,7 +28,7 @@ plugins {
 }
 
 dependencies {
-  plugin "sonia.scm.plugins:scm-issuetracker-plugin:3.0.0-SNAPSHOT"
+  plugin "sonia.scm.plugins:scm-issuetracker-plugin:3.0.0"
   optionalPlugin "sonia.scm.plugins:scm-commit-message-checker-plugin:1.0.0"
 
   testImplementation "com.github.sdorra:shiro-unit:1.0.1"
