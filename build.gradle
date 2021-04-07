@@ -24,22 +24,26 @@
 
 
 plugins {
-  id 'org.scm-manager.smp' version '0.7.2'
+  id 'org.scm-manager.smp' version '0.8.0'
 }
 
 dependencies {
-  plugin "sonia.scm.plugins:scm-issuetracker-plugin:2.0.1"
+  plugin "sonia.scm.plugins:scm-issuetracker-plugin:3.0.0"
   optionalPlugin "sonia.scm.plugins:scm-commit-message-checker-plugin:1.0.0"
 
   testImplementation "com.github.sdorra:shiro-unit:1.0.1"
 }
 
 scmPlugin {
-  scmVersion = "2.9.0"
+  scmVersion = "2.15.0"
   displayName = "Redmine"
   description = "Integrates Redmine to SCM-Manager"
   author = "Marvin Froeder"
   category = "Issue Tracker"
+
+  run {
+    loggingConfiguration = 'src/main/conf/logging.xml'
+  }
 
   openapi {
     packages = [

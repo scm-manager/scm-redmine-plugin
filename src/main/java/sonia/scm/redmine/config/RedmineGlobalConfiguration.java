@@ -30,6 +30,7 @@ import lombok.Setter;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Collections;
 
 /**
  * @author Sebastian Sdorra
@@ -45,7 +46,7 @@ public class RedmineGlobalConfiguration extends RedmineConfiguration {
 
   public RedmineGlobalConfiguration(String url, TextFormatting textFormatting, boolean autoClose, boolean updateIssues,
                                     boolean disableRepositoryConfiguration, String username, String password) {
-    super(url, textFormatting, autoClose, updateIssues, username, password);
+    super(url, textFormatting, autoClose, updateIssues, username, password, Collections.emptyMap());
     this.disableRepositoryConfiguration = disableRepositoryConfiguration;
   }
 

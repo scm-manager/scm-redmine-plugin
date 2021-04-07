@@ -21,35 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package sonia.scm.redmine.config;
+package sonia.scm.redmine;
 
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.redmine.dto.RedmineIssue;
 
-import java.util.Map;
+import java.io.IOException;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@SuppressWarnings("java:S2160") // we don't need equals for a dto
-public class RedmineConfigurationDto extends HalRepresentation {
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-  private String url;
-  private TextFormatting textFormatting = TextFormatting.TEXTILE;
-  private boolean autoClose;
-  private boolean updateIssues;
-  private String username;
-  private String password;
-  private Map<String,String> keywordMapping;
+@ExtendWith(MockitoExtension.class)
+class RedmineCommentatorTest {
 
-  @Override
-  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
-  protected HalRepresentation add(Links links) {
-    return super.add(links);
+  @Mock
+  private RedmineRestApiService apiService;
+
+  @InjectMocks
+  private RedmineCommentator commentator;
+
+  @Mock
+  private RedmineIssue issue;
+
+  @Test
+  void shouldComment() throws IOException {
+    when(apiService.getIssueById("#42")).thenReturn(issue);
+
+    commentator.comment("#42", "Awesome note");
+
+    verify(issue).setNote("Awesome note");
+    verify(apiService).updateIssue(issue);
   }
+
 }

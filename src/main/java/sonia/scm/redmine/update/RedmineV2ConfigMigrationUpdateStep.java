@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.Extension;
-import sonia.scm.redmine.config.RedmineConfigStore;
+import sonia.scm.redmine.config.RedmineConfigurationStore;
 import sonia.scm.redmine.config.RedmineConfiguration;
 import sonia.scm.redmine.config.TextFormatting;
 import sonia.scm.update.V1Properties;
@@ -35,6 +35,8 @@ import sonia.scm.update.V1PropertyDAO;
 import sonia.scm.version.Version;
 
 import javax.inject.Inject;
+
+import java.util.Collections;
 
 import static sonia.scm.update.V1PropertyReader.REPOSITORY_PROPERTY_READER;
 import static sonia.scm.version.Version.parse;
@@ -45,10 +47,10 @@ public class RedmineV2ConfigMigrationUpdateStep implements UpdateStep {
   private static final Logger LOG = LoggerFactory.getLogger(RedmineV2ConfigMigrationUpdateStep.class);
 
   private final V1PropertyDAO v1PropertyDAO;
-  private final RedmineConfigStore configStore;
+  private final RedmineConfigurationStore configStore;
 
   @Inject
-  public RedmineV2ConfigMigrationUpdateStep(V1PropertyDAO v1PropertyDAO, RedmineConfigStore configStore) {
+  public RedmineV2ConfigMigrationUpdateStep(V1PropertyDAO v1PropertyDAO, RedmineConfigurationStore configStore) {
     this.v1PropertyDAO = v1PropertyDAO;
     this.configStore = configStore;
   }
@@ -69,7 +71,8 @@ public class RedmineV2ConfigMigrationUpdateStep implements UpdateStep {
       properties.getBoolean("redmine.auto-close").orElse(false),
       properties.getBoolean("redmine.update-issues").orElse(false),
       "",
-      ""
+      "",
+      Collections.emptyMap()
     );
   }
 

@@ -38,6 +38,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  *
@@ -59,6 +61,7 @@ public class RedmineConfiguration implements Validateable {
   private String username;
   @XmlJavaTypeAdapter(XmlEncryptionAdapter.class)
   private String password;
+  private Map<String,String> keywordMapping;
 
   public boolean isAutoCloseEnabled() {
     return isUpdateIssuesEnabled() && autoClose;
@@ -66,6 +69,13 @@ public class RedmineConfiguration implements Validateable {
 
   public boolean isUpdateIssuesEnabled() {
     return isValid() && updateIssues;
+  }
+
+  public Map<String, String> getKeywordMapping() {
+    if (keywordMapping == null) {
+      return Collections.emptyMap();
+    }
+    return keywordMapping;
   }
 
   @Override
