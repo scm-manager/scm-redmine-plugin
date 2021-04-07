@@ -10,7 +10,7 @@ Anschließend lässt sich bereits konfigurieren in welcher Form Redmine Tickets 
 
 #### Kommentare erzeugen
 Um Kommentare in Redmine zu erzeugen werden Zugangsdaten benötigt, welche einem technischen Redmine Benutzer gehören sollten.
-Desweiteren muss die REST-Schnittstelle von Redmine aktiviert sein, die Einstellung befindet sich in Redmine unter `Administration->Konfiguration->API->REST-Schnittstelle aktivieren`.
+Des Weiteren muss die REST-Schnittstelle von Redmine aktiviert sein, die Einstellung befindet sich in Redmine unter `Administration->Konfiguration->API->REST-Schnittstelle aktivieren`.
 Für die Kommentare lässt sich über ein Auswahl-Menü die Textformatierung einstellen, diese muss mit der verwendeten Formatierung in Redmine übereinstimmen (`Administration->Konfiguration->Allgemein->Textformatierung`).
 
 Die Kommentare werden am Redmine Ticket erzeugt, sobald innerhalb einer Commit Nachricht die Ticket-ID erwähnt wurde. 
@@ -25,10 +25,10 @@ Um den Status eines Tickets über die Nachricht eines Commits zu ändern, kann e
 Beispiel Commit Nachricht: "Bug #42 closed"
 
 Das Beispiel setzt den Status des Tickets 42 auf "Closed".
-Das setzt natürlich voraus das es den Status "Closed" in der angegebenen Redmine Instanz gibt.
+Das setzt natürlich voraus, dass es den Status "Closed" in der angegebenen Redmine Instanz gibt.
 
 Über die "Status Modifizierungswörter" lassen sich Wörter definieren, die anstelle des Redmine Status verwendet werden können.
-Diese Schlüsselwörter kann man in form einer Kommaseparierten Liste angegeben.
+Diese Schlüsselwörter kann man in Form einer kommaseparierten Liste angegeben.
 Zum Beispiel könnte man für den Status "Closed" folgende Schlüsselwörter angeben: "closes, closing".
 Damit würde die Commit Nachricht "Closes Bug #42" ebenfalls das Ticket 42 auf den Status "Closed" setzen.
 
