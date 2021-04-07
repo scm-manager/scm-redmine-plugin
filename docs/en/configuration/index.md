@@ -10,7 +10,7 @@ Afterwards you can already configure how the Redmine issues are modified or upda
 
 #### Create comments
 To create comments in Redmine, credentials are mandatory. They should belong to a technical Redmine user.
-This user also needs sufficient permissions to add comments to existing issues ("Add notes").
+This user also needs sufficient permissions to add comments to existing issues ("View issues" & "Add notes").
 Furthermore, the REST interface of Redmine must be activated. The setting is located in Redmine under `Administration->Settings->API->Enable REST web service`.
 The text formatting can be set via a selection menu. This must match the formatting used in Redmine (`Administration->Settings->General->Text formatting`).
 
@@ -28,7 +28,7 @@ Example Commit message: "Bug #42 closed".
 The example sets the status of issue 42 to "Closed".
 Of course, this assumes that the status "Closed" exists in the specified Redmine instance.
 
-> **Remember:** The configured redmine user needs permissions to change the status of issues ("Edit issues").
+> **Important:** The configured redmine user needs permissions to change the status of issues ("Edit issues").
 
 Using the "Redmine status mapping" you can define keywords that can be used instead of the Redmine status.
 These keywords can be specified in the form of a comma-separated list.

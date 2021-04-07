@@ -10,7 +10,7 @@ Anschließend lässt sich bereits konfigurieren in welcher Form Redmine Tickets 
 
 #### Kommentare erzeugen
 Um Kommentare in Redmine zu erzeugen werden Zugangsdaten benötigt, welche einem technischen Redmine Benutzer gehören sollten.
-Dieser Benutzer benötigt zudem ausreichende Berechtigungen, um Kommentare an existierenden Tickets zu erstellen ("Add notes").
+Dieser Benutzer benötigt zudem ausreichende Berechtigungen, um Kommentare an existierenden Tickets zu erstellen ("Tickets anzeigen" & "Kommentare hinzufügen").
 Des Weiteren muss die REST-Schnittstelle von Redmine aktiviert sein, die Einstellung befindet sich in Redmine unter `Administration->Konfiguration->API->REST-Schnittstelle aktivieren`.
 Für die Kommentare lässt sich über ein Auswahl-Menü die Textformatierung einstellen, diese muss mit der verwendeten Formatierung in Redmine übereinstimmen (`Administration->Konfiguration->Allgemein->Textformatierung`).
 
@@ -20,7 +20,7 @@ Beispiel Commit Nachricht: "#492 Add awesome new feature"
 
 Damit wird ein Kommentar mit dieser Commit Nachricht am Redmine Ticket 492 erzeugt.
 
-> **Bemerke:** Der konfigurierte Redmine Benutzer benötigt Berechtigungen, um den Status von Tickets zu ändern ("Edit issues").
+> **Wichtig:** Der konfigurierte Redmine Benutzer benötigt Berechtigungen, um den Status von Tickets zu ändern ("Tickets bearbeiten").
 
 #### Ticket Status Aktualisierung
 Um den Status eines Tickets über die Nachricht eines Commits zu ändern, kann eine Ticket-ID mit einem Redmine Status innerhalb eines Satzes verwendet werden.
