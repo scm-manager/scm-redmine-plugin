@@ -1,6 +1,6 @@
 - section: Erste Schritte
   entries:
-    - /pullrequests/
     - /configuration/
     - /permissions/
     - /commitmessagechecker/
+    - /pullrequests/
