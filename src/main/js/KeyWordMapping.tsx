@@ -108,10 +108,10 @@ const KeyWordMapping: FC<Props> = props => {
   const [t] = useTranslation("plugins");
   const [mappings, setMappings] = useState<Mapping[]>(convert(props.mappings));
 
-  const onChange = (mappings: Mapping[]) => {
-    setMappings(mappings);
+  const onChange = (newMappings: Mapping[]) => {
+    setMappings(newMappings);
     const record: Record<string, string> = {};
-    mappings.forEach(mapping => {
+    newMappings.forEach(mapping => {
       record[mapping.status] = mapping.keywords;
     });
     props.onChange(record);
@@ -157,7 +157,7 @@ const KeyWordMapping: FC<Props> = props => {
                 {t("scm-redmine-plugin.config.mapping.keywords")}
                 <Help message={t("scm-redmine-plugin.config.mapping.keywordsHelp")} />
               </th>
-              <th></th>
+              <th/>
             </tr>
           </thead>
           <tbody>
