@@ -10,7 +10,7 @@
         "username-helptext": "The Redmine user name",
         "password": "Password",
         "password-helptext": "The Redmine password",
-        "textFormatting": "Text formatting",
+        "textFormatting": "Text Formatting",
         "textFormatting-helptext": "Type of text formatting used for redmine comments.",
         "autoClose": "Change issue state",
         "autoClose-helptext": "Enables the state changes function. SCM-Manager searches for issue keys and issue status keywords in commit messages and pull requests. If both are found in a text, SCM-Manager changes the state of the issue in Redmine.",
@@ -20,14 +20,15 @@
         "disableRepositoryConfiguration-helptext": "Do not allow repository owners to configure Redmine instances."
       },
       "mapping": {
-        "title": "Redmine status mapping",
+        "title": "Redmine Status Mapping",
         "help": "Map keywords to Redmine status in order to trigger state changes with those keywords.",
-        "status": "Redmine status",
+        "status": "Redmine Status",
         "statusHelp": "Name of Redmine status which should be mapped e.g.: Closed",
-        "keywords": "Keywords",
+        "keywords": "List of Keywords",
+        "keywordsPlaceholder": "Keyword1,Keyword2",
         "keywordsHelp": "Comma separated list of keywords which are mapped to the Redmine status e.g.: closes, closing",
         "no-mapping": "No mappings defined",
-        "add": "Add mapping",
+        "add": "Add Mapping",
         "remove": "Remove mapping"
       }
     }

@@ -26,9 +26,9 @@ import { useTranslation } from "react-i18next";
 import { InputField, AddButton, Icon, Help, Notification } from "@scm-manager/ui-components";
 import styled from "styled-components";
 
-type Props = {
-  mappings: Record<string, string>;
-  onChange: (mappings: Record<string, string>) => void;
+type Mapping = {
+  status: string;
+  keywords: string;
 };
 
 type MappingProps = {
@@ -74,7 +74,7 @@ const MappingForm: FC<MappingProps> = ({ mapping, remove, update }) => {
           className="is-grouped"
           onChange={onKeywordsChange}
           value={mapping.keywords}
-          placeholder={t("scm-redmine-plugin.config.mapping.keywords")}
+          placeholder={t("scm-redmine-plugin.config.mapping.keywordsPlaceholder")}
         />
       </td>
       <VCenteredTd>
@@ -88,14 +88,14 @@ const MappingForm: FC<MappingProps> = ({ mapping, remove, update }) => {
   );
 };
 
+type Props = {
+  mappings: Record<string, string>;
+  onChange: (mappings: Record<string, string>) => void;
+};
+
 const AddMappingButton = styled(AddButton)`
   float: right;
 `;
-
-type Mapping = {
-  status: string;
-  keywords: string;
-};
 
 const convert = (mappings: Record<string, string>): Mapping[] => {
   return Object.keys(mappings).map(name => ({
@@ -112,7 +112,11 @@ const KeyWordMapping: FC<Props> = props => {
     setMappings(newMappings);
     const record: Record<string, string> = {};
     newMappings.forEach(mapping => {
-      record[mapping.status] = mapping.keywords;
+      if(mapping.status in record) {
+        record[mapping.status] += ",".concat(mapping.keywords);
+      } else {
+        record[mapping.status] = mapping.keywords;
+      }
     });
     props.onChange(record);
   };
