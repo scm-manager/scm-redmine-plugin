@@ -14,7 +14,7 @@
         "textFormatting-helptext": "Type of text formatting used for redmine comments.",
         "autoClose": "Change issue state",
         "autoClose-helptext": "Enables the state changes function. SCM-Manager searches for issue keys and issue status keywords in commit messages and pull requests. If both are found in a text, SCM-Manager changes the state of the issue in Redmine.",
-        "updateIssues": "Update issues",
+        "updateIssues": "Update issues with a comment",
         "updateIssues-helptext": "Enable the automatic update function. SCM-Manager searches for issue keys in commit messages and pull requests. If an issue id is found, SCM-Manager updates the issue with a comment.",
         "disableRepositoryConfiguration": "Disable repository specific configuration",
         "disableRepositoryConfiguration-helptext": "Do not allow repository owners to configure Redmine instances."
