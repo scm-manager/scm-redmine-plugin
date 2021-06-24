@@ -42,11 +42,11 @@ import javax.inject.Provider;
 public class RedmineRepositoryConfigurationHalEnricher implements HalEnricher {
 
   private final Provider<ScmPathInfoStore> scmPathInfoStoreProvider;
-  private final RedmineConfigurationStore redmineConfigurationStore;
+  private final RedmineConfigStore redmineConfigurationStore;
 
   @Inject
   public RedmineRepositoryConfigurationHalEnricher(Provider<ScmPathInfoStore> scmPathInfoStoreProvider,
-                                                   RedmineConfigurationStore redmineConfigurationStore) {
+                                                   RedmineConfigStore redmineConfigurationStore) {
     this.scmPathInfoStoreProvider = scmPathInfoStoreProvider;
     this.redmineConfigurationStore = redmineConfigurationStore;
   }

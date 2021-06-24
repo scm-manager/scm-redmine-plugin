@@ -32,7 +32,7 @@ import sonia.scm.issuetracker.api.IssueTracker;
 import sonia.scm.issuetracker.spi.IssueTrackerBuilder;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.redmine.config.ConfigurationResolver;
-import sonia.scm.redmine.config.RedmineConfigurationStore;
+import sonia.scm.redmine.config.RedmineConfigStore;
 import sonia.scm.redmine.config.RedmineGlobalConfiguration;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
@@ -51,7 +51,7 @@ class RedmineIssueTrackerProviderTest {
   @Mock
   private IssueTrackerBuilder builder;
 
-  private RedmineConfigurationStore configStore;
+  private RedmineConfigStore configStore;
 
   @Mock
   private Provider<AdvancedHttpClient> httpClientProvider;
@@ -65,7 +65,7 @@ class RedmineIssueTrackerProviderTest {
 
   @BeforeEach
   void setUpConfiguration() {
-    configStore = new RedmineConfigurationStore(new InMemoryConfigurationStoreFactory());
+    configStore = new RedmineConfigStore(new InMemoryConfigurationStoreFactory());
     issueTrackerProvider = new RedmineIssueTrackerProvider(
       new ConfigurationResolver(configStore),
       httpClientProvider

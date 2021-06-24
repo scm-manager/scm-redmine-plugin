@@ -60,12 +60,12 @@ import static sonia.scm.NotFoundException.notFound;
 @Path("v2/redmine/configuration")
 public class RedmineConfigurationResource {
 
-  private RedmineConfigurationStore configStore;
+  private RedmineConfigStore configStore;
   private RedmineConfigurationMapper mapper;
   private RepositoryManager repositoryManager;
 
   @Inject
-  public RedmineConfigurationResource(RedmineConfigurationStore configStore, RedmineConfigurationMapper mapper, RepositoryManager repositoryManager) {
+  public RedmineConfigurationResource(RedmineConfigStore configStore, RedmineConfigurationMapper mapper, RepositoryManager repositoryManager) {
     this.configStore = configStore;
     this.mapper = mapper;
     this.repositoryManager = repositoryManager;
@@ -91,10 +91,9 @@ public class RedmineConfigurationResource {
       schema = @Schema(implementation = ErrorDto.class)
     )
   )
-  public Response updateGlobalConfiguration(RedmineGlobalConfigurationDto updatedConfig) {
+  public void updateGlobalConfiguration(RedmineGlobalConfigurationDto updatedConfig) {
     ConfigurationPermissions.write(Constants.NAME).check();
     configStore.storeConfiguration(mapper.map(updatedConfig, configStore.getConfiguration()));
-    return Response.ok().build();
   }
 
   @GET
@@ -149,11 +148,10 @@ public class RedmineConfigurationResource {
       schema = @Schema(implementation = ErrorDto.class)
     )
   )
-  public Response updateConfiguration(@PathParam("namespace") String namespace, @PathParam("name") String name, RedmineConfigurationDto updatedConfig) {
+  public void updateConfiguration(@PathParam("namespace") String namespace, @PathParam("name") String name, RedmineConfigurationDto updatedConfig) {
     Repository repository = loadRepository(namespace, name);
     RepositoryPermissions.custom(Constants.NAME, repository).check();
     configStore.storeConfiguration(mapper.map(updatedConfig, configStore.getConfiguration(repository)), repository);
-    return Response.ok().build();
   }
 
   @GET

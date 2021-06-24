@@ -35,10 +35,10 @@ public final class ConfigurationResolver {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConfigurationResolver.class);
 
-  private final RedmineConfigurationStore configurationStore;
+  private final RedmineConfigStore configurationStore;
 
   @Inject
-  public ConfigurationResolver(RedmineConfigurationStore configurationStore) {
+  public ConfigurationResolver(RedmineConfigStore configurationStore) {
     this.configurationStore = configurationStore;
   }
 
