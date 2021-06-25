@@ -31,7 +31,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.redmine.config.RedmineConfigurationStore;
+import sonia.scm.redmine.config.RedmineConfigStore;
 import sonia.scm.redmine.config.RedmineConfiguration;
 import sonia.scm.redmine.config.TextFormatting;
 import sonia.scm.update.V1PropertyDaoTestUtil;
@@ -52,7 +52,7 @@ class RedmineV2ConfigMigrationUpdateStepTest {
   V1PropertyDaoTestUtil testUtil = new V1PropertyDaoTestUtil();
 
   @Mock
-  RedmineConfigurationStore configStore;
+  RedmineConfigStore configStore;
   @Captor
   ArgumentCaptor<RedmineConfiguration> configurationCaptor;
   @Captor

@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ConfigurationResolverTest {
 
-  private RedmineConfigurationStore store;
+  private RedmineConfigStore store;
 
   private ConfigurationResolver resolver;
 
@@ -44,7 +44,7 @@ class ConfigurationResolverTest {
 
   @BeforeEach
   void setUpResolver() {
-    store = new RedmineConfigurationStore(new InMemoryConfigurationStoreFactory());
+    store = new RedmineConfigStore(new InMemoryConfigurationStoreFactory());
     resolver = new ConfigurationResolver(store);
   }
 
