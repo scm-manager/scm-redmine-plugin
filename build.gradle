@@ -40,6 +40,7 @@ scmPlugin {
   description = "Integrates Redmine to SCM-Manager"
   author = "Marvin Froeder"
   category = "Issue Tracker"
+  avatarUrl = '/images/redmine-logo.png'
 
   run {
     loggingConfiguration = 'src/main/conf/logging.xml'
