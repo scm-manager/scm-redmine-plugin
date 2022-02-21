@@ -72,7 +72,8 @@ public class RedmineV2ConfigMigrationUpdateStep implements UpdateStep {
       properties.getBoolean("redmine.update-issues").orElse(false),
       "",
       "",
-      Collections.emptyMap()
+      Collections.emptyMap(),
+      false
     );
   }
 

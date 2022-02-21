@@ -72,6 +72,7 @@ class RedmineRepositoryConfigurationForm extends React.Component<Props, RedmineC
             <div className="column is-half">{this.renderInputField("password", "password")}</div>
             <div className="column is-full">{this.renderTextFormattingDropDown()}</div>
             <div className="column is-full">{this.renderCheckbox("autoClose")}</div>
+            <div className="column is-full">{this.renderCheckbox("disableUpdateByCommit")}</div>
             {this.state.autoClose ? (
               <div className="column is-full">
                 <KeyWordMapping mappings={this.state.keywordMapping} onChange={this.keywordMappingChanged} />
