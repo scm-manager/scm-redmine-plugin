@@ -62,6 +62,11 @@ public class RedmineStateChanger implements StateChanger {
       .collect(Collectors.toList());
   }
 
+  @Override
+  public boolean isStateChangeActivatedForCommits() {
+    return !configuration.isDisableUpdateByCommit();
+  }
+
   private String resolveMapping(String keyWord) {
     for (Map.Entry<String, String> entry : configuration.getKeywordMapping().entrySet()) {
       List<String> values = split().splitToList(entry.getValue());
