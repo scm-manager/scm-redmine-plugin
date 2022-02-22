@@ -46,7 +46,7 @@ public class RedmineConfigurationDto extends HalRepresentation {
   private String username;
   private String password;
   private Map<String,String> keywordMapping;
-  private boolean disableUpdateByCommit;
+  private boolean disableStateChangeByCommit;
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package

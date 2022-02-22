@@ -50,8 +50,8 @@ public class RedmineGlobalConfiguration extends RedmineConfiguration {
   }
 
   public RedmineGlobalConfiguration(String url, TextFormatting textFormatting, boolean autoClose, boolean updateIssues,
-                                    boolean disableRepositoryConfiguration, String username, String password, boolean disableUpdateByCommit) {
-    super(url, textFormatting, autoClose, updateIssues, username, password, Collections.emptyMap(), disableUpdateByCommit);
+                                    boolean disableRepositoryConfiguration, String username, String password, boolean disableStateChangeByCommit) {
+    super(url, textFormatting, autoClose, updateIssues, username, password, Collections.emptyMap(), disableStateChangeByCommit);
     this.disableRepositoryConfiguration = disableRepositoryConfiguration;
   }
 

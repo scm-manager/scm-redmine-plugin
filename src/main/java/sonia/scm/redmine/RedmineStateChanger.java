@@ -64,7 +64,7 @@ public class RedmineStateChanger implements StateChanger {
 
   @Override
   public boolean isStateChangeActivatedForCommits() {
-    return !configuration.isDisableUpdateByCommit();
+    return !configuration.isDisableStateChangeByCommit();
   }
 
   private String resolveMapping(String keyWord) {

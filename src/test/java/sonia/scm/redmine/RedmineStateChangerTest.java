@@ -115,7 +115,7 @@ class RedmineStateChangerTest {
 
   @Test
   void shouldDisableUpdatesByCommits() {
-    configuration.setDisableUpdateByCommit(true);
+    configuration.setDisableStateChangeByCommit(true);
 
     assertThat(stateChanger.isStateChangeActivatedForCommits()).isFalse();
   }
