@@ -62,6 +62,7 @@ public class RedmineConfiguration implements Validateable {
   @XmlJavaTypeAdapter(XmlEncryptionAdapter.class)
   private String password;
   private Map<String,String> keywordMapping;
+  private boolean disableStateChangeByCommit;
 
   public boolean isAutoCloseEnabled() {
     return isUpdateIssuesEnabled() && autoClose;

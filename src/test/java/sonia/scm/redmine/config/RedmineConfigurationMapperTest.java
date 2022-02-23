@@ -185,7 +185,8 @@ public class RedmineConfigurationMapperTest {
       false,
       "trillian",
       "secret",
-      Collections.emptyMap()
+      Collections.emptyMap(),
+      false
     );
   }
 
@@ -197,7 +198,8 @@ public class RedmineConfigurationMapperTest {
       "trillian",
       "secret"
       ,
-      Collections.emptyMap()
+      Collections.emptyMap(),
+      false
     );
   }
 

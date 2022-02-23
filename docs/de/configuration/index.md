@@ -35,4 +35,7 @@ Diese Schlüsselwörter kann man in Form einer kommaseparierten Liste angegeben.
 Zum Beispiel könnte man für den Status "Closed" folgende Schlüsselwörter angeben: "closes, closing".
 Damit würde die Commit Nachricht "Closes Bug #42" ebenfalls das Ticket 42 auf den Status "Closed" setzen.
 
+Wenn Statusübergänge nur aufgrund von Pull Requests und nicht aufgrund von Commits durchgeführt werden soll, kann
+zusätzlich die Option "Deaktiviere Statusänderungen durch Commits" aktiviert werden.
+
 ![Redmine Konfiguration](assets/config.png)

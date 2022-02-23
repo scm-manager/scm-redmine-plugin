@@ -35,4 +35,7 @@ These keywords can be specified in the form of a comma-separated list.
 For example, for the status "Closed" you could specify the following keywords: "closes, closing".
 The commit message "Closes Bug #42" would then also set the ticket 42 to the status "Closed".
 
+If the status should only be updated due to pull requests and not by commits, the additional option "Disable issue
+state changes by commits" can be selected.
+
 ![Redmine configuration](assets/config.png)

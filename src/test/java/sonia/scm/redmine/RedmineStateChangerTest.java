@@ -113,4 +113,15 @@ class RedmineStateChangerTest {
     verify(apiService).updateIssue(issue);
   }
 
+  @Test
+  void shouldDisableUpdatesByCommits() {
+    configuration.setDisableStateChangeByCommit(true);
+
+    assertThat(stateChanger.isStateChangeActivatedForCommits()).isFalse();
+  }
+
+  @Test
+  void shouldEnableUpdatesByCommitsByDefault() {
+    assertThat(stateChanger.isStateChangeActivatedForCommits()).isTrue();
+  }
 }
