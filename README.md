@@ -13,6 +13,10 @@ This plugin integrates Redmine to SCM-Manager.
 
 Find out how this plugin can be used on the [user documentation page](https://scm-manager.org/plugins/scm-redmine-plugin/docs).
 
+## Local development
+When you first start the Redmine server using `docker-compose up`, you have to enable API requests for the server.
+This can be done in Redmine under "Administration" -> "Settings" -> "API" -> "Enable REST web service". 
+
 ## Build and testing
 
 The plugin can be compiled and packaged with the following tasks:
