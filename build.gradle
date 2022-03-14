@@ -23,7 +23,7 @@
  */
 
 plugins {
-  id 'org.scm-manager.smp' version '0.10.1'
+  id 'org.scm-manager.smp' version '0.10.3'
 }
 
 dependencies {
@@ -36,7 +36,7 @@ dependencies {
 scmPlugin {
   scmVersion = "2.15.0"
   displayName = "Redmine"
-  description = "Integrates Redmine to SCM-Manager"
+  description = "Redmine/EasyRedmine integration"
   author = "Marvin Froeder"
   category = "Issue Tracker"
   avatarUrl = '/images/redmine-logo.png'
