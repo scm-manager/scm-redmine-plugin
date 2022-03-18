@@ -33,7 +33,6 @@ type Props = WithTranslation & {
   onConfigurationChange: (p1: RedmineConfiguration, p2: boolean) => void;
 };
 
-
 class RedmineRepositoryConfigurationForm extends React.Component<Props, RedmineConfiguration> {
   constructor(props: Props) {
     super(props);
@@ -125,7 +124,7 @@ class RedmineRepositoryConfigurationForm extends React.Component<Props, RedmineC
         <label className="label">{t("scm-redmine-plugin.config.form.textFormatting")}</label>
         <div className="control">
           <DropDown
-            options={["TEXTILE", "MARKDOWN"]}
+            options={["TEXTILE", "MARKDOWN", "HTML"]}
             optionSelected={this.handleDropDownChange}
             preselectedOption={this.state.textFormatting}
           />
