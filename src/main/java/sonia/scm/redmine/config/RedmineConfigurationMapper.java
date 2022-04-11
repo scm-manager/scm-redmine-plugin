@@ -26,6 +26,7 @@ package sonia.scm.redmine.config;
 import com.google.common.annotations.VisibleForTesting;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
+import org.apache.commons.lang.StringUtils;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
@@ -75,7 +76,9 @@ public abstract class RedmineConfigurationMapper extends HalAppenderMapper {
 
   @AfterMapping
   public void replacePasswordWithDummy(@MappingTarget RedmineConfigurationDto target) {
-    target.setPassword(DUMMY_PASSWORD);
+    if (StringUtils.isNotEmpty(target.getPassword())) {
+      target.setPassword(DUMMY_PASSWORD);
+    }
   }
 
   @AfterMapping

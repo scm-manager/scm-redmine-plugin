@@ -156,6 +156,19 @@ public class RedmineConfigurationMapperTest {
     password = "secret",
     configuration = "classpath:sonia/scm/redmine/shiro.ini"
   )
+  public void shouldNotReplacePasswordAfterMappingDtoIfEmpty() {
+    RedmineConfiguration redmineConfiguration = createConfiguration();
+    redmineConfiguration.setPassword("");
+    RedmineConfigurationDto configuration = mapper.map(redmineConfiguration, createRepository());
+    assertEquals("", configuration.getPassword());
+  }
+
+  @Test
+  @SubjectAware(
+    username = "trillian",
+    password = "secret",
+    configuration = "classpath:sonia/scm/redmine/shiro.ini"
+  )
   public void shouldRestorePasswordAfterMappingFromGlobalDto() {
     RedmineGlobalConfigurationDto dto = createGlobalConfigurationDto();
     dto.setPassword(RedmineConfigurationMapper.DUMMY_PASSWORD);
