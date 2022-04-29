@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.1.1 - 2022-04-29
+### Added
+- HTML templates for EasyRedmine 11 ([#47](https://github.com/scm-manager/scm-redmine-plugin/pull/47))
+
+### Fixed
+- Replace passwords/tokens with "dummy" only if they are not empty ([#49](https://github.com/scm-manager/scm-redmine-plugin/pull/49))
+
 ## 3.1.0 - 2022-03-03
 ### Added
 - Add option to disable state change by commit ([#40](https://github.com/scm-manager/scm-redmine-plugin/pull/40))
@@ -35,12 +42,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Ignore repository-level configuration if it is disabled in the global configuration ([#14](https://github.com/scm-manager/scm-redmine-plugin/pull/14))
 
-## [2.0.0] - 2020-06-04
+## 2.0.0 - 2020-06-04
 ### Changed
 - Changeover to MIT license ([#4](https://github.com/scm-manager/scm-redmine-plugin/pull/4))
 - Rebuild for api changes from core
 
-## [2.0.0-rc2] - 2020-03-13
+## 2.0.0-rc2 - 2020-03-13
 ### Added
 - Add swagger rest annotations to generate openAPI specs for the scm-openapi-plugin. ([#2](https://github.com/scm-manager/scm-redmine-plugin/pull/2))
 
