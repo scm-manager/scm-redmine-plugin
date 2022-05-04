@@ -23,7 +23,7 @@
  */
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { InputField, AddButton, Icon, Help, Notification } from "@scm-manager/ui-components";
+import { InputField, AddButton, Help, Notification, Button } from "@scm-manager/ui-components";
 import styled from "styled-components";
 
 type Mapping = {
@@ -61,28 +61,30 @@ const MappingForm: FC<MappingProps> = ({ mapping, remove, update }) => {
 
   return (
     <tr>
-      <td>
+      <VCenteredTd>
         <InputField
           className="is-grouped"
           onChange={onStatusChange}
           value={mapping.status}
           placeholder={t("scm-redmine-plugin.config.mapping.status")}
         />
-      </td>
-      <td>
+      </VCenteredTd>
+      <VCenteredTd>
         <InputField
           className="is-grouped"
           onChange={onKeywordsChange}
           value={mapping.keywords}
           placeholder={t("scm-redmine-plugin.config.mapping.keywordsPlaceholder")}
         />
-      </td>
+      </VCenteredTd>
       <VCenteredTd>
-        <a onClick={remove} className={"pointer"} title={t("scm-redmine-plugin.config.mapping.remove")}>
-          <span className="icon is-small">
-            <Icon name="trash" color="inherit" />
-          </span>
-        </a>
+        <Button
+          color="text"
+          icon="trash"
+          action={remove}
+          title={t("scm-redmine-plugin.config.mapping.remove")}
+          className="px-2"
+        />
       </VCenteredTd>
     </tr>
   );
@@ -161,7 +163,7 @@ const KeyWordMapping: FC<Props> = props => {
                 {t("scm-redmine-plugin.config.mapping.keywords")}
                 <Help message={t("scm-redmine-plugin.config.mapping.keywordsHelp")} />
               </th>
-              <th/>
+              <th />
             </tr>
           </thead>
           <tbody>
