@@ -1,0 +1,2 @@
+- type: fixed
+  description: Missing encryption in the audit log

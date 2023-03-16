@@ -23,13 +23,12 @@
  */
 package sonia.scm.redmine.config;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import sonia.scm.Validateable;
-import sonia.scm.issuetracker.XmlEncryptionAdapter;
+import sonia.scm.xml.XmlEncryptionAdapter;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
