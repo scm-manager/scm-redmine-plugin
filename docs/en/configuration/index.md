@@ -2,11 +2,12 @@
 title: Configuration
 ---
 
-The SCM-Redmine-Plugin can be configured globally and repository specific. The global configuration is used for all repositories which doesn't have an specific config. The repository specific configuration can be disabled in the global config.
+The SCM-Redmine-Plugin can be configured globally and repository specific. The global configuration is used for all 
+repositories that don't have a specific config. The repository specific configuration can be disabled in the global config.
 
 ### Configuration form
-To connect SCM-Manager with Redmine, an instance url including the context path is required.
-Afterwards you can already configure how the Redmine issues are modified or updated. 
+To connect SCM-Manager with Redmine, an instance URL including the context path is required.
+Afterwards, you can already configure how the Redmine issues are modified or updated. 
 
 #### Create comments
 To create comments in Redmine, credentials are mandatory. They should belong to a technical Redmine user.
@@ -16,21 +17,23 @@ The text formatting can be set via a selection menu. This must match the formatt
 
 Comments are generated on the Redmine issue if the issue id is mentioned within a commit message. 
 
-Example Commit message: "#492 Add awesome new feature".
+Example commit message: "#492 Add awesome new feature".
 
 This will create a comment with this commit message on Redmine issue 492.
 
 #### Update issue status
 To change the status of an issue via a commit message, an issue id and a Redmine status must be in one sentence.
 
-Example Commit message: "Bug #42 closed".
+Example commit message: "Bug #42 closed".
 
 The example sets the status of issue 42 to "Closed".
 Of course, this assumes that the status "Closed" exists in the specified Redmine instance.
 
 > **Important:** The configured redmine user needs permissions to change the status of issues ("Edit issues").
+> 
+> Furthermore, please avoid to use more than one mapped keyword in one comment as this can cause undesired side effects.
 
-Using the "Redmine status mapping" you can define keywords that can be used instead of the Redmine status.
+Using the "Redmine status mapping", you can define keywords that can be used instead of the Redmine status.
 These keywords can be specified in the form of a comma-separated list.
 For example, for the status "Closed" you could specify the following keywords: "closes, closing".
 The commit message "Closes Bug #42" would then also set the ticket 42 to the status "Closed".
