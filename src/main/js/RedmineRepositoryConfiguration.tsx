@@ -14,26 +14,27 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, {FC} from "react";
+import { useTranslation } from "react-i18next";
 import { Subtitle, Configuration } from "@scm-manager/ui-components";
 import RedmineRepositoryConfigurationForm from "./RedmineRepositoryConfigurationForm";
+import { useDocumentTitleForRepository } from "@scm-manager/ui-core";
+import { Repository } from "@scm-manager/ui-types";
 
-type Props = WithTranslation & {
+type Props = {
   link: string;
+  repository: Repository;
 };
 
-class RedmineRepositoryConfiguration extends React.Component<Props> {
-  render() {
-    const { link, t } = this.props;
+const RedmineRepositoryConfiguration: FC<Props> = ({ link, repository }) => {
+  const [t] = useTranslation("plugins");
+  useDocumentTitleForRepository(repository, t("scm-redmine-plugin.config.link"))
+  return (
+    <>
+      <Subtitle subtitle={t("scm-redmine-plugin.config.title")} />
+      <Configuration link={link} render={props => <RedmineRepositoryConfigurationForm {...props} />} />
+    </>
+  );
+};
 
-    return (
-      <>
-        <Subtitle subtitle={t("scm-redmine-plugin.config.title")} />
-        <Configuration link={link} render={props => <RedmineRepositoryConfigurationForm {...props} />} />
-      </>
-    );
-  }
-}
-
-export default withTranslation("plugins")(RedmineRepositoryConfiguration);
+export default RedmineRepositoryConfiguration;

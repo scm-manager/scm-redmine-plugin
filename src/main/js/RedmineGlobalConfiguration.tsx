@@ -14,26 +14,26 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { Title, Configuration } from "@scm-manager/ui-components";
 import RedmineGlobalConfigurationForm from "./RedmineGlobalConfigurationForm";
+import { useDocumentTitle } from "@scm-manager/ui-core";
 
-type Props = WithTranslation & {
+type Props = {
   link: string;
 };
 
-class RedmineGlobalConfiguration extends React.Component<Props> {
-  render() {
-    const { link, t } = this.props;
+const RedmineGlobalConfiguration: FC<Props> = ({ link }) => {
+  const [t] = useTranslation("plugins");
+  useDocumentTitle(t("scm-redmine-plugin.config.link"));
 
-    return (
-      <>
-        <Title title={t("scm-redmine-plugin.config.title")} />
-        <Configuration link={link} render={props => <RedmineGlobalConfigurationForm {...props} />} />
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <Title title={t("scm-redmine-plugin.config.title")} />
+      <Configuration link={link} render={props => <RedmineGlobalConfigurationForm {...props} />} />
+    </>
+  );
+};
 
-export default withTranslation("plugins")(RedmineGlobalConfiguration);
+export default RedmineGlobalConfiguration;
