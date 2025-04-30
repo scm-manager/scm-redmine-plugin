@@ -18,7 +18,6 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Title, Configuration } from "@scm-manager/ui-components";
 import RedmineGlobalConfigurationForm from "./RedmineGlobalConfigurationForm";
-import { useDocumentTitle } from "@scm-manager/ui-core";
 
 type Props = {
   link: string;
@@ -26,7 +25,6 @@ type Props = {
 
 const RedmineGlobalConfiguration: FC<Props> = ({ link }) => {
   const [t] = useTranslation("plugins");
-  useDocumentTitle(t("scm-redmine-plugin.config.link"));
 
   return (
     <>
