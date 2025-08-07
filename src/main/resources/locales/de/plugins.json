@@ -20,19 +20,19 @@
         "updateIssues-helptext": "Aktiviert Aktualisierungen der Redmine / Easy Redmine Tickets. Der SCM-Manager sucht nach Ticket IDs in Commit Nachrichten und Pull Requests. Wird ein Redmine Ticket gefunden, dann aktualisiert der SCM-Manager das Ticket mit einem Kommentar.",
         "disableRepositoryConfiguration": "Deaktiviere die Repository spezifische Konfiguration.",
         "disableRepositoryConfiguration-helptext": "Repository OWNER dürfen keine Redmine / Easy Redmine Instanzen konfigurieren. Der SCM-Manager Webserver muss nach dieser Änderung neugestartet werden."
+      },
+      "mapping": {
+        "title": "Redmine / Easy Redmine Status Mapping",
+        "help": "Ordne Schlüsselwörter einem Redmine / Easy Redmine-Status zu, um Zustandsänderungen mit diesen Schlüsselwörtern auszulösen.",
+        "status": "Redmine / Easy Redmine Status",
+        "statusHelp": "Name des Redmine / Easy Redmine-Status z.B.: Closed",
+        "keywords": "Liste der Schlüsselwörter",
+        "keywordsPlaceholder": "Keyword1,Keyword2",
+        "keywordsHelp": "Kommagetrennte Liste von Schlüsselwörtern, die dem Status zugeordnet werden sollen, z. B.: closes, closing",
+        "no-mapping": "Keine Mappings definiert",
+        "add": "Mapping hinzufügen",
+        "remove": "Mapping entfernen"
       }
-    },
-    "mapping": {
-      "title": "Redmine / Easy Redmine Status Mapping",
-      "help": "Ordne Schlüsselwörter einem Redmine / Easy Redmine-Status zu, um Zustandsänderungen mit diesen Schlüsselwörtern auszulösen.",
-      "status": "Redmine / Easy Redmine Status",
-      "statusHelp": "Name des Redmine / Easy Redmine-Status z.B.: Closed",
-      "keywords": "Liste der Schlüsselwörter",
-      "keywordsPlaceholder": "Keyword1,Keyword2",
-      "keywordsHelp": "Kommagetrennte Liste von Schlüsselwörtern, die dem Status zugeordnet werden sollen, z. B.: closes, closing",
-      "no-mapping": "Keine Mappings definiert",
-      "add": "Mapping hinzufügen",
-      "remove": "Mapping entfernen"
     }
   },
   "permissions": {
